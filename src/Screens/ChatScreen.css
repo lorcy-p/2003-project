@@ -1,0 +1,120 @@
+/* Styles for ChatScreen Component */
+
+
+/* Input Container at the Bottom Center */
+.inputContainer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px; 
+    background-color: #f9f9f9; 
+    padding: 10px; 
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
+    z-index: 1000; 
+  }
+  
+  /* Input Field Styling */
+  .inputField {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    box-sizing: border-box; 
+  }
+  
+  
+  .inputField:hover {
+    border-color: #888; 
+  }
+  
+  .inputField:focus {
+    border-color: #007bff; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+  }
+  
+
+  /* Styles for Scrollable Messages Container */
+.messageScrollContainer {
+    position: fixed;
+    bottom: 60px; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    height: 200px; 
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  /* Styles for Messages Inside the Scrollable Container */
+  .messageContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* General Message Styles */
+  .message {
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  /* Specific Sender/Receiver Message Styles */
+  .messageReceiver {
+    background-color: #f1f1f1;
+    align-self: flex-start;
+  }
+  
+  .messageSender {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+  }
+  
+  /* Time Styles */
+  .timeReceiver,
+  .timeSender {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+    text-align: right;
+  }
+  
+  /* Scrollbar Customization */
+  .messageScrollContainer::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .messageScrollContainer::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+  }
+  
+  .messageScrollContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+  }
+  
+  /* Black Container Styling */
+.blackContainer {
+    background-color: #000; /* Black background */
+    padding: 0px;
+    margin: 15px auto;
+    border-radius: 16px;
+    max-width: 600px;
+    height:350px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+  
+  
+  
