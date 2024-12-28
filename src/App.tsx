@@ -5,11 +5,20 @@ import { Experience } from "./components/Experience";
 import { UI } from "./components/UI";
 import React, { FC } from "react";
 import ChatScreen from './Screens/ChatScreen'; 
+import SelectAI from "./Screens/SelectAiScreen";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App: FC = () => {
   return (
     <>
-      <ChatScreen /> 
+      <Router>
+        <Routes>
+          <Route path="/" element={<SelectAI />} />
+          <Route path="/chat" element={<ChatScreen />} />
+        </Routes>
+      </Router>
+
+      
     </>
   );
 };

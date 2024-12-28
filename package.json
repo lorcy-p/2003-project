@@ -14,8 +14,9 @@
     "@react-three/xr": "^5.7.1",
     "@types/three": "0.152.1",
     "leva": "^0.9.35",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.1.1",
     "rhubarb": "^0.1.0-rc2",
     "three": "0.153.0"
   },
