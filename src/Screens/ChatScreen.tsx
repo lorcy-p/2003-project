@@ -104,12 +104,13 @@ const ChatScreen: React.FC = () => {
               onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
             />
           </div>
-
-          <Loader />
-          <Leva hidden={true} />
-          <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }}>
-            <Experience />
-          </Canvas>
+          <div className="canvasContainer">
+            <Loader />
+            <Leva hidden={true} />
+            <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }}>
+              <Experience />
+            </Canvas>
+          </div>
         </div>
       </div>
     </div>

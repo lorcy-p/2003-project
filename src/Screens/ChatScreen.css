@@ -116,5 +116,23 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   }
   
+
+   /* Canvas Container for the 3D model*/
+  .canvasContainer {
+    position: fixed;
+    padding: 10px;
+    margin: 15px auto;
+    width: 100%;
+    max-width: 600px;
+    height: 350px; /* Adjust the height */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    left: 50%;
+    transform: translateX(-50%);
+
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow-y: auto;
+  }
   
   
