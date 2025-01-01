@@ -7,6 +7,7 @@ import React, { FC } from "react";
 import ChatScreen from './Screens/ChatScreen'; 
 import SelectAI from "./Screens/SelectAiScreen";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginScreen from "./Screens/LoginScreen";
 
 const App: FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: FC = () => {
         <Routes>
           <Route path="/" element={<SelectAI />} />
           <Route path="/chat" element={<ChatScreen />} />
+          <Route path="/login" element={<LoginScreen />} />
         </Routes>
       </Router>
 

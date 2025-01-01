@@ -1,0 +1,91 @@
+
+/* Centering login container */
+.login-container::before {
+    content: "";
+    display: inline-block;
+    height: 100%; /* This ensures the pseudo-element takes up the full height */
+    vertical-align: middle;
+}
+
+.login-container {
+    display: inline-flex;
+    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+    width: 100%; /* Full width for centering */
+    height: 100vh; /* Full viewport height */
+    text-align: center;
+}
+
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    text-align: left;
+    font-weight: 400;
+}
+
+.login-input{
+    padding: 7px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.login-button {
+    color: #fff;
+    border: 0.5px solid white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.welcomeheader{
+    font-weight: 600;
+    font-size: 30px;
+}
+
+.welcomeheaderwrapper{
+    position: absolute;
+    top: 25vh;
+    width: 400px;
+    left: calc((100vw - 400px) / 2);
+    text-align: center;
+}
+
+.headerunderline {
+    border: 0;
+    height: 2px;
+    background-color: #ffffff;
+    width: 75%;
+    margin: auto;
+}
+
+.headersubheading{
+    margin-top: 10px;
+}
