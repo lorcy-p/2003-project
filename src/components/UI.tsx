@@ -6,6 +6,12 @@ interface UIProps {
   [key: string]: any;
 }
 
+/*
+
+  Simple test UI (OUTDATED)
+
+*/
+
 export const UI: FC<UIProps> = ({ hidden, ...props }) => {
   const input = useRef<HTMLInputElement>(null);
   const { chat, loading, cameraZoomed, setCameraZoomed, message } = useChat();

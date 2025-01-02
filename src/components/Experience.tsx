@@ -9,6 +9,7 @@ import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { useChat } from "../hooks/useChat";
 import { TestAvatar } from "./TestAvatar";
 
+// Simple loading response ui
 const Dots: FC<React.ComponentProps<"group">> = (props) => {
   const { loading } = useChat();
   const [loadingText, setLoadingText] = useState<string>("");

@@ -106,11 +106,11 @@ const ChatScreen: React.FC = () => {
           </div>
           <div className="canvasContainer">
             <Loader />
-            <Leva hidden={true} />
             <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }}>
               <Experience />
             </Canvas>
           </div>
+          <Leva hidden={false} />
         </div>
       </div>
     </div>
