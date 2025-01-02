@@ -1,0 +1,13 @@
+ Client meeting 2
+ Date and time : 14/11/2024
+ Location : online call
+ Participants : Jack, Jass, Joshua, Lorcan
+ What happened:
+ ● Client has given us access to typescript files and a link to a prototype website
+ ● Discussed requirements
+ ● Settled confusion around developing the ai. We are not required to develop the ai.
+ ● Wehavebeenshownhowto login to the prototype
+ Tasks to complete by next sprint:
+ ● Playaround with the model
+ ● Lookinto the typescript files
+ Next client meeting : 28/11/2024

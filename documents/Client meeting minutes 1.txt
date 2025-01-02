@@ -1,0 +1,12 @@
+Client meeting 1
+ Date and time : 29/10/2024
+ Location : online call
+ Participants : Jack, Jass, Joshua, Lorcan
+ What happened:
+ ● Client discussed the idea of the project
+ ● Talked about the languages used for the project
+ ● Client mentioned he was working on getting us access to the project
+predominantly 3js and typescript.
+ Tasks to complete by next sprint:
+ ● Research 3js and typescript
+ Next client meeting : 14/11/2024

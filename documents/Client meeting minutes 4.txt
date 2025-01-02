@@ -1,0 +1,7 @@
+Client meeting 4
+ Date and time : 12/12/2024
+ Location : cancelled
+ This meeting was cancelled as the client was busy with other meetings.
+ Designs created last sprint were sent to the client requesting feedback but no
+ response was heard. Development had to go on with these designs as time
+ constraints were strict.

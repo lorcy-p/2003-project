@@ -1,0 +1,11 @@
+Client meeting 3
+ Date and time : 28/11/2024
+ Location : online call
+ Participants : Jack, Jass, Joshua, Lorcan
+ What happened:
+ ● Client has set us up with the github for the project
+ ● Client pleased with progress
+ Tasks to complete for the next sprint:
+ ● Develop some prototype models for use
+ ● Create low fidelity prototypes for the design
+ Next client meeting : 12/12/2024
