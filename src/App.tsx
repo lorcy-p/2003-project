@@ -14,9 +14,9 @@ const App: FC = () => {
     <>
       <Router>
         <Routes>
+          <Route path="/login" element={<LoginScreen />} />
           <Route path="/" element={<SelectAI />} />
           <Route path="/chat" element={<ChatScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
         </Routes>
       </Router>
 
