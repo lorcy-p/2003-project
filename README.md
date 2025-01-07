@@ -1,11 +1,22 @@
 # 2003-project
->>>>>>> 00e39e7a0e989f710693890e042228a1518feedd
 
-Note to Josh - to create the login screen, create a tsx file for the screen as well as a css file. place these inside the Screens folder. You then need to change the App.tsx file. make sure that your screens tsx file is imported and replace "<ChatScreen /> " to your screens file nam - Lorcan.
+prerequisites:
+nodejs. This is bundled with npm, which is required.
+https://nodejs.org/en
 
-### Comment from Josh 
-Note to others - I am adding navigation and will list what needs to be installed for these navigations.
-- "npm install react-router-dom", I am using React Router to navigate screens.
-- Right now you can only navigate to the next screen and can't go back as we haven't set up the button for going back yet.
-###
 
+
+Installation
+
+Clone the repository and navigate to the project directory:
+
+git clone <https://github.com/lorcy-p/2003-project>
+cd <project-directory>
+
+Install dependencies:
+
+npm install
+
+Start the development server:
+
+npm run dev
