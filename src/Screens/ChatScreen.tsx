@@ -5,8 +5,6 @@ import { Leva } from "leva";
 import { Canvas } from "@react-three/fiber";
 import { Experience } from "../components/Experience";
 
-
-
 // Define the structure of a message
 interface Message {
   sender: string; // Who sent the message: "user" or "recipient"
@@ -16,27 +14,30 @@ interface Message {
 }
 
 const ChatScreen: React.FC = () => {
-  
   // Set up websocket
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [playing, setPlaying] = useState(false);
 
   const keepAliveInterval = 10000;
 
   const webSocketRef = useRef(socket);
-
+  const playingRef = useRef(playing);
 
   useEffect(() => {
     webSocketRef.current = socket;
   }, [socket]);
 
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
+
   // Websocket is connected
-  function connected(ws: WebSocket, scenarioId: number)
-  {
+  function connected(ws: WebSocket, scenarioId: number) {
     console.log(`Websocket connected, scenario ${scenarioId}`);
-    const json = { type : "connect" };
+    const json = { type: "connect" };
     ws.send(JSON.stringify(json));
-    if (scenarioId)
-    {
+
+    if (scenarioId) {
       const json = { type: "start", scenario: scenarioId };
       ws.send(JSON.stringify(json));
     }
@@ -51,31 +52,39 @@ const ChatScreen: React.FC = () => {
       if (webSocketRef.current) webSocketRef.current.send("{}");
     }, keepAliveInterval);
     return () => clearInterval(interval);
-  }, []);
+  }, [socket]);
 
- // Start the websocket
- function start_ws(scenarioId: number = 0){
+  // Start the websocket
+  function start_ws(scenarioId: number = 0) {
+    // Create a websocket connection
+    const ws = new WebSocket("wss://studio.metaphysical.dev/agents");
 
-  // Create a websocket connection
-  const ws = new WebSocket("wss://studio.metaphysical.dev/agents");
-  // Set up event listeners
-  ws.onopen = () => { connected(ws, 166); }
-  ws.onmessage = (e: MessageEvent) => { handleMessage(e.data); };
-  ws.onerror = (event) => { console.error("WebSocket error:", event); }
-  ws.onclose = () => { stop_ws(ws); }
-  
-  // Clean up when the component unmounts
-  return () => { ws.close(); } // Close websocket
+    // Set up event listeners
+    ws.onopen = () => {
+      connected(ws, scenarioId);
+    };
+    ws.onmessage = (e: MessageEvent) => {
+      handleMessage(e.data);
+    };
+    ws.onerror = (event) => {
+      console.error("WebSocket error:", event);
+    };
+    ws.onclose = () => {
+      stop_ws(ws);
+    };
 
- }
-
- // Stop the websocket
- function stop_ws(ws: WebSocket) { 
-   if (ws.readyState <= 1) ws.close();
-   setSocket(null);
+    // Clean up when the component unmounts
+    return () => {
+      ws.close();
+    }; // Close websocket
   }
-    
-  
+
+  // Stop the websocket
+  function stop_ws(ws: WebSocket) {
+    if (ws.readyState <= 1) ws.close();
+    setSocket(null);
+  }
+
   // State to store the list of messages
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -97,27 +106,24 @@ const ChatScreen: React.FC = () => {
   // Ref for scrolling to the bottom of the chat
   const messageScrollRef = useRef<HTMLDivElement>(null);
 
-
   // Function to handle inbound messages from the websocket
-  function handleMessage(msg: string)
-  {
-    try
-    {
+  function handleMessage(msg: string) {
+    console.log(msg)
+    try {
       const json = JSON.parse(msg);
-      console.log("Got WS msg: "+JSON.stringify(json));
+      console.log("Got WS msg: " + JSON.stringify(json));
       setMessages((messages) => [
         ...messages,
         {
-          sender: json.action.who, text: json.action.say, timestamp: getCurrentTime()
-        }
-        ]);
-    }
-    catch (e)
-    {
+          sender: json.action.who,
+          text: json.action.say,
+          timestamp: getCurrentTime(),
+        },
+      ]);
+    } catch (e) {
       console.log("Bad JSON");
     }
   }
-
 
   // Function to handle sending a message
   const handleSendMessage = () => {
@@ -126,12 +132,15 @@ const ChatScreen: React.FC = () => {
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: "user", text: newMessage, timestamp: getCurrentTime() },
-        {
-          sender: "recipient",
-          text: "That is very interesting, tell me more",
-          timestamp: getCurrentTime(),
-        },
       ]);
+
+      const json = {
+        type: "input",
+        name: "user",
+        text: newMessage,
+      };
+
+      webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
       // Clear the input field
       setNewMessage("");
     }
@@ -152,6 +161,50 @@ const ChatScreen: React.FC = () => {
         messageScrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Functions to start and stop the scenarios
+  function startScenario() {
+    start_ws(166);
+    playScenario();
+  }
+
+  function stopScenario() {
+    const json = { type: "stop" };
+    webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
+    webSocketRef.current && stop_ws(webSocketRef.current);
+    setMessages([
+      {
+        sender: "recipient",
+        text: "Demo text for now.",
+        timestamp: "10:32 PM",
+        attachment: "",
+      },
+      {
+        sender: "user",
+        text: "demo text for now",
+        timestamp: "10:45 PM",
+      },
+    ]);
+    setPlaying(false);
+  }
+
+  // Start playing, continuous
+  function playScenario() {
+    setPlaying(true);
+    tickScenario();
+  }
+
+  // Pause playing
+  function pausesScenario() {
+    setPlaying(false);
+  }
+
+  // Tick the scenario
+  function tickScenario() {
+    console.log("Tick");
+    const json = { type: "tick" };
+    webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
+  }
 
   return (
     <div className="conversation">
@@ -193,7 +246,7 @@ const ChatScreen: React.FC = () => {
                     className={
                       message.sender === "recipient"
                         ? "timeReceiver" // Styles for recipient's timestamp
-                        : "timeSender"   // Styles for user's timestamp
+                        : "timeSender" // Styles for user's timestamp
                     }
                   >
                     {message.timestamp}
@@ -215,7 +268,7 @@ const ChatScreen: React.FC = () => {
               placeholder="Type message here..."
               value={newMessage} // Bind input value to state
               onChange={(e) => setNewMessage(e.target.value)} // Update state on input change
-              onKeyDown={(e) => e.key === "Enter" && start_ws(166)} // Send message on Enter key press
+              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Send message on Enter key press
             />
           </div>
 
@@ -225,6 +278,11 @@ const ChatScreen: React.FC = () => {
             <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }}>
               <Experience />
             </Canvas>
+
+            <div className="buttonContainer">
+              <button className="startChat" onClick={() => startScenario()} />
+              <button className="stopChat" onClick={() => stopScenario()} />
+            </div>
           </div>
 
           {/* Leva UI controls */}
