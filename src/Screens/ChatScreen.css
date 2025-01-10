@@ -148,8 +148,9 @@
   gap: 10px; 
 }
 
-.startChat,
-.stopChat {
+.playChat,
+.pauseChat,
+.startScenario {
   width: 50px; 
   height: 50px; 
   color: white; 
@@ -164,26 +165,38 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease; 
 }
 
-.startChat {
+.playChat {
   background-color: green;
 }
 
-.startChat:hover {
+.playChat:hover {
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); 
 }
 
-.startChat:active {
+.playChat:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
-.stopChat {
+.pauseChat {
   background-color: red;
 }
 
-.stopChat:hover {
+.pauseChat:hover {
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); 
 }
 
-.stopChat:active {
+.pauseChat:active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+}
+
+.startScenario {
+  background-color: rgb(86, 91, 253);
+}
+
+.startScenario:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.startScenario:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 }
