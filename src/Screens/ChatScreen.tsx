@@ -105,11 +105,12 @@ const ChatScreen: React.FC = () => {
     try {
       const json = JSON.parse(msg);
       console.log("Got WS msg: " + JSON.stringify(json));
+  
       setMessages((messages) => [
         ...messages,
         {
           sender: "recipient",
-          text: json.action.say,
+          text: json.action?.say,
           timestamp: getCurrentTime(),
         },
       ]);
@@ -120,24 +121,36 @@ const ChatScreen: React.FC = () => {
 
   // Function to handle sending a message
   const handleSendMessage = () => {
+    
     console.log(`Human input for ${"user"}: ${newMessage}`);
+    
+    // Send JSON data to the websocket
+    const json = {
+      type: "input",
+      name: "Human", // Identify sender
+      text: newMessage,
+    }
+
+    // Send the JSON
+    webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
+  
+    
     if (newMessage.trim() !== "") {
+
       // Add the user's message
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: "user", text: newMessage, timestamp: getCurrentTime() },
+      
       ]);
 
-      const json = {
-        type: "input",
-        name: humanCharacter,
-        text: newMessage,
-      };
-
-      webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
       // Clear the input field
       setNewMessage("");
+      
+  
     }
+
+    
   };
 
   // Function to get the current time in "HH:MM AM/PM" format
@@ -183,7 +196,8 @@ const ChatScreen: React.FC = () => {
   }
 
   // Tick the scenario
-  function tickScenario() {
+  function tickScenario()
+  {
     console.log("Tick");
     const json = { type: "tick" };
     webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
