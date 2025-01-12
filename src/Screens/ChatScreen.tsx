@@ -8,14 +8,17 @@ import { Experience } from "../components/Experience";
 // Define the structure of a message
 interface Message {
   sender: string; // Who sent the message: "user" or "recipient"
-  text: string;   // The message content
+  text: string; // The message content
   timestamp: string; // Time the message was sent
   attachment?: string; // Optional attachment (e.g., image URL)
 }
 
+interface MTIs {
+  mti: any;
+  viseme: any;
+}
+
 const ChatScreen: React.FC = () => {
-  
-  
   // Set up websocket
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [playing, setPlaying] = useState(false);
@@ -72,7 +75,7 @@ const ChatScreen: React.FC = () => {
       console.error("WebSocket error:", event);
     };
     ws.onclose = () => {
-      console.log("WebSocket closed")
+      console.log("WebSocket closed");
       stop_ws(ws);
     };
 
@@ -89,9 +92,10 @@ const ChatScreen: React.FC = () => {
   }
 
   // State to store the list of messages
-  const [messages, setMessages] = useState<Message[]>([
-   
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  // State to store the MTIs
+  const [MTIs, setMTIs] = useState<MTIs[]>([]);
 
   // State to handle the user's input
   const [newMessage, setNewMessage] = useState("");
@@ -101,11 +105,10 @@ const ChatScreen: React.FC = () => {
 
   // Function to handle inbound messages from the websocket
   function handleMessage(msg: string) {
-  
     try {
       const json = JSON.parse(msg);
       console.log("Got WS msg: " + JSON.stringify(json));
-  
+
       setMessages((messages) => [
         ...messages,
         {
@@ -114,6 +117,16 @@ const ChatScreen: React.FC = () => {
           timestamp: getCurrentTime(),
         },
       ]);
+
+      setMTIs((MTIs) => [
+        ...MTIs,
+        {
+          mti: json.action?.anim?.mtis,
+          viseme: json.action?.visemes,
+        },
+      ]);
+
+      console.log("Got WS msg: " + JSON.stringify(json.action?.anim));
     } catch (e) {
       console.log("Bad JSON");
     }
@@ -121,36 +134,28 @@ const ChatScreen: React.FC = () => {
 
   // Function to handle sending a message
   const handleSendMessage = () => {
-    
     console.log(`Human input for ${"user"}: ${newMessage}`);
-    
+
     // Send JSON data to the websocket
     const json = {
       type: "input",
       name: "Human", // Identify sender
       text: newMessage,
-    }
+    };
 
     // Send the JSON
     webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
-  
-    
-    if (newMessage.trim() !== "") {
 
+    if (newMessage.trim() !== "") {
       // Add the user's message
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: "user", text: newMessage, timestamp: getCurrentTime() },
-      
       ]);
 
       // Clear the input field
       setNewMessage("");
-      
-  
     }
-
-    
   };
 
   // Function to get the current time in "HH:MM AM/PM" format
@@ -196,8 +201,7 @@ const ChatScreen: React.FC = () => {
   }
 
   // Tick the scenario
-  function tickScenario()
-  {
+  function tickScenario() {
     console.log("Tick");
     const json = { type: "tick" };
     webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
@@ -277,7 +281,10 @@ const ChatScreen: React.FC = () => {
             </Canvas>
 
             <div className="buttonContainer">
-              <button className="startScenario" onClick ={() => startScenario()} />
+              <button
+                className="startScenario"
+                onClick={() => startScenario()}
+              />
               <button className="playChat" onClick={() => playScenario()} />
               <button className="pauseChat" onClick={() => stopScenario()} />
             </div>

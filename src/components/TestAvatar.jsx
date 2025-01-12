@@ -2,7 +2,7 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { button, useControls } from "leva";
 import React, { useEffect, useRef, useState } from "react";
-
+import MTIs from "../Screens/ChatScreen";
 import * as THREE from "three";
 import { useChat } from "../hooks/useChat";
 
@@ -115,6 +115,7 @@ export function TestAvatar(props) {
   const { message, onMessagePlayed, chat } = useChat();
 
   const [lipsync, setLipsync] = useState();
+  const [lipsyncData, setLipsyncData] = useState([]);
 
   useEffect(() => {
     console.log(message);
@@ -122,13 +123,20 @@ export function TestAvatar(props) {
       setAnimation("Idle");
       return;
     }
+    /*
     setAnimation(message.animation);
     setFacialExpression(message.facialExpression);
+
+    setLipsyncData(MTIs);
+
+    console.log(lipsyncData)
+
     setLipsync(message.lipsync);
     const audio = new Audio("data:audio/mp3;base64," + message.audio);
     audio.play();
     setAudio(audio);
     audio.onended = onMessagePlayed;
+    */
   }, [message]);
 
 
@@ -199,6 +207,9 @@ export function TestAvatar(props) {
     lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
     lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
 
+
+
+    
     // LIPSYNC
     if (setupMode) {
       return;
@@ -227,6 +238,9 @@ export function TestAvatar(props) {
       lerpMorphTarget(value, 0, 0.1);
     });
   });
+
+
+
 
 
 // Leva Controls
