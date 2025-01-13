@@ -1,0 +1,14 @@
+Client meeting 5
+ Date and time : 9/01/2025
+ Location : online call
+ Participants : Jack, Jass, Joshua
+ What happened:
+Client was showed the current prototype
+Client pleased with progress
+Jack has been given advice on animations. Each model has to be animated separately as they have different face positions
+
+ Tasks to complete for the next sprint:
+Complete a polished prototype
+Record and rehearse presentation video
+ Next client meeting : 23/01/2025
+
