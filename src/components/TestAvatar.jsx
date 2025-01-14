@@ -129,7 +129,7 @@ export function TestAvatar(props) {
     { t: 0.3125, v: "l" },
   ];
 
-   // Function to smoothly lerp a morph target's influence
+  // Function to smoothly lerp a morph target's influence
   const lerpInfluence = (visemeName, targetValue, duration) => {
     const start = performance.now(); // Get the starting time
 
@@ -431,9 +431,6 @@ export function TestAvatar(props) {
           skeleton={nodes.Wolf3D_Outfit_Top.skeleton}
         />
       </group>
-      <Html position={[-1, 1.5, 0]}>
-        <button onClick={() => playVisemeAnimation()}>Test Visemes</button>
-      </Html>
     </>
   );
 }
