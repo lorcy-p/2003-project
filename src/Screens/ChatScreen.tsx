@@ -4,6 +4,7 @@ import { Loader } from "@react-three/drei";
 import { Leva } from "leva";
 import { Canvas } from "@react-three/fiber";
 import { Experience } from "../components/Experience";
+import visemesEmitter from "../components/visemeEvents";
 
 // Define the structure of a message
 interface Message {
@@ -13,9 +14,12 @@ interface Message {
   attachment?: string; // Optional attachment (e.g., image URL)
 }
 
-export interface MTIs {
-  mti: any;
-  viseme: any;
+// Variable to hold visemes outside the getter function
+let visemes: string | null = null;
+
+// getter function to access visemes
+export function getVisemes() {
+  return visemes;
 }
 
 const ChatScreen: React.FC = () => {
@@ -95,9 +99,6 @@ const ChatScreen: React.FC = () => {
   // State to store the list of messages
   const [messages, setMessages] = useState<Message[]>([]);
 
-  // State to store the MTIs
-  const [MTIs, setMTIs] = useState<MTIs[]>([]);
-
   // State to handle the user's input
   const [newMessage, setNewMessage] = useState("");
 
@@ -125,15 +126,12 @@ const ChatScreen: React.FC = () => {
         },
       ]);
 
-      setMTIs((MTIs) => [
-        ...MTIs,
-        {
-          mti: json.action?.anim?.mtis,
-          viseme: json.action?.visemes,
-        },
-      ]);
+      // Update visemes
+      visemes = JSON.stringify(json.action?.visemes);
 
-      console.log("Got WS msg: " + JSON.stringify(json.action?.visemes));
+      // Emit an event whenever visemes are updated
+      visemesEmitter.emit("visemesUpdated", visemes);
+
       console.log("Got WS msg: " + JSON.stringify(json.action?.mood));
 
       if (playingRef.current) tickScenario();

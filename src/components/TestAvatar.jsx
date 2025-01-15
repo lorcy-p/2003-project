@@ -3,7 +3,8 @@ import * as THREE from "three";
 import { useAnimations, useGLTF, Html} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { button, useControls } from "leva";
-import MTIs from "../Screens/ChatScreen";
+import { getVisemes } from "../Screens/ChatScreen";
+import visemesEmitter from "../components/visemeEvents";
 
 export function TestAvatar(props) {
 
@@ -121,13 +122,22 @@ export function TestAvatar(props) {
     "n": "viseme_nn",
   };
 
-  // Input viseme data (to be linked to messages)
-  const visemeData = [
-    { t: 0.05, v: "-" },
-    { t: 0.1, v: "u" },
-    { t: 0.2125, v: "e" },
-    { t: 0.3125, v: "l" },
-  ];
+  let visemeData = [];
+
+  visemesEmitter.on('visemesUpdated', (updatedVisemes) => {
+    console.log("Received updated visemes in another file:", updatedVisemes);
+
+    // Parse the string into a JavaScript array
+    const parsedData = JSON.parse(getVisemes());
+
+    // Map it into the desired format
+    visemeData = parsedData.map(({ t, v }) => ({ t, v }));
+
+    // Output the result
+    console.log(visemeData);
+    // Play lip animation with updated visemes
+    playVisemeAnimation()
+  });
 
   // Function to smoothly lerp a morph target's influence
   const lerpInfluence = (visemeName, targetValue, duration) => {
@@ -138,23 +148,28 @@ export function TestAvatar(props) {
       const elapsed = (now - start) / duration; // Calculate the elapsed fraction
       const t = Math.min(elapsed, 1); // Clamp `t` between 0 and 1 
 
-      group.current.traverse((child) => {
-        if (child.isSkinnedMesh && child.morphTargetDictionary) {
-          const index = child.morphTargetDictionary[visemeName];
-          if (index !== undefined) {
-             // Interpolate the morph target influence value aka animate it
-            child.morphTargetInfluences[index] = THREE.MathUtils.lerp(
-              child.morphTargetInfluences[index],
-              targetValue,
-              t
-            );
-            // Useful log to see which visemes are being animated
-            //console.log(`Animating ${visemeName} to ${targetValue}`);
-          } else {
-            console.warn(`Viseme "${visemeName}" not found in morph targets.`);
+      if (!group.current) {
+        console.error('Object is undefined');
+      } else {
+        group.current.traverse((child) => {
+          if (child.isSkinnedMesh && child.morphTargetDictionary) {
+            const index = child.morphTargetDictionary[visemeName];
+            if (index !== undefined) {
+               // Interpolate the morph target influence value aka animate it
+              child.morphTargetInfluences[index] = THREE.MathUtils.lerp(
+                child.morphTargetInfluences[index],
+                targetValue,
+                t
+              );
+              // Useful log to see which visemes are being animated
+              //console.log(`Animating ${visemeName} to ${targetValue}`);
+            } else {
+              console.warn(`Viseme "${visemeName}" not found in morph targets.`);
+            }
           }
-        }
-      });
+        });
+      }
+      
 
       // Continue the animation loop until `t` reaches 1
       if (t < 1) {
@@ -177,12 +192,12 @@ export function TestAvatar(props) {
       setTimeout(() => {
         // Gradually reset the previous viseme
         if (lastViseme && visemeMap[lastViseme]) {
-          lerpInfluence(visemeMap[lastViseme], 0, 300); // Reset over 300ms
+          lerpInfluence(visemeMap[lastViseme], 0, 400); // Reset over 300ms
         }
 
         // Gradually apply the current viseme
         if (!isSilent && visemeName) {
-          lerpInfluence(visemeName, 1, 300); // Apply over 300ms
+          lerpInfluence(visemeName, 1, 400); // Apply over 300ms
         }
 
         lastViseme = v; // Update the last viseme
@@ -193,11 +208,15 @@ export function TestAvatar(props) {
     if (!setupMode){
       const lastTime = visemeData[visemeData.length - 1].t; // Get the last viseme's timestamp
       setTimeout(() => {
-        group.current.traverse((child) => {
-          if (child.isSkinnedMesh && child.morphTargetInfluences) {
-            child.morphTargetInfluences.fill(0); // Reset all influences to 0
-          }
-        });
+        if (!group.current) {
+          console.error('Object is undefined');
+        } else {
+          group.current.traverse((child) => {
+            if (child.isSkinnedMesh && child.morphTargetInfluences) {
+              child.morphTargetInfluences.fill(0); // Reset all influences to 0
+            }
+          });
+        }
         console.log("Reset all morph target influences.");
       }, (lastTime + 0.5) * 1000); // Add 500ms delay to ensure smooth reset
     }
