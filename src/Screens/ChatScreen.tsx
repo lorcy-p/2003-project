@@ -54,6 +54,7 @@ const ChatScreen: React.FC = () => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [playing, setPlaying] = useState(false);
   const [humanCharacter, setHumanCharacter] = useState("");
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   const keepAliveInterval = 5000;
 
@@ -67,6 +68,13 @@ const ChatScreen: React.FC = () => {
   useEffect(() => {
     playingRef.current = playing;
   }, [playing]);
+
+  type SpeechQueueItem = {
+    characterName: string;
+    audio: string;  // Base64 of MP3
+  };
+
+  const speechQueue: SpeechQueueItem[] = [];
 
   // Websocket is connected
   function connected(ws: WebSocket, scenarioId: number) {
@@ -132,13 +140,45 @@ const ChatScreen: React.FC = () => {
   // Ref for scrolling to the bottom of the chat
   const messageScrollRef = useRef<HTMLDivElement>(null);
 
+  const playNextSpeech = () => {
+    if (!speechQueue.length) return;
+    const item = speechQueue[0];
+    console.log(`Starting speech for ${item.characterName}`);
+
+    const src = "data:audio/mp3;base64," + item.audio;
+    const audio = new Audio(src);
+    audio.onended = () => { speechQueue.shift(); playNextSpeech(); }
+    audio.play();
+    setAudio(audio);
+
+  }
+
   // Function to handle inbound messages from the websocket
   function handleMessage(msg: string) {
     try {
+      console.log("Handling message");
       const json = JSON.parse(msg);
       console.log("Got WS msg: " + JSON.stringify(json));
 
-      if (json.action.who === "Human"){
+      try {
+        if (json.action.who != "Human") {
+          if (json.action.audio)
+          {
+            const item = {
+              audio: json.action.audio,
+              visemes: json.action.visemes,
+              characterName: json.action.who,
+              timedMtis: json.action.anim
+            };
+            speechQueue.push(item);
+            if (speechQueue.length === 1) playNextSpeech();
+          }
+        }
+      }catch (e) {
+        console.error(`Error with speech queue: ${e}`);
+      }
+
+      if (json.action.who === "Human") {
         console.log("Ignore echo message");
         if (playingRef.current) tickScenario();
         return;
@@ -168,7 +208,7 @@ const ChatScreen: React.FC = () => {
 
       if (playingRef.current) tickScenario();
     } catch (e) {
-      console.log("Bad JSON");
+      console.log(`Bad JSON: ${e}`);
     }
   }
 
