@@ -27,7 +27,7 @@ const SelectAI: React.FC = () => {
             <h1 className="chatting_text">Start Chatting</h1>
             <div className="ai_selector_container">
 
-                <div className={`select_ai ${isClicked? "clicked" : "not_clicked"}`} onClick={() => setIsClicked(!isClicked)}>
+                <div className={`select_ai ${isClicked? "clicked" : "not_clicked"}`} onClick={() => setIsClicked(!isClicked)} onDoubleClick={() => {setIsClicked(!isClicked); beginChatting();}}>
 
                     <img src="images/AI image.png" alt="AI image" className="ai_image"/>
                     <p className="ai_text">Talk with John. If you ever need a great mind to talk to John is your guy, he can provide you with a range of insight into different topics</p>
