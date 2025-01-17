@@ -124,20 +124,34 @@ export function TestAvatar(props) {
 
   let visemeData = [];
 
-  visemesEmitter.on('visemesUpdated', (updatedVisemes) => {
-    console.log("Received updated visemes in another file:", updatedVisemes);
-
-    // Parse the string into a JavaScript array
-    const parsedData = JSON.parse(getVisemes());
-
-    // Map it into the desired format
-    visemeData = parsedData.map(({ t, v }) => ({ t, v }));
-
-    // Output the result
-    console.log(visemeData);
-    // Play lip animation with updated visemes
-    playVisemeAnimation()
-  });
+  if (group.current){
+    if (visemesEmitter.listeners('visemesUpdated').length === 0){
+      visemesEmitter.once('visemesUpdated', (updatedVisemes) => {
+        console.log("Received updated visemes in another file:", updatedVisemes);
+    
+         // Check if group.current is defined before proceeding
+        if (!group.current) {
+          console.error("group.current is undefined. Cannot process visemes.");
+          return; // Exit early to avoid errors
+        }
+    
+    
+        // Parse the string into a JavaScript array
+        const parsedData = JSON.parse(getVisemes());
+    
+        // Map it into the desired format
+        visemeData = parsedData.map(({ t, v }) => ({ t, v }));
+    
+        // Output the result
+        console.log(visemeData);
+    
+        // Play lip animation with updated visemes
+        playVisemeAnimation()
+      });
+    }
+  }
+  
+  
 
   // Function to smoothly lerp a morph target's influence
   const lerpInfluence = (visemeName, targetValue, duration) => {
@@ -149,6 +163,7 @@ export function TestAvatar(props) {
       const t = Math.min(elapsed, 1); // Clamp `t` between 0 and 1 
 
       if (!group.current) {
+        console.log(group.current)
         console.error('Object is undefined');
       } else {
         group.current.traverse((child) => {
@@ -192,12 +207,12 @@ export function TestAvatar(props) {
       setTimeout(() => {
         // Gradually reset the previous viseme
         if (lastViseme && visemeMap[lastViseme]) {
-          lerpInfluence(visemeMap[lastViseme], 0, 400); // Reset over 300ms
+          lerpInfluence(visemeMap[lastViseme], 0, 300); // Reset over 300ms
         }
 
         // Gradually apply the current viseme
         if (!isSilent && visemeName) {
-          lerpInfluence(visemeName, 1, 400); // Apply over 300ms
+          lerpInfluence(visemeName, 1, 300); // Apply over 300ms
         }
 
         lastViseme = v; // Update the last viseme
@@ -355,7 +370,7 @@ export function TestAvatar(props) {
               onChange: (val) => {
                 if (setupMode) {
                   //CURRENTLY DOESN'T WORK AS INTENDED AND WILL RESET VISEMES IMMEDIATELY
-                  lerpInfluence(key, val, 1);
+                  lerpMorphTarget(key, val, 0.1);
                 }
               },
             },

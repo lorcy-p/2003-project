@@ -14,11 +14,14 @@ interface Message {
   attachment?: string; // Optional attachment (e.g., image URL)
 }
 
+
+
 // Variable to hold visemes outside the getter function
 let visemes: string | null = null;
 
 // getter function to access visemes
 export function getVisemes() {
+  console.log("getting visemes")
   return visemes;
 }
 
@@ -73,7 +76,7 @@ const ChatScreen: React.FC = () => {
       connected(ws, scenarioId);
     };
     ws.onmessage = (e: MessageEvent) => {
-      console.log("hello");
+      console.log("hello")
       handleMessage(e.data);
     };
     ws.onerror = (event) => {
@@ -111,12 +114,12 @@ const ChatScreen: React.FC = () => {
       const json = JSON.parse(msg);
       console.log("Got WS msg: " + JSON.stringify(json));
 
-      if (json.action.who === "Human") {
+      if (json.action.who === "Human"){
         console.log("Ignore echo message");
         if (playingRef.current) tickScenario();
         return;
       }
-
+      
       setMessages((messages) => [
         ...messages,
         {
@@ -129,10 +132,15 @@ const ChatScreen: React.FC = () => {
       // Update visemes
       visemes = JSON.stringify(json.action?.visemes);
 
+      console.log("emitting")
       // Emit an event whenever visemes are updated
       visemesEmitter.emit("visemesUpdated", visemes);
+      
 
-      console.log("Got WS msg: " + JSON.stringify(json.action?.mood));
+
+      //console.log("Got WS msg: " + JSON.stringify(json.action?.anim));
+
+      console.log("Got WS mood: " + JSON.stringify(json.action?.mood));
 
       if (playingRef.current) tickScenario();
     } catch (e) {
@@ -184,6 +192,7 @@ const ChatScreen: React.FC = () => {
 
   // Functions to start and stop the scenarios
   function startScenario() {
+    
     start_ws(166);
 
     setHumanCharacter("Human");
