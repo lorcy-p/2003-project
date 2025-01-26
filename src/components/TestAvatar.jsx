@@ -17,13 +17,13 @@ export function TestAvatar(props) {
   const facialExpressions = {
     default: {},
     test: {
-    viseme_CH: 0.75,
-  viseme_SS: 0.79,
-  eyeSquintLeft: 1,
-  eyeSquintRight: 1,
-  eyeWideRight: 1
+      viseme_CH: 0.75,
+      viseme_SS: 0.79,
+      eyeSquintLeft: 1,
+      eyeSquintRight: 1,
+      eyeWideRight: 1
     },
-    smile: {
+    happy: {
       browInnerUp: 0.17,
       eyeSquintLeft: 0.4,
       eyeSquintRight: 0.44,
@@ -31,6 +31,13 @@ export function TestAvatar(props) {
       noseSneerRight: 0.14000002836874015,
       mouthPressLeft: 0.61,
       mouthPressRight: 0.41000000000000003,
+    },
+    surprised: {
+      eyeWideLeft: 0.5,
+      eyeWideRight: 0.5,
+      jawOpen: 0.351,
+      mouthFunnel: 1,
+      browInnerUp: 1,
     },
     funnyFace: {
       jawLeft: 0.63,
@@ -56,13 +63,6 @@ export function TestAvatar(props) {
       eyeLookDownLeft: 0.5,
       eyeLookDownRight: 0.5,
       jawForward: 1,
-    },
-    surprised: {
-      eyeWideLeft: 0.5,
-      eyeWideRight: 0.5,
-      jawOpen: 0.351,
-      mouthFunnel: 1,
-      browInnerUp: 1,
     },
     angry: {
       browDownLeft: 1,
@@ -126,7 +126,14 @@ export function TestAvatar(props) {
 
   if (group.current){
     if (visemesEmitter.listeners('visemesUpdated').length === 0){
-      visemesEmitter.once('visemesUpdated', (updatedVisemes) => {
+      visemesEmitter.once('visemesUpdated', ({ updatedVisemes, mood }) => {
+
+        // Mood Control
+        if (mood){
+          setFacialExpression(mood);
+        }
+        // Viseme Animation
+
         console.log("Received updated visemes in another file:", updatedVisemes);
     
          // Check if group.current is defined before proceeding
@@ -238,6 +245,7 @@ export function TestAvatar(props) {
     
   };
 
+
   // Full Body Animations
     const { animations } = useGLTF("/models/testanimations.glb");
   
@@ -286,6 +294,8 @@ export function TestAvatar(props) {
     const [winkRight, setWinkRight] = useState(false);
     const [facialExpression, setFacialExpression] = useState("");
     const [audio, setAudio] = useState();
+
+
   
     // Blinking
     useFrame(() => {
@@ -329,7 +339,8 @@ export function TestAvatar(props) {
       },
       facialExpression: {
         options: Object.keys(facialExpressions),
-        onChange: (value) => setFacialExpression(value),
+        onChange: (value) => {if (setupMode) 
+          {setFacialExpression(value)}},
       },
       enableSetupMode: button(() => {
         setupMode = true;

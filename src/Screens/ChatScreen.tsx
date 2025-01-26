@@ -14,39 +14,70 @@ interface Message {
   attachment?: string; // Optional attachment (e.g., image URL)
 }
 
-
 const startIcon = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5"
-         stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
-      <path
-          d='M7.5 11.5v3M6 13h3m3-4.653c2.005 0 3.7-1.888 5.786-1.212 2.264.733 3.82 3.413 3.708 9.492-.022 1.224-.336 2.578-1.546 3.106-2.797 1.221-4.397-2.328-7-2.328h-1.897c-2.605 0-4.213 3.545-6.998 2.328-1.21-.528-1.525-1.882-1.547-3.107-.113-6.078 1.444-8.758 3.708-9.491C8.299 6.459 9.994 8.347 12 8.347m0-4.565v4.342M14.874 13h3'/>
-    </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke="currentColor"
+  >
+    <path d="M7.5 11.5v3M6 13h3m3-4.653c2.005 0 3.7-1.888 5.786-1.212 2.264.733 3.82 3.413 3.708 9.492-.022 1.224-.336 2.578-1.546 3.106-2.797 1.221-4.397-2.328-7-2.328h-1.897c-2.605 0-4.213 3.545-6.998 2.328-1.21-.528-1.525-1.882-1.547-3.107-.113-6.078 1.444-8.758 3.708-9.491C8.299 6.459 9.994 8.347 12 8.347m0-4.565v4.342M14.874 13h3" />
+  </svg>
 );
 
 const playIcon = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5"
-         stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
-      <path
-          d='M14.581 9.402C16.194 10.718 17 11.375 17 12.5c0 1.125-.806 1.783-2.419 3.098a23.1 23.1 0 0 1-1.292.99c-.356.25-.759.508-1.176.762-1.609.978-2.413 1.467-3.134.926-.722-.542-.787-1.675-.918-3.943A32.48 32.48 0 0 1 8 12.5c0-.563.023-1.192.06-1.833.132-2.267.197-3.401.919-3.943.721-.541 1.525-.052 3.134.926.417.254.82.512 1.176.762a23.1 23.1 0 0 1 1.292.99'/>
-    </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke="currentColor"
+  >
+    <path d="M14.581 9.402C16.194 10.718 17 11.375 17 12.5c0 1.125-.806 1.783-2.419 3.098a23.1 23.1 0 0 1-1.292.99c-.356.25-.759.508-1.176.762-1.609.978-2.413 1.467-3.134.926-.722-.542-.787-1.675-.918-3.943A32.48 32.48 0 0 1 8 12.5c0-.563.023-1.192.06-1.833.132-2.267.197-3.401.919-3.943.721-.541 1.525-.052 3.134.926.417.254.82.512 1.176.762a23.1 23.1 0 0 1 1.292.99" />
+  </svg>
 );
 
 const pauseIcon = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5"
-         stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
-      <path
-          d='M9 6.5H8a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-10a1 1 0 0 0-1-1m6.5 0h-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-10a1 1 0 0 0-1-1'/>
-    </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke="currentColor"
+  >
+    <path d="M9 6.5H8a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-10a1 1 0 0 0-1-1m6.5 0h-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-10a1 1 0 0 0-1-1" />
+  </svg>
 );
-
 
 // Variable to hold visemes outside the getter function
 let visemes: string | null = null;
 
+// Variable to hold mood outside the getter function
+let mood: string | null = null;
+
 // getter function to access visemes
 export function getVisemes() {
-  console.log("getting visemes")
+  console.log("getting visemes");
   return visemes;
+}
+
+// getter function to access visemes
+export function getMood() {
+  console.log("getting mood");
+  return mood;
 }
 
 const ChatScreen: React.FC = () => {
@@ -71,7 +102,7 @@ const ChatScreen: React.FC = () => {
 
   type SpeechQueueItem = {
     characterName: string;
-    audio: string;  // Base64 of MP3
+    audio: string; // Base64 of MP3
   };
 
   const speechQueue: SpeechQueueItem[] = [];
@@ -108,7 +139,7 @@ const ChatScreen: React.FC = () => {
       connected(ws, scenarioId);
     };
     ws.onmessage = (e: MessageEvent) => {
-      console.log("hello")
+      console.log("hello");
       handleMessage(e.data);
     };
     ws.onerror = (event) => {
@@ -147,11 +178,13 @@ const ChatScreen: React.FC = () => {
 
     const src = "data:audio/mp3;base64," + item.audio;
     const audio = new Audio(src);
-    audio.onended = () => { speechQueue.shift(); playNextSpeech(); }
+    audio.onended = () => {
+      speechQueue.shift();
+      playNextSpeech();
+    };
     audio.play();
     setAudio(audio);
-
-  }
+  };
 
   // Function to handle inbound messages from the websocket
   function handleMessage(msg: string) {
@@ -162,19 +195,18 @@ const ChatScreen: React.FC = () => {
 
       try {
         if (json.action.who != "Human") {
-          if (json.action.audio)
-          {
+          if (json.action.audio) {
             const item = {
               audio: json.action.audio,
               visemes: json.action.visemes,
               characterName: json.action.who,
-              timedMtis: json.action.anim
+              timedMtis: json.action.anim,
             };
             speechQueue.push(item);
             if (speechQueue.length === 1) playNextSpeech();
           }
         }
-      }catch (e) {
+      } catch (e) {
         console.error(`Error with speech queue: ${e}`);
       }
 
@@ -183,7 +215,7 @@ const ChatScreen: React.FC = () => {
         if (playingRef.current) tickScenario();
         return;
       }
-      
+
       setMessages((messages) => [
         ...messages,
         {
@@ -196,15 +228,12 @@ const ChatScreen: React.FC = () => {
       // Update visemes
       visemes = JSON.stringify(json.action?.visemes);
 
-      console.log("emitting")
+      mood = JSON.stringify(json.action?.mood);
+      mood = mood.replace(/^"(.*)"$/, "$1");
+      console.log("Got WS mood: " + mood);
+
       // Emit an event whenever visemes are updated
-      visemesEmitter.emit("visemesUpdated", visemes);
-      
-
-
-      //console.log("Got WS msg: " + JSON.stringify(json.action?.anim));
-
-      console.log("Got WS mood: " + JSON.stringify(json.action?.mood));
+      visemesEmitter.emit("visemesUpdated", { visemes, mood });
 
       if (playingRef.current) tickScenario();
     } catch (e) {
@@ -256,7 +285,6 @@ const ChatScreen: React.FC = () => {
 
   // Functions to start and stop the scenarios
   function startScenario() {
-    
     start_ws(166);
 
     setHumanCharacter("Human");
@@ -362,14 +390,13 @@ const ChatScreen: React.FC = () => {
             </Canvas>
 
             <div className="buttonContainer">
-              <button
-                className="startScenario"
-                onClick={() => startScenario()}
-              >{startIcon}</button>
+              <button className="startScenario" onClick={() => startScenario()}>
+                {startIcon}
+              </button>
               <button className="playChat" onClick={() => playScenario()}>
                 {playIcon}
               </button>
-              <button className="pauseChat" onClick={() => stopScenario()} >
+              <button className="pauseChat" onClick={() => stopScenario()}>
                 {pauseIcon}
               </button>
             </div>
