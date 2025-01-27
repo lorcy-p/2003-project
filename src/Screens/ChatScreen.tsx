@@ -5,7 +5,8 @@ import { Leva } from "leva";
 import { Canvas } from "@react-three/fiber";
 import { Experience } from "../components/Experience";
 import visemesEmitter from "../components/visemeEvents";
-
+import AudioRecorder
+ from "../components/AudioRecorder";
 // Define the structure of a message
 interface Message {
   sender: string; // Who sent the message: "user" or "recipient"
@@ -13,6 +14,8 @@ interface Message {
   timestamp: string; // Time the message was sent
   attachment?: string; // Optional attachment (e.g., image URL)
 }
+
+
 
 const startIcon = (
   <svg
@@ -267,6 +270,18 @@ const ChatScreen: React.FC = () => {
     }
   };
 
+  // Take audio input
+  async function take_audio(base64: string)
+  {
+    console.log(`Got audio for ${humanCharacter} ${base64}`);
+    const json = {
+      type: "input",
+      name: humanCharacter,
+      audio: base64
+    };
+    webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
+  }
+
   // Function to get the current time in "HH:MM AM/PM" format
   const getCurrentTime = () => {
     const now = new Date();
@@ -380,6 +395,9 @@ const ChatScreen: React.FC = () => {
               onChange={(e) => setNewMessage(e.target.value)} // Update state on input change
               onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Send message on Enter key press
             />
+            
+
+            <AudioRecorder onAudioRecorded={take_audio}/>
           </div>
 
           {/* Canvas for 3D experience */}

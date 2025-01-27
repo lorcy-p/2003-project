@@ -3,39 +3,66 @@
 
 /* Input Container at the Bottom Center */
 .inputContainer {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 600px; 
-    background-color: #f9f9f9; 
-    padding: 10px; 
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
-    z-index: 1000; 
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px; 
+  background-color: #f9f9f9; 
+  padding: 10px; 
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
+  z-index: 1000; 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Input Field Styling */
+.inputField {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box; 
+}
+  
+  
+  .recordAudio{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 30px; 
+    height: 30px; 
+    cursor: pointer;
+    overflow: hidden; 
   }
   
-  /* Input Field Styling */
-  .inputField {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    outline: none;
-    box-sizing: border-box; 
+  .recordAudio svg {
+    width: 70%; 
+    height: 70%; 
+    padding: 0;
+    margin: 0;
+    display: block;
+    object-fit: contain; 
   }
-  
-  
-  .inputField:hover {
-    border-color: #888; 
-  }
-  
-  .inputField:focus {
-    border-color: #007bff; 
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
-  }
-  
+    
+    
+    .inputField:hover {
+      border-color: #888; 
+    }
+    
+    .inputField:focus {
+      border-color: #007bff; 
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+    }
+    
 
   /* Styles for Scrollable Messages Container */
 .messageScrollContainer {
