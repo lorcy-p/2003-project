@@ -52,8 +52,12 @@
     display: block;
     object-fit: contain; 
   }
+ 
     
-    
+  .recordAudio:active{
+    border-style: solid;
+    border-width: 2px;
+  }
     .inputField:hover {
       border-color: #888; 
     }
