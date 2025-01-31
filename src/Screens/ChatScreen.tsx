@@ -271,16 +271,33 @@ const ChatScreen: React.FC = () => {
   };
 
   // Take audio input
-  async function take_audio(base64: string)
-  {
+  async function take_audio(base64: string) {
     console.log(`Got audio for ${humanCharacter} ${base64}`);
+  
+    // Create a temporary message while awaiting the response
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: "user", text: "Processing...", timestamp: getCurrentTime() },
+    ]);
+  
     const json = {
       type: "input",
       name: humanCharacter,
-      audio: base64
+      audio: base64,
     };
+  
     webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
+  
+    
+    setTimeout(() => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "user", text: newMessage, timestamp: getCurrentTime() },
+      ]);
+    }, 2000); 
   }
+  
+  
 
   // Function to get the current time in "HH:MM AM/PM" format
   const getCurrentTime = () => {
