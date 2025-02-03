@@ -1,12 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import "./ChatScreen.css";
-import { Loader } from "@react-three/drei";
+import { Loader, useTexture } from "@react-three/drei";
 import { Leva } from "leva";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Experience } from "../components/Experience";
 import visemesEmitter from "../components/visemeEvents";
-import AudioRecorder
- from "../components/AudioRecorder";
+import AudioRecorder from "../components/AudioRecorder";
 // Define the structure of a message
 interface Message {
   sender: string; // Who sent the message: "user" or "recipient"
@@ -14,8 +13,6 @@ interface Message {
   timestamp: string; // Time the message was sent
   attachment?: string; // Optional attachment (e.g., image URL)
 }
-
-
 
 const startIcon = (
   <svg
@@ -94,6 +91,8 @@ const ChatScreen: React.FC = () => {
 
   const webSocketRef = useRef(socket);
   const playingRef = useRef(playing);
+
+  const [isOpen, setIsOpen] = useState(true); // Track collapse state
 
   useEffect(() => {
     webSocketRef.current = socket;
@@ -273,31 +272,28 @@ const ChatScreen: React.FC = () => {
   // Take audio input
   async function take_audio(base64: string) {
     console.log(`Got audio for ${humanCharacter} ${base64}`);
-  
+
     // Create a temporary message while awaiting the response
     setMessages((prevMessages) => [
       ...prevMessages,
       { sender: "user", text: "Processing...", timestamp: getCurrentTime() },
     ]);
-  
+
     const json = {
       type: "input",
       name: humanCharacter,
       audio: base64,
     };
-  
+
     webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
-  
-    
+
     setTimeout(() => {
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: "user", text: newMessage, timestamp: getCurrentTime() },
       ]);
-    }, 2000); 
+    }, 2000);
   }
-  
-  
 
   // Function to get the current time in "HH:MM AM/PM" format
   const getCurrentTime = () => {
@@ -351,94 +347,98 @@ const ChatScreen: React.FC = () => {
   return (
     <div className="conversation">
       <div className="container-fluid">
-        <div className="card">
-          {/* Scrollable container for messages */}
-          <div
-            className="messageScrollContainer"
-            ref={messageScrollRef} // Attach ref for scrolling
-          >
-            <div className="messageContainer">
-              {/* Loop through messages and display them */}
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`message ${
-                    message.sender === "recipient"
-                      ? "messageReceiver" // Styles for recipient's messages
-                      : "messageSender" // Styles for user's messages
-                  }`}
-                >
-                  {message.sender === "recipient" && (
-                    <>
-                      <div className="receiverName font-corpos">AI Model</div>
-                      <div className="receiverMessage font-corpos">
-                        {message.text}
-                      </div>
-                      {/* Display an attachment if available */}
-                      {message.attachment && (
-                        <div className="attachment">
-                          <img src={message.attachment} alt="attachment" />
-                        </div>
-                      )}
-                      <hr className="receiverHorizontalLine" />
-                    </>
-                  )}
-                  {/* Display the message timestamp */}
-                  <div
-                    className={
-                      message.sender === "recipient"
-                        ? "timeReceiver" // Styles for recipient's timestamp
-                        : "timeSender" // Styles for user's timestamp
-                    }
-                  >
-                    {message.timestamp}
-                  </div>
-                  {message.sender === "user" && (
-                    <div className="senderMessage">{message.text}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Input field for typing new messages */}
-          <div className="inputContainer">
-            <input
-              id="icon"
-              type="text"
-              className="inputField"
-              placeholder="Type message here..."
-              value={newMessage} // Bind input value to state
-              onChange={(e) => setNewMessage(e.target.value)} // Update state on input change
-              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Send message on Enter key press
-            />
-            
-
-            <AudioRecorder onAudioRecorded={take_audio}/>
-          </div>
-
-          {/* Canvas for 3D experience */}
-          <div className="canvasContainer">
-            <Loader />
-            <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }}>
-              <Experience />
-            </Canvas>
-
-            <div className="buttonContainer">
-              <button className="startScenario" onClick={() => startScenario()}>
-                {startIcon}
-              </button>
-              <button className="playChat" onClick={() => playScenario()}>
-                {playIcon}
-              </button>
-              <button className="pauseChat" onClick={() => stopScenario()}>
-                {pauseIcon}
-              </button>
-            </div>
-          </div>
+        {/* Canvas for 3D experience */}
+        <div className="canvasContainer">
+          <Loader />
+          <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }}>
+            <Experience />
+          </Canvas>
 
           {/* Leva UI controls */}
           <Leva hidden={false} />
+        </div>
+
+        <div className="chatWrapper">
+          {/* Toggle Button */}
+          <button className="toggleButton" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? "Hide Chat" : "Show Chat"}
+          </button>
+
+          {/* Collapsible Chat Card */}
+          <div className={`card ${isOpen ? "open" : "collapsed"}`}>
+            {isOpen && (
+              <div className="messageScrollContainer">
+                <div className="messageContainer">
+                  {messages.map((message, index) => (
+                    <div
+                      key={index}
+                      className={`message ${
+                        message.sender === "recipient"
+                          ? "messageReceiver"
+                          : "messageSender"
+                      }`}
+                    >
+                      {message.sender === "recipient" && (
+                        <>
+                          <div className="receiverName font-corpos">
+                            AI Model
+                          </div>
+                          <div className="receiverMessage font-corpos">
+                            {message.text}
+                          </div>
+                          {message.attachment && (
+                            <div className="attachment">
+                              <img src={message.attachment} alt="attachment" />
+                            </div>
+                          )}
+                          <hr className="receiverHorizontalLine" />
+                        </>
+                      )}
+                      <div
+                        className={
+                          message.sender === "recipient"
+                            ? "timeReceiver"
+                            : "timeSender"
+                        }
+                      >
+                        {message.timestamp}
+                      </div>
+                      {message.sender === "user" && (
+                        <div className="senderMessage">{message.text}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Input field for typing new messages */}
+        <div className="inputContainer">
+          <input
+            id="icon"
+            type="text"
+            className="inputField"
+            placeholder="Type message here..."
+            value={newMessage} // Bind input value to state
+            onChange={(e) => setNewMessage(e.target.value)} // Update state on input change
+            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Send message on Enter key press
+          />
+
+          <AudioRecorder onAudioRecorded={take_audio} />
+        </div>
+
+        <div className="buttonContainer">
+          <button className="startScenario" onClick={() => startScenario()}>
+            {startIcon}
+          </button>
+          <button className="playChat" onClick={() => playScenario()}>
+            {playIcon}
+          </button>
+          <button className="pauseChat" onClick={() => stopScenario()}>
+            {pauseIcon}
+          </button>
         </div>
       </div>
     </div>

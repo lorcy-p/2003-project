@@ -150,15 +150,12 @@
 
    /* Canvas Container for the 3D model*/
   .canvasContainer {
-    position: fixed;
-    padding: 10px;
-    margin: 15px auto;
-    width: 100%;
-    max-width: 600px;
-    height: 350px; /* Adjust the height */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    
 
     background-color: #f0f0f0;
     border: 1px solid #ddd;
@@ -173,10 +170,37 @@
 .buttonContainer{
   position: absolute;
   bottom: 10px;  
-  left: 50%; 
+  left: 10%; 
   transform: translateX(-50%); 
   display: flex; 
   gap: 10px; 
+}
+
+.chatWrapper {
+  position: relative;
+}
+
+.toggleButton {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.card {
+  transition: max-height 0.3s ease-in-out, opacity 0.3s;
+  overflow: hidden;
+  max-height: 500px; /* Adjust based on content */
+  opacity: 1;
+}
+
+.card.collapsed {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .playChat,
