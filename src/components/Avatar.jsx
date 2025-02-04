@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { useAnimations, useGLTF, Html} from "@react-three/drei";
+import { useGLTF, Html} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { button, useControls } from "leva";
 import useVisemeAnimation from "../hooks/useVisemeAnimation";
-import visemesEmitter from "../components/visemeEvents";
+import useCharacterAnimation from "../hooks/useCharacterAnimation";
 
 export function Avatar(props) {
 
@@ -127,55 +127,20 @@ export function Avatar(props) {
 
   // Get useVisemeAnimation from the hook
   useVisemeAnimation(group, setFacialExpression, visemeMap, setupMode);
-  
 
-  // Full Body Animations
-    const { animations } = useGLTF("/models/testanimations.glb");
-  
-    const { actions, mixer } = useAnimations(animations, group);
-    const [animation, setAnimation] = useState(
-      animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name // Check if Idle animation exists otherwise use first animation
-    );
-    useEffect(() => {
-      actions[animation]
-        .reset()
-        .fadeIn(mixer.stats.actions.inUse === 0 ? 0 : 0.5)
-        .play();
-      return () => actions[animation].fadeOut(0.5);
-    }, [animation]);
-  
-  
-    const lerpMorphTarget = (target, value, speed = 0.1) => {
-      scene.traverse((child) => {
-        if (child.isSkinnedMesh && child.morphTargetDictionary) {
-          const index = child.morphTargetDictionary[target];
-          if (
-            index === undefined ||
-            child.morphTargetInfluences[index] === undefined
-          ) {
-            return;
-          }
-          child.morphTargetInfluences[index] = THREE.MathUtils.lerp(
-            child.morphTargetInfluences[index],
-            value,
-            speed
-          );
-  
-          if (!setupMode) {
-            try {
-              set({
-                [target]: value,
-              });
-            } catch (e) {}
-          }
-        }
-      });
-    };
-  
+  const { animation, animations, setAnimation, lerpMorphTarget } = useCharacterAnimation(
+    "/models/testanimations.glb",
+    group,
+    scene,
+    setupMode
+  );
+
+
+    /* Blinking
+
     const [blink, setBlink] = useState(false);
     const [winkLeft, setWinkLeft] = useState(false);
     const [winkRight, setWinkRight] = useState(false);
-    const [audio, setAudio] = useState();
 
 
   
@@ -198,9 +163,28 @@ export function Avatar(props) {
       lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
     });
 
+    // Auto blinking
+      useEffect(() => {
+        let blinkTimeout;
+        const nextBlink = () => {
+          blinkTimeout = setTimeout(() => {
+            setBlink(true);
+            setTimeout(() => {
+              setBlink(false);
+              nextBlink();
+            }, 200);
+          }, THREE.MathUtils.randInt(1000, 5000));
+        };
+        nextBlink();
+        return () => clearTimeout(blinkTimeout);
+      }, []);
+
+    */
+
+      
 
 
-  // Leva Controls
+  //Leva Controls
     useControls("FacialExpressions", {
       winkLeft: button(() => {
         setWinkLeft(true);
@@ -269,21 +253,6 @@ export function Avatar(props) {
     );
   
   
-  // Auto blinking
-    useEffect(() => {
-      let blinkTimeout;
-      const nextBlink = () => {
-        blinkTimeout = setTimeout(() => {
-          setBlink(true);
-          setTimeout(() => {
-            setBlink(false);
-            nextBlink();
-          }, 200);
-        }, THREE.MathUtils.randInt(1000, 5000));
-      };
-      nextBlink();
-      return () => clearTimeout(blinkTimeout);
-    }, []);
   
 
     
