@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
 import * as THREE from "three";
-import { useAnimations, useGLTF, Html} from "@react-three/drei";
+import { useAnimations, useGLTF} from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 
-const useCharacterAnimation = (modelPath, group, scene, setupMode) => {
+const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions, facialExpression, setupMode) => {
   const { animations } = useGLTF(modelPath);
   const { actions, mixer } = useAnimations(animations, group);
-  
+
   const [animation, setAnimation] = useState(
     animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name
   );
+
+  const [blink, setBlink] = useState(false);
+  const [winkLeft, setWinkLeft] = useState(false);
+  const [winkRight, setWinkRight] = useState(false);
 
   useEffect(() => {
     if (actions[animation]) {
@@ -35,18 +40,40 @@ const useCharacterAnimation = (modelPath, group, scene, setupMode) => {
             value,
             speed
           );
-          
-          if (!setupMode) {
-            try {
-              set({ [target]: value });
-            } catch (e) {}
-          }
         }
       }
     });
   };
 
-  return { animation, animations, setAnimation, lerpMorphTarget };
+  useFrame(() => {
+    if (!setupMode && nodes.EyeLeft) {
+      Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
+        const mapping = facialExpressions[facialExpression];
+        if (key === "eyeBlinkLeft" || key === "eyeBlinkRight") return;
+        lerpMorphTarget(key, mapping && mapping[key] ? mapping[key] : 0, 0.1);
+      });
+    }
+    
+    lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
+    lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
+  });
+
+  useEffect(() => {
+    let blinkTimeout;
+    const nextBlink = () => {
+      blinkTimeout = setTimeout(() => {
+        setBlink(true);
+        setTimeout(() => {
+          setBlink(false);
+          nextBlink();
+        }, 200);
+      }, THREE.MathUtils.randInt(1000, 5000));
+    };
+    nextBlink();
+    return () => clearTimeout(blinkTimeout);
+  }, []);
+
+  return { animation, animations, setAnimation, lerpMorphTarget, setWinkLeft, setWinkRight };
 };
 
 export default useCharacterAnimation;

@@ -34,12 +34,10 @@ const useVisemeAnimation = (
     };
 
     if (visemesEmitter.listeners("visemesUpdated").length === 0) {
-      visemesEmitter.once("visemesUpdated", handleVisemesUpdated);
+      visemesEmitter.on("visemesUpdated", handleVisemesUpdated);
     }
 
-    return () => {
-      visemesEmitter.off("visemesUpdated", handleVisemesUpdated);
-    };
+    
   }, [group, visemesEmitter, getVisemes, setFacialExpression]);
 
   const lerpInfluence = (visemeName, targetValue, duration) => {
@@ -112,6 +110,8 @@ const useVisemeAnimation = (
       }, (lastTime + 0.5) * 1000);
     }
   };
+
+  return {lerpInfluence };
 };
 
 

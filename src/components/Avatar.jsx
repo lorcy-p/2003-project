@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
+import React, { useRef, useState } from "react";
 import { useGLTF, Html} from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
 import { button, useControls } from "leva";
 import useVisemeAnimation from "../hooks/useVisemeAnimation";
 import useCharacterAnimation from "../hooks/useCharacterAnimation";
@@ -125,63 +123,19 @@ export function Avatar(props) {
   
   const [facialExpression, setFacialExpression] = useState("");
 
-  // Get useVisemeAnimation from the hook
-  useVisemeAnimation(group, setFacialExpression, visemeMap, setupMode);
 
-  const { animation, animations, setAnimation, lerpMorphTarget } = useCharacterAnimation(
+  // Get useVisemeAnimation from the hook
+  const { lerpInfluence } = useVisemeAnimation(group, setFacialExpression, visemeMap, setupMode);
+
+  const { animation, animations, setAnimation, lerpMorphTarget, setWinkLeft, setWinkRight } = useCharacterAnimation(
     "/models/testanimations.glb",
     group,
     scene,
+    nodes, 
+    facialExpressions, 
+    facialExpression,
     setupMode
   );
-
-
-    /* Blinking
-
-    const [blink, setBlink] = useState(false);
-    const [winkLeft, setWinkLeft] = useState(false);
-    const [winkRight, setWinkRight] = useState(false);
-
-
-  
-    // Blinking
-    useFrame(() => {
-      !setupMode &&
-        Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
-          const mapping = facialExpressions[facialExpression];
-          if (key === "eyeBlinkLeft" || key === "eyeBlinkRight") {
-            return; // eyes wink/blink are handled separately
-          }
-          if (mapping && mapping[key]) {
-            lerpMorphTarget(key, mapping[key], 0.1);
-          } else {
-            lerpMorphTarget(key, 0, 0.1);
-          }
-        });
-  
-      lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
-      lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
-    });
-
-    // Auto blinking
-      useEffect(() => {
-        let blinkTimeout;
-        const nextBlink = () => {
-          blinkTimeout = setTimeout(() => {
-            setBlink(true);
-            setTimeout(() => {
-              setBlink(false);
-              nextBlink();
-            }, 200);
-          }, THREE.MathUtils.randInt(1000, 5000));
-        };
-        nextBlink();
-        return () => clearTimeout(blinkTimeout);
-      }, []);
-
-    */
-
-      
 
 
   //Leva Controls
@@ -242,8 +196,7 @@ export function Avatar(props) {
               max: 1,
               onChange: (val) => {
                 if (setupMode) {
-                  //CURRENTLY DOESN'T WORK AS INTENDED AND WILL RESET VISEMES IMMEDIATELY
-                  lerpMorphTarget(key, val, 0.1);
+                  lerpInfluence(key, val, 0.1);
                 }
               },
             },
