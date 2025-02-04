@@ -3,10 +3,10 @@ import * as THREE from "three";
 import { useAnimations, useGLTF, Html} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { button, useControls } from "leva";
-import { getVisemes } from "../Screens/ChatScreen";
+import useVisemeAnimation from "../hooks/useVisemeAnimation";
 import visemesEmitter from "../components/visemeEvents";
 
-export function TestAvatar(props) {
+export function Avatar(props) {
 
   //Load the GLTF model
   const { nodes, materials, scene } = useGLTF('models/testmodel.glb')
@@ -122,129 +122,12 @@ export function TestAvatar(props) {
     "n": "viseme_nn",
   };
 
-  let visemeData = [];
-
-  if (group.current){
-    if (visemesEmitter.listeners('visemesUpdated').length === 0){
-      visemesEmitter.once('visemesUpdated', ({ updatedVisemes, mood }) => {
-
-        // Mood Control
-        if (mood){
-          setFacialExpression(mood);
-        }
-        // Viseme Animation
-
-        console.log("Received updated visemes in another file:", updatedVisemes);
-    
-         // Check if group.current is defined before proceeding
-        if (!group.current) {
-          console.error("group.current is undefined. Cannot process visemes.");
-          return; // Exit early to avoid errors
-        }
-    
-    
-        // Parse the string into a JavaScript array
-        const parsedData = JSON.parse(getVisemes());
-    
-        // Map it into the desired format
-        visemeData = parsedData.map(({ t, v }) => ({ t, v }));
-    
-        // Output the result
-        console.log(visemeData);
-    
-        // Play lip animation with updated visemes
-        playVisemeAnimation()
-      });
-    }
-  }
   
+  const [facialExpression, setFacialExpression] = useState("");
+
+  // Get useVisemeAnimation from the hook
+  useVisemeAnimation(group, setFacialExpression, visemeMap, setupMode);
   
-
-  // Function to smoothly lerp a morph target's influence
-  const lerpInfluence = (visemeName, targetValue, duration) => {
-    const start = performance.now(); // Get the starting time
-
-    const update = () => { 
-      const now = performance.now(); // Get the current time
-      const elapsed = (now - start) / duration; // Calculate the elapsed fraction
-      const t = Math.min(elapsed, 1); // Clamp `t` between 0 and 1 
-
-      if (!group.current) {
-        console.log(group.current)
-        console.error('Object is undefined');
-      } else {
-        group.current.traverse((child) => {
-          if (child.isSkinnedMesh && child.morphTargetDictionary) {
-            const index = child.morphTargetDictionary[visemeName];
-            if (index !== undefined) {
-               // Interpolate the morph target influence value aka animate it
-              child.morphTargetInfluences[index] = THREE.MathUtils.lerp(
-                child.morphTargetInfluences[index],
-                targetValue,
-                t
-              );
-              // Useful log to see which visemes are being animated
-              //console.log(`Animating ${visemeName} to ${targetValue}`);
-            } else {
-              console.warn(`Viseme "${visemeName}" not found in morph targets.`);
-            }
-          }
-        });
-      }
-      
-
-      // Continue the animation loop until `t` reaches 1
-      if (t < 1) {
-        requestAnimationFrame(update);
-      }
-    };
-    // Start the animation loop
-    update();
-  };
-
-
-  // Function to play the viseme animation based on the input data
-  const playVisemeAnimation = () => {
-    let lastViseme = null; // Track the previous viseme
-
-    visemeData.forEach(({ t, v }, index) => {
-      const visemeName = visemeMap[v]; // Map the viseme symbol to the morph target name
-      const isSilent = v === "-"; // Check if the viseme represents silence
-      
-      setTimeout(() => {
-        // Gradually reset the previous viseme
-        if (lastViseme && visemeMap[lastViseme]) {
-          lerpInfluence(visemeMap[lastViseme], 0, 300); // Reset over 300ms
-        }
-
-        // Gradually apply the current viseme
-        if (!isSilent && visemeName) {
-          lerpInfluence(visemeName, 1, 300); // Apply over 300ms
-        }
-
-        lastViseme = v; // Update the last viseme
-      }, t * 1000); // Convert time to milliseconds
-    });
-
-    // Reset all morph target influences at the end of the animation
-    if (!setupMode){
-      const lastTime = visemeData[visemeData.length - 1].t; // Get the last viseme's timestamp
-      setTimeout(() => {
-        if (!group.current) {
-          console.error('Object is undefined');
-        } else {
-          group.current.traverse((child) => {
-            if (child.isSkinnedMesh && child.morphTargetInfluences) {
-              child.morphTargetInfluences.fill(0); // Reset all influences to 0
-            }
-          });
-        }
-        console.log("Reset all morph target influences.");
-      }, (lastTime + 0.5) * 1000); // Add 500ms delay to ensure smooth reset
-    }
-    
-  };
-
 
   // Full Body Animations
     const { animations } = useGLTF("/models/testanimations.glb");
@@ -292,7 +175,6 @@ export function TestAvatar(props) {
     const [blink, setBlink] = useState(false);
     const [winkLeft, setWinkLeft] = useState(false);
     const [winkRight, setWinkRight] = useState(false);
-    const [facialExpression, setFacialExpression] = useState("");
     const [audio, setAudio] = useState();
 
 
@@ -327,22 +209,6 @@ export function TestAvatar(props) {
       winkRight: button(() => {
         setWinkRight(true);
         setTimeout(() => setWinkRight(false), 300);
-      }),
-      testVisemes: button(() => {
-        visemeData = [
-          {t: 0.05, v: '-'},
-          {t: 0.1, v: 'h'},
-          {t: 0.2125, v: 'e'},
-          {t: 0.275, v: 'l'},
-          {t: 0.35, v: 'a'},
-          {t: 0.39375, v: 'e'},
-          {t: 0.45, v: 'u'},
-          {t: 0.575, v: 'er'},
-          {t: 0.725, v: 'l'},
-          {t: 0.8375, v: 'd'},
-          {t: 0.962, v: '-'}
-          ]
-        playVisemeAnimation()
       }),
       animation: {
         value: animation,
@@ -492,4 +358,4 @@ export function TestAvatar(props) {
   );
 }
 
-export default TestAvatar;
+export default Avatar;
