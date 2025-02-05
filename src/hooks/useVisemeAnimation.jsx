@@ -86,13 +86,13 @@ const useVisemeAnimation = (
 
 
   // Lerp function to alter viseme values
-  const lerpInfluence = (visemeName, targetValue, duration) => {
-    const start = performance.now();
+  const lerpInfluence = (visemeName, targetValue, duration, weight = 0.7) => {
+    const start = performance.now(); // Get the starting time
 
     const update = () => {
-      const now = performance.now();
-      const elapsed = (now - start) / duration;
-      const t = Math.min(elapsed, 1);
+      const now = performance.now(); // Get the current time
+      const elapsed = (now - start) / duration; // Calculate the elapsed fraction
+      const t = Math.min(elapsed, 1); // Clamp 't' between 0 and 1
 
       if (!group.current) {
         console.error("group.current is undefined");
@@ -106,7 +106,7 @@ const useVisemeAnimation = (
             child.morphTargetInfluences[index] = THREE.MathUtils.lerp(
               child.morphTargetInfluences[index],
               targetValue,
-              t
+              t * weight //apply weighted average here
             );
           } else {
             console.warn(`Viseme "${visemeName}" not found in morph targets.`);
@@ -124,37 +124,43 @@ const useVisemeAnimation = (
 
   // Use lerpInfluence to slowly change between each viseme in the given visemeData array
   const playVisemeAnimation = () => {
-    let lastViseme = null;
+    let lastViseme = null; // Track the previous viseme
+
     visemeDataRef.current.forEach(({ t, v }) => {
-      const visemeName = visemeMap[v];
-      const isSilent = v === "-";
+      const visemeName = visemeMap[v]; // Map the viseme symbol to the morph target name
+      const isSilent = v === "-"; // Check if the viseme represents silence
 
       setTimeout(() => {
+         // Gradually reset the previous viseme
         if (lastViseme && visemeMap[lastViseme]) {
-          lerpInfluence(visemeMap[lastViseme], 0, 300);
+          lerpInfluence(visemeMap[lastViseme], 0, 300, 0.7); // Reset over 300ms
         }
+
+        // Gradually apply the current viseme
         if (!isSilent && visemeName) {
-          lerpInfluence(visemeName, 1, 300);
+          lerpInfluence(visemeName, 1, 300, 0.7); // Apply over 300ms
         }
-        lastViseme = v;
-      }, t * 1000);
+
+        lastViseme = v; // Update the last viseme
+      }, t * 1000); // Convert time to milliseconds
     });
 
+    // Reset all morph target influences at the end of the animation
     if (!setupMode) {
       const lastTime =
-        visemeDataRef.current[visemeDataRef.current.length - 1]?.t || 0;
+        visemeDataRef.current[visemeDataRef.current.length - 1]?.t || 0; // Get the last viseme's timestamp
       setTimeout(() => {
         if (!group.current) {
-          console.error("group.current is undefined");
+          console.error("group.current is undefined"); 
           return;
         }
         group.current.traverse((child) => {
           if (child.isSkinnedMesh && child.morphTargetInfluences) {
-            child.morphTargetInfluences.fill(0);
+            child.morphTargetInfluences.fill(0); // Reset all influences to 0
           }
         });
         console.log("Reset all morph target influences.");
-      }, (lastTime + 0.5) * 1000);
+      }, (lastTime + 0.5) * 1000); // Add 500ms delay to ensure smooth reset
     }
   };
 

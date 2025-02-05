@@ -136,6 +136,17 @@ export function Avatar(props) {
     "ch": "viseme_CH",
     "n": "viseme_nn",
   };
+/* 
+This model is missing some key visemes
+Mainly:
+ - G
+ - L
+ - H
+ - B
+ - M
+
+
+*/
 
 /* Both of the following can be used with just the base 'use' form when not using leva controls 
   i.e:

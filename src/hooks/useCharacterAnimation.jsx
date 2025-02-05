@@ -50,7 +50,7 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
 
 
   // Lerp Function
-  const lerpMorphTarget = (target, value, speed = 0.1) => {
+  const lerpMorphTarget = (target, value, speed = 0.1, weight = 0.3) => {
     scene.traverse((child) => {
       if (child.isSkinnedMesh && child.morphTargetDictionary) {
         const index = child.morphTargetDictionary[target];
@@ -61,7 +61,7 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
           child.morphTargetInfluences[index] = THREE.MathUtils.lerp(
             child.morphTargetInfluences[index],
             value,
-            speed
+            speed * weight
           );
         }
       }
@@ -75,12 +75,12 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
       Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
         const mapping = facialExpressions[facialExpression];
         if (key === "eyeBlinkLeft" || key === "eyeBlinkRight") return;
-        lerpMorphTarget(key, mapping && mapping[key] ? mapping[key] : 0, 0.1);
+        lerpMorphTarget(key, mapping && mapping[key] ? mapping[key] : 0, 0.1, 1);
       });
     }
     
-    lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
-    lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
+    lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5, 1);
+    lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5, 1);
   });
 
 

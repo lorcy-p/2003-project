@@ -161,7 +161,6 @@ export const Experience: FC = () => {
     <>
       <CameraControls ref={cameraControls} />
       <Background />
-
       <Avatar />
       <Environment preset="sunset" />
       <ContactShadows opacity={0.7} />
