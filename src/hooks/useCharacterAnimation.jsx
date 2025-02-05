@@ -3,6 +3,25 @@ import * as THREE from "three";
 import { useAnimations, useGLTF} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
+/*
+
+This hook is responsible for the animation of the rest of the model (i.e its full body and facial features apart from the visemes)
+It does this using two main features:
+
+
+ - First, useAnimations from react-three/drei is used to make the full body move utilising animations saved in a glb file
+
+
+ - Second, lerpMorphTarget is used to make changes to the models face by gradually moving Morph Target Influences (points on the face)
+  into set positions utilising linear interpolation to gradually shift between maximum and minimum values of 1 and 0. This allows each
+  pre-assigned MTI to be changed at any time, this is mainly utilised to change the facial expression of the model based on a received mood.
+
+
+ - Finally, lerpMorphTarget is specifically used on the models eyes/eyelids to simulate blinking, this is then passed into an effect to be
+  triggered based on a random timeout between 1000ms and 5000ms (between 1-5 seconds)
+
+*/
+
 const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions, facialExpression, setupMode) => {
   const { animations } = useGLTF(modelPath);
   const { actions, mixer } = useAnimations(animations, group);
@@ -15,6 +34,8 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
   const [winkLeft, setWinkLeft] = useState(false);
   const [winkRight, setWinkRight] = useState(false);
 
+
+  // Full Body Animations
   useEffect(() => {
     if (actions[animation]) {
       actions[animation]
@@ -27,6 +48,8 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
     };
   }, [animation, actions, mixer]);
 
+
+  // Lerp Function
   const lerpMorphTarget = (target, value, speed = 0.1) => {
     scene.traverse((child) => {
       if (child.isSkinnedMesh && child.morphTargetDictionary) {
@@ -45,6 +68,8 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
     });
   };
 
+
+  // Blinking
   useFrame(() => {
     if (!setupMode && nodes.EyeLeft) {
       Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
@@ -58,6 +83,8 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
     lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
   });
 
+
+  // Automatic Blinking Trigger
   useEffect(() => {
     let blinkTimeout;
     const nextBlink = () => {

@@ -1,11 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import "./ChatScreen.css";
-import { Loader, useTexture } from "@react-three/drei";
 import { Leva } from "leva";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Experience } from "../components/Experience";
 import visemesEmitter from "../components/visemeEvents";
 import AudioRecorder from "../components/AudioRecorder";
+
 // Define the structure of a message
 interface Message {
   sender: string; // Who sent the message: "user" or "recipient"
@@ -349,7 +349,6 @@ const ChatScreen: React.FC = () => {
       <div className="container-fluid">
         {/* Canvas for 3D experience */}
         <div className="canvasContainer">
-          <Loader />
           <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }}>
             <Experience />
           </Canvas>
