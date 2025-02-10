@@ -14,6 +14,13 @@ interface Message {
   attachment?: string; // Optional attachment (e.g., image URL)
 }
 
+// SVG images
+
+const chatBoxIcon = (
+  
+  <svg viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="1.5"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>cc [#ffffff]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -4039.000000)" fill="#ffffff"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M100,3892 L100,3892 C100,3892.552 99.552,3893 99,3893 L97,3893 C95.895,3893 95,3892.105 95,3891 L95,3887 C95,3885.895 95.895,3885 97,3885 L99,3885 C99.552,3885 100,3885.448 100,3886 C100,3886.552 99.552,3887 99,3887 L98,3887 C97.448,3887 97,3887.448 97,3888 L97,3890 C97,3890.552 97.448,3891 98,3891 L99,3891 C99.552,3891 100,3891.448 100,3892 M93,3892 L93,3892 C93,3892.552 92.552,3893 92,3893 L90,3893 C88.895,3893 88,3892.105 88,3891 L88,3887 C88,3885.895 88.895,3885 90,3885 L92,3885 C92.552,3885 93,3885.448 93,3886 C93,3886.552 92.552,3887 92,3887 L91,3887 C90.448,3887 90,3887.448 90,3888 L90,3890 C90,3890.552 90.448,3891 91,3891 L92,3891 C92.552,3891 93,3891.448 93,3892 M101,3897 L87,3897 C86.448,3897 86,3896.552 86,3896 L86,3882 C86,3881.448 86.448,3881 87,3881 L101,3881 C101.552,3881 102,3881.448 102,3882 L102,3896 C102,3896.552 101.552,3897 101,3897 M84,3881 L84,3897 C84,3898.105 84.895,3899 86,3899 L102,3899 C103.105,3899 104,3898.105 104,3897 L104,3881 C104,3879.895 103.105,3879 102,3879 L86,3879 C84.895,3879 84,3879.895 84,3881" id="cc-[#ffffff]"> </path> </g> </g> </g> </g></svg>
+);
+
 const startIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -122,6 +129,8 @@ const ChatScreen: React.FC = () => {
     setSocket(ws);
   }
 
+  
+
   // Keep websocket alive with a background empty request
   useEffect(() => {
     const interval = setInterval(() => {
@@ -130,6 +139,7 @@ const ChatScreen: React.FC = () => {
     }, keepAliveInterval);
     return () => clearInterval(interval);
   }, [socket]);
+
 
   // Start the websocket
   function start_ws(scenarioId: number = 0) {
@@ -344,6 +354,7 @@ const ChatScreen: React.FC = () => {
     webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
   }
 
+
   return (
     <div className="conversation">
       <div className="container-fluid">
@@ -359,10 +370,6 @@ const ChatScreen: React.FC = () => {
         </div>
 
         <div className="chatWrapper">
-          {/* Toggle Button */}
-          <button className="toggleButton" onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? "Hide Chat" : "Show Chat"}
-          </button>
 
           {/* Collapsible Chat Card */}
           <div className={`card ${isOpen ? "open" : "collapsed"}`}>
@@ -413,32 +420,31 @@ const ChatScreen: React.FC = () => {
             )}
           </div>
         </div>
-
-        {/* Input field for typing new messages */}
-        <div className="inputContainer">
-          <input
-            id="icon"
-            type="text"
-            className="inputField"
-            placeholder="Type message here..."
-            value={newMessage} // Bind input value to state
-            onChange={(e) => setNewMessage(e.target.value)} // Update state on input change
-            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Send message on Enter key press
-          />
+        
+        <div className="chatElements">
+          {/* Input field for typing new messages */}
+          <div className={`inputContainer ${isOpen ? "open" : "collapsed"}`}>
+            {isOpen && (
+              <input
+                id="icon"
+                type="text"
+                className="inputField"
+                placeholder="Type message here..."
+                value={newMessage} // Bind input value to state
+                onChange={(e) => setNewMessage(e.target.value)} // Update state on input change
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Send message on Enter key press
+              />)}
+            
+          </div>
 
           <AudioRecorder onAudioRecorded={take_audio} />
-        </div>
 
-        <div className="buttonContainer">
-          <button className="startScenario" onClick={() => startScenario()}>
-            {startIcon}
-          </button>
-          <button className="playChat" onClick={() => playScenario()}>
-            {playIcon}
-          </button>
-          <button className="pauseChat" onClick={() => stopScenario()}>
-            {pauseIcon}
-          </button>
+          <div className="buttonContainer">
+            {/* Toggle Button */}
+            <button className="toggleButton" onClick={() => setIsOpen(!isOpen)}>
+              {chatBoxIcon}
+            </button>
+          </div>
         </div>
       </div>
     </div>

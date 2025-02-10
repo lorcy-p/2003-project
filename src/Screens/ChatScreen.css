@@ -1,47 +1,68 @@
 /* Styles for ChatScreen Component */
 
 
-/* Input Container at the Bottom Center */
-.inputContainer {
+.chatElements {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 600px; 
-  background-color: #f9f9f9; 
-  padding: 10px; 
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
-  z-index: 1000; 
+  max-width: 600px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 10px;
+  z-index: 1000;
+  flex-wrap: wrap;
   gap: 10px;
+
+}
+/* Input Container at the Bottom Center */
+.inputContainer {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s;
 }
 
+.inputContainer.collapsed {
+  
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
 /* Input Field Styling */
 .inputField {
-  width: 100%;
+  flex: 1;
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid rgb(74, 72, 80);
   border-radius: 4px;
   outline: none;
-  box-sizing: border-box; 
+  box-sizing: border-box;
+  background-color: black;
 }
   
   
   .recordAudio{
+    width: 50px; 
+    height: 50px; 
+    color: white; 
+    border: none; 
+    border-radius: 50%; 
     display: flex;
     justify-content: center; 
     align-items: center;
-    border: none;
-    border-radius: 50%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    width: 30px; 
-    height: 30px; 
+    font-size: 16px; 
     cursor: pointer;
-    overflow: hidden; 
+    background-color: black;
+    border-style: solid;
+    border-color: gray;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.2s ease, box-shadow 0.2s ease; 
   }
   
   .recordAudio svg {
@@ -57,9 +78,10 @@
   .recordAudio:active{
     border-style: solid;
     border-width: 2px;
+    border-color: #5b8ff7; 
   }
     .inputField:hover {
-      border-color: #888; 
+      border-color: #5b8ff7; 
     }
     
     .inputField:focus {
@@ -71,14 +93,14 @@
   /* Styles for Scrollable Messages Container */
 .messageScrollContainer {
     position: fixed;
-    bottom: 60px; 
+    bottom: 80px; 
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
+    width: 80%;
     max-width: 600px;
     height: 200px; 
-    background-color: #ffffff;
-    border: 1px solid #ddd;
+    background-color: black;
+    border: 1px solid gray;
     border-radius: 8px;
     overflow-y: auto;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -155,8 +177,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    
-
+  
     background-color: #f0f0f0;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -168,27 +189,15 @@
     
 /* Buttons for starting and stopping scenario */
 .buttonContainer{
-  position: absolute;
-  bottom: 10px;  
-  left: 10%; 
-  transform: translateX(-50%); 
-  display: flex; 
-  gap: 10px; 
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .chatWrapper {
   position: relative;
 }
 
-.toggleButton {
-  background-color: #007bff;
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  cursor: pointer;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
 
 .card {
   transition: max-height 0.3s ease-in-out, opacity 0.3s;
@@ -205,7 +214,8 @@
 
 .playChat,
 .pauseChat,
-.startScenario {
+.startScenario,
+.toggleButton {
   width: 50px; 
   height: 50px; 
   color: white; 
@@ -255,3 +265,31 @@
 .startScenario:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 }
+
+
+.toggleButton {
+  background-color: rgb(5, 5, 138);
+}
+
+.toggleButton:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.toggleButton:active {
+  box-shadow: 0 2px 4px rgba(51, 10, 213, 0.2); 
+}
+
+.toggleButton svg{
+  width: 50%; 
+  height: 50%; 
+  padding: 0;
+  margin: 0;
+  display: block;
+  object-fit: contain; 
+}
+
+
+
+
+
+

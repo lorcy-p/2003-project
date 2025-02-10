@@ -43,6 +43,7 @@
     background-color: rgba(219, 233, 254, 0.5);
     padding: 10px; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    margin-top: 20px;
 }
 
 .ai_selector_container {
@@ -74,6 +75,12 @@
     top: 5%;
     left:5%; 
     padding: 10px;
+    
+
+    overflow: hidden;     
+    text-overflow: ellipsis; 
+    white-space: nowrap;   
+    word-break: break-word;
     
 }
 
@@ -128,17 +135,161 @@
 
 /* AI image */
 .ai_image{
-    height: 80%;
-    width: 20%;
+    height: auto;
+    max-height: 100%;
+    width: auto;
+    max-width: 100%;
     margin-right: 20px;
 }
 
 /* Ai text */
 .ai_text{
     font-family: Arial, sans-serif;
-    font-size: 10px;
+    font-size: 9px;
     flex: 1;
     text-align: left; 
     padding: 10px; 
     box-sizing: border-box; 
+    max-width: 100%;   
+    overflow-wrap: break-word; 
+    word-break: break-word; 
+    white-space: normal;
+}
+
+/* For very small screens (Mobile devices) */
+@media (max-width: 480px) {
+    .title {
+        top: 10px;
+        left: 10px;
+        font-size: 1rem;
+        
+    }
+
+    .main-text {
+        font-size: 1.5rem;
+    }
+
+    .sub-text {
+        font-size: 0.7rem;
+    }
+
+    .chatting_text {
+        font-size: 20px;
+    }
+
+    .ai_container {
+        width: 90%;
+        height: 70%;
+        max-width: 100%;
+        max-height: 100%;
+        padding: 8px;
+    }
+
+    .ai_selector_container {
+        width: 90%;
+        height: 70%;
+    }
+
+    .select_ai {
+        width: 90%;
+        height: 15%;
+        left: 5%;
+        padding: 5px;
+    }
+
+
+    .ai_text{
+        font-size: 5px;
+    }
+
+
+    .begin_button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
+/* For tablets (Medium screens) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .title {
+        top: 12px;
+        left: 15px;
+
+    }
+
+    .main-text {
+        font-size: 1.8rem;
+    }
+
+    .sub-text {
+        font-size: 0.75rem;
+    }
+
+    .chatting_text {
+        font-size: 22px;
+    }
+
+    .ai_container {
+        width: 85%;
+        height: 75%;
+    }
+
+    .ai_selector_container {
+        width: 85%;
+        height: 70%;
+    }
+
+    .select_ai {
+        width: 85%;
+        height: 18%;
+        left: 5%;
+        padding: 8px;
+    }
+
+    .begin_button {
+        font-size: 15px;
+        padding: 9px 18px;
+    }
+}
+
+/* For desktops (Large screens) */
+@media (min-width: 769px) and (max-width: 1200px) {
+    
+    .title{
+        position: relative;
+        z-index: 10;
+    }
+    
+    .ai_container {
+        width: 70%;
+        height: 75%;
+    }
+
+    .ai_selector_container {
+        width: 75%;
+        height: 70%;
+    }
+
+    .select_ai {
+        width: 75%;
+        height: 20%;
+    }
+}
+
+/* For extra-large screens (4K and beyond) */
+@media (min-width: 1201px) {
+    .ai_container {
+        width: 60%;
+        height: 75%;
+    }
+
+    .ai_selector_container {
+        width: 65%;
+        height: 70%;
+    }
+
+    .select_ai {
+        width: 70%;
+        height: 20%;
+    }
 }
