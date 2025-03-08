@@ -3,15 +3,14 @@
     position: absolute;
     top: 5px;
     left: 10px;
-    font-family: Arial, sans-serif;
     display: inline-block;
-    color: #ffffff;
+    color: #000000;
 }
 
 .main-text {
     font-size: 2rem;
     display: block;
-    color: #ffffff;
+    color: #000000;
 }
 
 .sub-text {
@@ -20,7 +19,7 @@
     bottom: 0;
     right: 0;
     margin-bottom: -15px;
-    color: #e6e4e4;
+    color: #000000;
 }
 
 /* Chatting Text Styling */
@@ -34,17 +33,17 @@
 
 /* AI Container Styling */
 .ai_container {
-    border-radius: 5px;
+    border-radius: 7px;
     position: fixed;
     padding: 10px; 
     top: 50%; 
     transform: translate(-50%, -50%); 
-    width: 40%;
+    width: 30%;
     height: 80%;
     max-width: 250px; 
-    max-height: 600px;
-    background-color: #000000;
-    border: 2px solid #333333;
+    max-height: 425px;
+    background-color: #2D336B;
+    border: 2px solid #A9B5DF;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
     margin-top: 30px;
     margin-left: 150px;
@@ -58,6 +57,8 @@
     width: 100%;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
     margin: 2px 0;
+    max-width: 100%;
+    max-height: 20%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -83,28 +84,30 @@
     width: 40%;
     max-width: 100%;
     margin-right: 20px;
+    
 }
 
+/* Overview box to store the scenario details */
 .overview_box {
     position: fixed;
     padding: 10px; 
     right: 0%;
     width: 60%;
     height: 100%;
-    max-width: 1000px; 
+    max-width: 800px; 
     max-height: 600px;
-    background-color: #000000;
+    background-color: #2D336B;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;  
     color: #ecf0f1;
+    border-left: 2px solid #A9B5DF;
 }
 
 .welcome_text{
     text-align: center;
     margin-top: 20px;
     font-size: 20px;
-    border-bottom: 2px solid rgb(255, 255, 255);
 
 }
 
@@ -115,54 +118,57 @@
 
 .ai_image_overview {
     border-radius: 10px;
-    width: 500px;
+    width: 400px;
     height: 250px;
-    max-height: 60%;
-    align-self: center;
+    max-height: 250px;
+    max-width: 400px;
     margin-top:  10px;
-}
-
-.ai_description {
-    border-radius: 10px;
-    position: absolute;
-    right: 0;
-    background-color: #1a1616;
-    border: 2px solid #333333;
-    width: 300px;
-    bottom: 40px;
-    padding: 10px;
-    margin-right: 10px;
-    height: 200px;
-    margin: 10px;
-    text-align: center;
-    color: white;
+    border: 2px solid #A9B5DF;
 }
 
 .ai_details {
     border-radius: 10px;
     position: absolute;
-    left: 0;
-    bottom: 40px;
-    width: 300px;
-    background-color: #1a1616;
-    border: 2px solid #333333;
-    margin-left: 10px;
-    height: 200px;
-    margin: 10px;
+    right: 0;
+    border: 2px solid #A9B5DF;
+    width: 50%;
+    padding: 10px;
+    height: 50%;
+    max-width: 200px;
+    max-height: 250px;
+    margin: 10px 20px;
     text-align: center;
     color: white;
 }
 
+
+.ai_description {
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    bottom: 40px;
+    width: 100%;
+    border: 2px solid #A9B5DF;
+    margin-left: 10px;
+    padding: 10px;
+    height: 50%;
+    margin: 10px;
+    max-width: 625px;
+    max-height: 200px;
+    text-align: center;
+    color: white;
+}
+
+/* Change the elements style when interacted with */
 .clicked {
-    background-color: #2c2c2c;
-   
+    background-color: #7886C7;
     border-width: 2px;
-    border-color: #313f9d;
+    border-color: #ffffff;
 }
 
 .not_clicked {
-    background-color: #2c2c2c;
-    border-color: #969696;
+    background-color: #7886C7;
+    border-color: #A9B5DF;
     border-width: 2px;
 }
 
@@ -188,8 +194,7 @@
     left: 50%; 
     margin-bottom: -5px;
     transform: translateX(-50%); 
-    background-color: #000000;
-    border: 2px solid #333333;
+    background-color: #152d99;
     color: white;
     padding: 5px 20px;
     border-radius: 5px;
@@ -199,7 +204,7 @@
 }
 
 .begin_button:hover {
-    background-color: #333333;
+    border: 1px solid #A9B5DF;
 }
 
 /* AI Text */
@@ -215,4 +220,177 @@
     word-break: break-word; 
     white-space: normal;
     color: #ecf0f1;
+}
+
+
+.title_underline {
+    border: 0;
+    height: 2px;
+    background-color: #000000;
+    width: 75%;
+}
+
+.welcome_underline {
+    
+    border: 0;
+    
+    height: 2px;
+    
+    background-color: #FFFFFF;
+    
+    width: 65%;
+
+    margin:  2px auto;
+
+}
+
+.details_underline {
+    border: 0;
+    
+    height: 1px;
+    
+    background-color: #FFFFFF;
+    
+    width: 65%;
+
+    margin:  2px auto;
+}
+
+/* Responsive Design */
+
+/* Adjusts elements to fit each screen size */
+
+@media screen and (max-width: 990px){
+    
+    .overview_box{
+        width: 50%;
+    }
+
+    .ai_image_overview{
+        width: 60%;
+    }
+
+    .ai_details{
+        width: 30%;
+        font-size: 12px;
+    }
+
+    .ai_description{
+        width: 91%;
+    }
+}
+
+@media screen and (max-width: 768px ) {
+    
+    .overview_box{
+        width: 60%;
+    }
+
+    .ai_container{
+        margin-left: 100px;
+    }
+
+    .main-text{
+        font-size: 25px;
+        margin: 5px;
+    }
+}
+
+@media screen and (max-width: 568px) {
+    /* Make page scrollable */
+    body {
+        overflow-y: auto;
+    }
+
+    /* Positions title at the top */
+
+    .title{
+        position: relative;
+        z-index: 1;
+        margin-bottom: 40px;
+    }
+    /* Adjust AI container to full width */
+    .ai_container {
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-width: none;
+        max-height: none;
+        transform: none;
+        align-self: center;
+        margin: 0;
+        border-radius: 0px;
+    }
+
+    /* AI Selection Boxes - Full Width */
+    .select_ai {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .select_ai h1 {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    /* AI Image */
+    .ai_image {
+        width: 80%;
+        height: auto;
+        max-width: 150px;
+        margin: 0 auto;
+    }
+
+    /* Overview Box - Stacked Layout */
+    .overview_box {
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-width: none;
+        max-height: none;
+        margin: 20px auto;
+        padding: 15px;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .ai_image_overview {
+        width: 100%;
+        height: auto;
+        max-width: 300px;
+        margin: 10px auto;
+    }
+
+    /* AI Details - Full Width */
+    .ai_details {
+        position: relative;
+        width: 90%;
+        max-width: none;
+        height: auto;
+        margin: 10px auto;
+    }
+
+    /* AI Description - Full Width */
+    .ai_description {
+        position: relative;
+        width: 90%;
+        max-width: none;
+        height: auto;
+        margin: 10px auto;
+    }
+
+    /* Adjust text for better readability */
+    .chatting_text,
+    .welcome_text {
+        font-size: 18px;
+    }
+
+    .begin_button {
+        width: 80%;
+        font-size: 14px;
+        padding: 8px;
+    }
 }

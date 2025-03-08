@@ -22,6 +22,7 @@ const SelectAI: React.FC = () => {
 
             <div className="title">
                 <span className="main-text">Metaphysical</span>
+                <hr className="title_underline"></hr>
                 <span className="sub-text">Studio</span>
             </div>
             <div className="ai_container">
@@ -40,16 +41,25 @@ const SelectAI: React.FC = () => {
                     <img src="images/AI image.png" alt="AI image" className="ai_image_overview"/>
 
                     <div className="ai_details">
-                        <div>
+                        <div className="ai_details_text">
+                            <h1>Who am I?</h1>
+                            <hr className="details_underline"></hr>
+                            <br></br>
                             <p>Name: Fred the pig farmer</p>
+                            <br></br>
                             <p>Age: 32</p>
+                            <br></br>
+                            <p>Gender: Male</p>
+                            <br></br>
                             <p>Residence: Cornwall</p>
                         </div>
                     </div>
 
                     <div className="ai_description">
                         <div>
-                            <h1>Description:</h1>
+                            <h1>About me</h1>
+                            <hr className="details_underline"></hr>
+                            <br></br>
                             <p>Fred is a pig farmer by blood. His love for pig farming started at a very young age and it is all he had dedicated his life to. He can tell you anything you need to know about pigs.</p>
                         </div>
                     </div>
@@ -62,7 +72,7 @@ const SelectAI: React.FC = () => {
                 {!isClicked && (
                     <>
                         <h1 className="welcome_text">Welcome to Metaphysical Studios' AI chat bot</h1>
-
+                        <hr className="welcome_underline"></hr>
                         <p className="welcome_para">Select a range of different scenarios to talk to. We have made use of realistic models to provide and immersive realistic experience for our users. Select a scenario on the left and try it out!</p>
                     </>
                 )}
