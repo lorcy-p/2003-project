@@ -129,7 +129,26 @@ const ChatScreen: React.FC = () => {
     setSocket(ws);
   }
 
+  const websocketConnected = useRef(false);
+
+  useEffect(() => {
+    if (websocketConnected.current==false) {
+      start_ws(166);
+      
+      setTimeout(() => {
+      setPlaying(true);
+      tickScenario();
+      websocketConnected.current = true;
+      },1500);
+      //webSocketRef.current && webSocketRef.current.send(JSON.stringify(" "));
+    }
   
+    //return () => {
+      //if (socket) {
+        //stop_ws(socket);
+      //}
+    //};
+  }, []);
 
   // Keep websocket alive with a background empty request
   useEffect(() => {
@@ -151,7 +170,6 @@ const ChatScreen: React.FC = () => {
       connected(ws, scenarioId);
     };
     ws.onmessage = (e: MessageEvent) => {
-      console.log("hello");
       handleMessage(e.data);
     };
     ws.onerror = (event) => {
@@ -159,12 +177,12 @@ const ChatScreen: React.FC = () => {
     };
     ws.onclose = () => {
       console.log("WebSocket closed");
-      stop_ws(ws);
+      //stop_ws(ws);
     };
 
     // Clean up when the component unmounts
     return () => {
-      ws.close();
+      //ws.close();
     }; // Close websocket
   }
 
