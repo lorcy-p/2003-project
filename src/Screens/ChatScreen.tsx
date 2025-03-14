@@ -101,6 +101,10 @@ const ChatScreen: React.FC = () => {
 
   const [isOpen, setIsOpen] = useState(true); // Track collapse state
 
+  // Get the current Scenario number
+  const scenarioId = localStorage.getItem("AI_ID");
+  const scenarioID = parseInt(scenarioId || "0");
+
   useEffect(() => {
     webSocketRef.current = socket;
   }, [socket]);
@@ -133,7 +137,7 @@ const ChatScreen: React.FC = () => {
 
   useEffect(() => {
     if (websocketConnected.current==false) {
-      start_ws(166);
+      start_ws(scenarioID);
       
       setTimeout(() => {
       setPlaying(true);
@@ -341,7 +345,7 @@ const ChatScreen: React.FC = () => {
 
   // Functions to start and stop the scenarios
   function startScenario() {
-    start_ws(166);
+    start_ws(scenarioID);
 
     setHumanCharacter("Human");
   }
