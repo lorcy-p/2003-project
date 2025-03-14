@@ -198,12 +198,15 @@ const ChatScreen: React.FC = () => {
 
   // State to store the list of messages
   const [messages, setMessages] = useState<Message[]>([]);
-
+ 
   // State to handle the user's input
   const [newMessage, setNewMessage] = useState("");
 
   // Ref for scrolling to the bottom of the chat
   const messageScrollRef = useRef<HTMLDivElement>(null);
+
+// State to determine if AI is "typing"
+  const [isTyping, setIsTyping] = useState(false);
 
   const playNextSpeech = () => {
     if (!speechQueue.length) return;
@@ -270,6 +273,8 @@ const ChatScreen: React.FC = () => {
       visemesEmitter.emit("visemesUpdated", { visemes, mood });
 
       if (playingRef.current) tickScenario();
+      //stop typing animation
+      setIsTyping(false);
     } catch (e) {
       console.log(`Bad JSON: ${e}`);
     }
@@ -298,6 +303,8 @@ const ChatScreen: React.FC = () => {
 
       // Clear the input field
       setNewMessage("");
+      //display typing animation
+      setIsTyping(true);
     }
   };
 
@@ -396,7 +403,7 @@ const ChatScreen: React.FC = () => {
           {/* Collapsible Chat Card */}
           <div className={`card ${isOpen ? "open" : "collapsed"}`}>
             {isOpen && (
-              <div className="messageScrollContainer">
+              <div className="messageScrollContainer" ref={messageScrollRef}>
                 <div className="messageContainer">
                   {messages.map((message, index) => (
                     <div
@@ -437,6 +444,14 @@ const ChatScreen: React.FC = () => {
                       )}
                     </div>
                   ))}
+                {isTyping && (
+                        <div className="message messageReceiver">
+                            <div className="receiverName font-corpos">AI Model</div>
+                            <div className="receiverMessage font-corpos">
+                            <span className="typing-ellipsis"></span>
+                            </div>
+                        </div>
+                    )}
                 </div>
               </div>
             )}
