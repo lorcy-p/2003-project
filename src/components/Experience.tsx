@@ -8,7 +8,7 @@ import {
 import React from "react";
 import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { useChat } from "../hooks/useChat";
-import { TestAvatar } from "./TestAvatar";
+import { Avatar } from "../models/Avatar";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -73,7 +73,7 @@ export const Experience: FC = () => {
     <>
       <CameraControls ref={cameraControls} />
       <Background />
-      <TestAvatar />
+      <Avatar />
       <Environment preset="sunset" />
 
       <ContactShadows opacity={0.7} />
