@@ -1,143 +1,794 @@
 import React, { useState } from "react";
-import "./SelectAiScreen.css";
 import { useNavigate } from "react-router-dom";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import { styled, ThemeProvider, createTheme } from "@mui/material/styles";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+import PersonIcon from "@mui/icons-material/Person";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ChatIcon from "@mui/icons-material/Chat";
 
-
-const SelectAI: React.FC = () => {
-  
-    const navigate = useNavigate(); // Initialize navigation function
-
-    const [isClicked, setIsClicked] = useState(false); // Use state to track clicks
-
-    const [selectedAI, setSelectedAI] = useState(null);
-
-    // Define the function to navigate to the chat screen
-    const beginChatting = (AI_Name) =>{
-        
-        const name = AI_Name; // Set the AI name to the selected AI
-        if (isClicked){
-            const AI_ID = scenarioID[name]; // Set the scenario ID to Fred if Fred is selected
-            localStorage.setItem('AI_ID', AI_ID); // Store the scenario ID in local storage
-            navigate('/chat'); // Navigate to the chat screen when the button is pressed
-        }  
+// customised MUI theme
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: "#3a5ad9",
+            light: "#eef1fd",
+            dark: "#2a41a2"
+        },
+        secondary: {
+            main: "#64748b"
+        },
+        background: {
+            default: "#f8fafc",
+            paper: "#ffffff"
+        },
+        text: {
+            primary: "#1e293b",
+            secondary: "#64748b"
+        }
+    },
+    typography: {
+        fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+        h1: {
+            fontWeight: 800,
+            letterSpacing: "-0.025em"
+        },
+        h2: {
+            fontWeight: 700,
+            letterSpacing: "-0.025em"
+        },
+        h5: {
+            fontWeight: 600,
+            letterSpacing: "-0.015em"
+        },
+        h6: {
+            fontWeight: 600,
+            letterSpacing: "-0.01em"
+        },
+        button: {
+            fontWeight: 600
+        }
+    },
+    shape: {
+        borderRadius: 12
+    },
+    components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    textTransform: "none",
+                    fontWeight: 600,
+                    padding: "10px 20px",
+                    boxShadow: "none"
+                },
+                containedPrimary: {
+                    "&:hover": {
+                        boxShadow: "0 10px 25px -12px rgba(58, 90, 217, 0.6)"
+                    }
+                }
+            }
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03)",
+                    borderRadius: 12
+                }
+            }
+        },
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    textTransform: "none",
+                    fontWeight: 600,
+                    fontSize: "0.95rem",
+                    minHeight: 48
+                }
+            }
+        }
     }
+});
 
+// Define the AI character interface
+interface AICharacter {
+    id: number;
+    name: string;
+    shortDescription: string;
+    age: number;
+    gender: string;
+    residence: string;
+    fullDescription: string;
+    imagePath: string;
+}
 
-    // Handel click event
-    const handleClick = (ai) => {
-        setIsClicked(!isClicked);
-        setSelectedAI(ai);
+// Styled components
+const CharacterCard = styled(Card, {
+    shouldForwardProp: (prop) => prop !== "selected"
+})<{ selected?: boolean }>(({ theme, selected }) => ({
+    transition: "all 0.2s ease",
+    cursor: "pointer",
+    border: selected ? `2px solid ${theme.palette.primary.main}` : "1px solid rgba(0,0,0,0.04)",
+    transform: selected ? "translateY(-4px)" : "none",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    "&:hover": {
+        transform: "translateY(-4px)",
+        boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
     }
+}));
 
-    // Define scenario ID for each AI
-    const scenarioID = {
-        Fred: 166,
-        Wade: 173
+const DetailCard = styled(Card)(({ theme }) => ({
+    height: "100%",
+    border: "1px solid rgba(0,0,0,0.04)",
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column"
+}));
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+    borderBottom: "1px solid rgba(0,0,0,0.08)",
+    "& .MuiTabs-indicator": {
+        height: 3,
+        borderRadius: "3px 3px 0 0"
     }
+}));
+
+// Tab panel component
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
 
     return (
-        
-        <div className="container">
-
-            <div className="title">
-                <span className="main-text">Metaphysical</span>
-                <hr className="title_underline"></hr>
-                <span className="sub-text">Studio</span>
-            </div>
-            
-            <div className="ai_container">
-                <div className={`select_ai ${selectedAI === 'Fred' ? "clicked" : "not_clicked"}`} 
-                    onClick={() => handleClick('Fred')} onDoubleClick={() => beginChatting('Fred')}>
-                    <img src="images/AI image.png" alt="AI image" className="ai_image"/>
-                    <h1 className="name">Fred the pig farmer</h1>
-                </div>
-
-                <div className={`select_ai ${selectedAI === 'Wade' ? "clicked" : "not_clicked"}`} 
-                    onClick={() => handleClick('Wade')} onDoubleClick={() => beginChatting('Wade')}>
-                    <h1 className="name">Wade Smith the blacksmith</h1>
-                </div>
-            </div>
-            <div className="overview_box">
-
-                {isClicked && selectedAI == 'Fred' &&(
-                    <>
-                    <img src="images/AI image.png" alt="AI image" className="ai_image_overview"/>
-
-                    <div className="ai_details">
-                        <div className="ai_details_text">
-                            <h1>Who am I?</h1>
-                            <hr className="details_underline"></hr>
-                            <br></br>
-                            <p>Name: Fred the pig farmer</p>
-                            <br></br>
-                            <p>Age: 32</p>
-                            <br></br>
-                            <p>Gender: Male</p>
-                            <br></br>
-                            <p>Residence: Cornwall</p>
-                        </div>
-                    </div>
-
-                    <div className="ai_description">
-                        <div>
-                            <h1>About me</h1>
-                            <hr className="details_underline"></hr>
-                            <br></br>
-                            <p>Fred is a pig farmer by blood. His love for pig farming started at a very young age and it is all he had dedicated his life to. He can tell you anything you need to know about pigs.</p>
-                        </div>
-                    </div>
-
-                    <button className="begin_button">Begin</button>
-                    
-                    </>
-                )}
-
-                {isClicked && selectedAI == 'Wade' &&(
-                    <>
-                        <img src="images/AI image.png" alt="AI image" className="ai_image_overview"/>
-
-                        <div className="ai_details">
-                            <div className="ai_details_text">
-                                <h1>Who am I?</h1>
-                                <hr className="details_underline"></hr>
-                                <br></br>
-                                <p>Name: Wade the BlackSmith</p>
-                                <br></br>
-                                <p>Age: 48</p>
-                                <br></br>
-                                <p>Gender: Male</p>
-                                <br></br>
-                                <p>Residence: London</p>
-                            </div>
-                        </div>
-
-                        <div className="ai_description">
-                            <div>
-                                <h1>About me</h1>
-                                <hr className="details_underline"></hr>
-                                <br></br>
-                                <p>Wade has been smithing since he was a young lad. His father made sure to teach him all the tricks he needs to make high quality products.</p>
-                            </div>
-                        </div>
-
-                        <button className="begin_button">Begin</button>                 
-                    </>
-                )}
-
-                {!isClicked && (
-                    <>
-                        <h1 className="welcome_text">Welcome to Metaphysical Studios' AI chat bot</h1>
-                        <hr className="welcome_underline"></hr>
-                        <p className="welcome_para">Select a range of different scenarios to talk to. We have made use of realistic models to provide and immersive realistic experience for our users. Select a scenario on the left and try it out!</p>
-                    </>
-                )}
-
-            </div>
-
-                
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`character-tabpanel-${index}`}
+            aria-labelledby={`character-tab-${index}`}
+            {...other}
+            style={{
+                height: value === index ? "auto" : 0,
+                overflow: "auto",
+                flex: value === index ? 1 : 0
+            }}
+        >
+            {value === index && <Box sx={{ p: { xs: 2, md: 3 } }}>{children}</Box>}
         </div>
-  
-  );
+    );
+}
+
+const SelectAI: React.FC = () => {
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [selectedAI, setSelectedAI] = useState<AICharacter | null>(null);
+    const [tabValue, setTabValue] = useState(0);
+
+    // Sample AI character data
+    const aiCharacters: AICharacter[] = [
+        {
+            id: 166,
+            name: "Fred the pig farmer",
+            shortDescription: "Pig farming expert from Cornwall",
+            age: 32,
+            gender: "Male",
+            residence: "Cornwall",
+            fullDescription: "Fred is a pig farmer by blood. His love for pig farming started at a very young age and it is all he had dedicated his life to. He can tell you anything you need to know about pigs.",
+            imagePath: "/images/AI image.png"
+        },
+        {
+            id: 173,
+            name: "Wade Smith the blacksmith",
+            shortDescription: "Traditional blacksmith from London",
+            age: 48,
+            gender: "Male",
+            residence: "London",
+            fullDescription: "Wade has been smithing since he was a young lad. His father made sure to teach him all the tricks he needs to make high quality products.",
+            imagePath: "/images/AI image.png"
+        },
+        // Adding more characters to demonstrate grid layout
+        {
+            id: 174,
+            name: "Eleanor the herbalist",
+            shortDescription: "Medicinal herb expert from Scotland",
+            age: 41,
+            gender: "Female",
+            residence: "Edinburgh",
+            fullDescription: "Eleanor has dedicated her life to studying medicinal herbs and their properties. She has extensive knowledge of traditional remedies and natural healing.",
+            imagePath: "/images/AI image.png"
+        },
+        {
+            id: 175,
+            name: "Thomas the sailor",
+            shortDescription: "Experienced navigator from Bristol",
+            age: 45,
+            gender: "Male",
+            residence: "Bristol",
+            fullDescription: "Thomas has sailed the seven seas and has countless stories to tell. His knowledge of navigation and maritime history is unmatched.",
+            imagePath: "/images/AI image.png"
+        },
+        {
+            "id": 176,
+            "name": "Sofia the Astronomer",
+            "shortDescription": "Stargazer and cosmic philosopher from Cambridge",
+            "age": 36,
+            "gender": "Female",
+            "residence": "Cambridge",
+            "fullDescription": "Sofia has spent countless nights observing the stars, tracking celestial movements, and contemplating humanity's place in the universe. Her knowledge spans both modern astrophysics and ancient astronomical traditions. She's passionate about making complex cosmic concepts accessible to everyone.",
+            "imagePath": "/images/AI image.png"
+        },
+            {
+                "id": 177,
+                "name": "Kiran the Spice Merchant",
+                "shortDescription": "Exotic spice expert with knowledge of global trade routes",
+                "age": 52,
+                "gender": "Male",
+                "residence": "Brighton",
+                "fullDescription": "Kiran's family has been in the spice trade for generations. He travels the world sourcing the finest ingredients and has accumulated extensive knowledge about culinary traditions, medicinal properties of spices, and the historical spice routes that shaped global commerce and culture.",
+                "imagePath": "/images/AI image.png"
+            },
+            {
+                "id": 178,
+                "name": "Brigid the Weaver",
+                "shortDescription": "Master of traditional textile arts and folklore",
+                "age": 67,
+                "gender": "Female",
+                "residence": "Welsh Countryside",
+                "fullDescription": "Brigid learned weaving as a child and has preserved ancient techniques that were nearly lost to time. Her knowledge extends beyond textiles to include local folklore, natural dyes, and the cultural significance of patterns. Her stories connect modern visitors to age-old traditions.",
+                "imagePath": "/images/AI image.png"
+            },
+            {
+                "id": 179,
+                "name": "Edwin the Beekeeper",
+                "shortDescription": "Honey producer and bee behavior specialist",
+                "age": 43,
+                "gender": "Male",
+                "residence": "Yorkshire",
+                "fullDescription": "Edwin has dedicated his life to understanding the complex societies of bees. He maintains several apiaries using both traditional and modern methods. His passion for preservation extends to wildflower meadows and sustainable agriculture. He can discuss everything from colony behavior to mead-making traditions.",
+                "imagePath": "/images/AI image.png"
+            }
+    ];
+
+    // Filter characters based on search query
+    const filteredCharacters = aiCharacters.filter(char =>
+        char.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        char.shortDescription.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Handle character selection
+    const handleSelectCharacter = (character: AICharacter) => {
+        setSelectedAI(character);
+    };
+
+    // Handle tab change
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setTabValue(newValue);
+    };
+
+    // Begin chatting with selected character
+    const beginChatting = () => {
+        if (selectedAI) {
+            localStorage.setItem('AI_ID', selectedAI.id.toString());
+            navigate('/chat');
+        }
+    };
+
+    return (
+        <ThemeProvider theme={theme}>
+            <Box sx={{
+                backgroundColor: "background.default",
+                minHeight: "100vh",
+                display: "flex",
+                flexDirection: "column"
+            }}>
+                <Container maxWidth="xl" sx={{ flex: 1, display: "flex", flexDirection: "column", py: 3 }}>
+                    {/* Header */}
+                    <Box sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 3
+                    }}>
+                        <Box>
+                            <Typography variant="h5" component="h1" fontWeight="bold" color="primary">
+                                Metaphysical
+                            </Typography>
+                            <Box sx={{
+                                height: 3,
+                                width: 40,
+                                bgcolor: "primary.main",
+                                mt: 0.5
+                            }} />
+                            <Typography variant="subtitle1" color="text.secondary">
+                                Studio
+                            </Typography>
+                        </Box>
+
+                        {/* Search bar moved to header for better space utilization */}
+                        <TextField
+                            placeholder="Search characters..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            variant="outlined"
+                            size="small"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon fontSize="small" />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            sx={{
+                                width: { xs: "50%", sm: "40%", md: "30%" },
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: 8
+                                },
+                                zIndex: "2"
+                            }}
+                        />
+                    </Box>
+
+                    {/* Main content area with flexible height */}
+                    <Box sx={{
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: { xs: "column", md: "row" },
+                        gap: 3
+                    }}>
+                        {/* Character grid - takes less space for more sleek look */}
+                        <Box sx={{
+                            width: { xs: "100%", md: "35%" },
+                            display: "flex",
+                            flexDirection: "column"
+                        }}>
+                            <Box sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                mb: 2
+                            }}>
+                                <Typography variant="h6">Characters</Typography>
+                                <Chip
+                                    label={`${filteredCharacters.length} available`}
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                />
+                            </Box>
+
+                            <Box sx={{
+                                flex: 1,
+                                overflowY: "auto",
+                                pr: { xs: 0, md: 1 },
+                                py: 0.5,
+                                "&::-webkit-scrollbar": {
+                                    width: "6px",
+                                    borderRadius: "3px"
+                                },
+                                "&::-webkit-scrollbar-thumb": {
+                                    backgroundColor: "rgba(0,0,0,0.1)",
+                                    borderRadius: "3px"
+                                }
+                            }}>
+                                <Grid container spacing={2}>
+                                    {filteredCharacters.map((character) => (
+                                        <Grid item xs={12} sm={6} md={12} lg={6} key={character.id}>
+                                            <CharacterCard
+                                                selected={selectedAI?.id === character.id}
+                                                onClick={() => handleSelectCharacter(character)}
+                                            >
+                                                <CardMedia
+                                                    component="img"
+                                                    height="120"
+                                                    image={character.imagePath}
+                                                    alt={character.name}
+                                                />
+                                                <CardContent sx={{ p: 2, pb: "16px !important", flex: 1 }}>
+                                                    <Typography variant="subtitle1" fontWeight="medium" gutterBottom noWrap>
+                                                        {character.name}
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="text.secondary"
+                                                        sx={{
+                                                            display: '-webkit-box',
+                                                            WebkitLineClamp: 2,
+                                                            WebkitBoxOrient: 'vertical',
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis'
+                                                        }}
+                                                    >
+                                                        {character.shortDescription}
+                                                    </Typography>
+
+                                                    {/* Small info pills */}
+                                                    <Box sx={{ display: "flex", gap: 1, mt: 1.5, flexWrap: "wrap" }}>
+                                                        <Chip
+                                                            label={character.residence}
+                                                            size="small"
+                                                            sx={{
+                                                                height: 24,
+                                                                fontSize: "0.75rem",
+                                                                bgcolor: "background.default"
+                                                            }}
+                                                        />
+                                                        <Chip
+                                                            label={`Age: ${character.age}`}
+                                                            size="small"
+                                                            sx={{
+                                                                height: 24,
+                                                                fontSize: "0.75rem",
+                                                                bgcolor: "background.default"
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                </CardContent>
+                                            </CharacterCard>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+
+                                {filteredCharacters.length === 0 && (
+                                    <Box sx={{
+                                        p: 4,
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        bgcolor: "background.paper",
+                                        borderRadius: 2,
+                                        border: "1px dashed rgba(0,0,0,0.1)"
+                                    }}>
+                                        <SearchIcon color="disabled" sx={{ fontSize: 36, mb: 2, opacity: 0.6 }} />
+                                        <Typography color="text.secondary" fontSize="0.9rem" textAlign="center">
+                                            No characters found matching "{searchQuery}"
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+                        </Box>
+
+                        {/* Character details section */}
+                        <Box sx={{
+                            width: { xs: "100%", md: "65%" },
+                            display: "flex"
+                        }}>
+                            {selectedAI ? (
+                                <DetailCard sx={{ width: "100%" }}>
+                                    {/* Character header with image */}
+                                    <Box sx={{
+                                        display: "flex",
+                                        p: { xs: 2, md: 3 },
+                                        gap: 3,
+                                        borderBottom: "1px solid rgba(0,0,0,0.08)",
+                                        flexDirection: { xs: "column", sm: "row" },
+                                        alignItems: { xs: "center", sm: "flex-start" }
+                                    }}>
+                                        <Box
+                                            component="img"
+                                            src={selectedAI.imagePath}
+                                            alt={selectedAI.name}
+                                            sx={{
+                                                width: { xs: "100%", sm: 120 },
+                                                height: { xs: 200, sm: 120 },
+                                                objectFit: "cover",
+                                                borderRadius: 1.5,
+                                                flexShrink: 0
+                                            }}
+                                        />
+
+                                        <Box sx={{ flex: 1 }}>
+                                            <Box sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "flex-start",
+                                                flexDirection: { xs: "column", md: "row" },
+                                                gap: { xs: 1, md: 0 }
+                                            }}>
+                                                <Typography variant="h5" component="h2" fontWeight="bold">
+                                                    {selectedAI.name}
+                                                </Typography>
+
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    size="small"
+                                                    startIcon={<ChatIcon />}
+                                                    onClick={beginChatting}
+                                                    sx={{
+                                                        borderRadius: 6,
+                                                        px: 2
+                                                    }}
+                                                >
+                                                    Start Conversation
+                                                </Button>
+                                            </Box>
+
+                                            <Typography variant="body1" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
+                                                {selectedAI.shortDescription}
+                                            </Typography>
+
+                                            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                                                <Chip
+                                                    icon={<PersonIcon fontSize="small" />}
+                                                    label={`${selectedAI.age}, ${selectedAI.gender}`}
+                                                    size="small"
+                                                    variant="outlined"
+                                                />
+                                                <Chip
+                                                    icon={<LocationOnIcon fontSize="small" />}
+                                                    label={selectedAI.residence}
+                                                    size="small"
+                                                    variant="outlined"
+                                                />
+                                            </Box>
+                                        </Box>
+                                    </Box>
+
+                                    {/* Tabs section */}
+                                    <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                                        <StyledTabs
+                                            value={tabValue}
+                                            onChange={handleTabChange}
+                                            aria-label="character details tabs"
+                                            variant="fullWidth"
+                                        >
+                                            <Tab
+                                                icon={<PersonIcon />}
+                                                label="About"
+                                                id="character-tab-0"
+                                                aria-controls="character-tabpanel-0"
+                                                iconPosition="start"
+                                            />
+                                            <Tab
+                                                icon={<HistoryEduIcon />}
+                                                label="Background"
+                                                id="character-tab-1"
+                                                aria-controls="character-tabpanel-1"
+                                                iconPosition="start"
+                                            />
+                                            <Tab
+                                                icon={<LocationOnIcon />}
+                                                label="Location"
+                                                id="character-tab-2"
+                                                aria-controls="character-tabpanel-2"
+                                                iconPosition="start"
+                                            />
+                                        </StyledTabs>
+
+                                        <Box sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            flex: 1,
+                                            overflow: "hidden"
+                                        }}>
+                                            {/* About Tab */}
+                                            <TabPanel value={tabValue} index={0}>
+                                                <Typography variant="h6" gutterBottom>Profile</Typography>
+
+                                                <Typography variant="body1" paragraph>
+                                                    {selectedAI.fullDescription}
+                                                </Typography>
+
+                                                <Typography variant="body1" paragraph>
+                                                    {selectedAI.name} loves to share their knowledge and experiences with interested listeners. Their expertise has been developed over many years of practice and study.
+                                                </Typography>
+
+                                                <Box sx={{
+                                                    bgcolor: "primary.light",
+                                                    p: 2,
+                                                    borderRadius: 2,
+                                                    mt: 2,
+                                                    display: "flex",
+                                                    alignItems: "flex-start",
+                                                    gap: 2
+                                                }}>
+                                                    <ChatIcon color="primary" fontSize="small" sx={{ mt: 0.5 }} />
+                                                    <Typography variant="body2" color="primary.dark">
+                                                        <strong>Conversation Tip:</strong> Ask {selectedAI.name} about their daily routine and what aspects of their work they find most rewarding.
+                                                    </Typography>
+                                                </Box>
+                                            </TabPanel>
+
+                                            {/* Background Tab */}
+                                            <TabPanel value={tabValue} index={1}>
+                                                <Typography variant="h6" gutterBottom>Experience & History</Typography>
+
+                                                <Typography variant="body1" paragraph>
+                                                    {selectedAI.name} began their career at a young age, learning the traditional methods and techniques that have been passed down through generations.
+                                                </Typography>
+
+                                                <Typography variant="body1" paragraph>
+                                                    With {selectedAI.age} years of life experience, they've seen many changes in their field and adapted their practices while maintaining respect for tradition.
+                                                </Typography>
+
+                                                <Typography variant="subtitle1" fontWeight="medium" gutterBottom sx={{ mt: 3 }}>
+                                                    Topics of Expertise
+                                                </Typography>
+
+                                                <Grid container spacing={2} sx={{ mt: 0.5 }}>
+                                                    {[
+                                                        "Traditional techniques",
+                                                        "Historical knowledge",
+                                                        "Specialized tools",
+                                                        "Regional variations"
+                                                    ].map((topic, index) => (
+                                                        <Grid item xs={12} sm={6} key={index}>
+                                                            <Box sx={{
+                                                                p: 1.5,
+                                                                border: "1px solid rgba(0,0,0,0.08)",
+                                                                borderRadius: 1.5,
+                                                                bgcolor: "background.default"
+                                                            }}>
+                                                                <Typography variant="body2">{topic}</Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                    ))}
+                                                </Grid>
+                                            </TabPanel>
+
+                                            {/* Location Tab */}
+                                            <TabPanel value={tabValue} index={2}>
+                                                <Typography variant="h6" gutterBottom>Life in {selectedAI.residence}</Typography>
+
+                                                <Typography variant="body1" paragraph>
+                                                    {selectedAI.name} has deep connections to {selectedAI.residence}, where their work is influenced by local traditions and community needs.
+                                                </Typography>
+
+                                                <Typography variant="body1" paragraph>
+                                                    The unique environment and culture of {selectedAI.residence} have shaped their skills and perspective in countless ways.
+                                                </Typography>
+
+                                                <Box sx={{
+                                                    mt: 3,
+                                                    p: 0.5,
+                                                    border: "1px solid rgba(0,0,0,0.08)",
+                                                    borderRadius: 2,
+                                                    overflow: "hidden"
+                                                }}>
+                                                    <Box
+                                                        sx={{
+                                                            height: 200,
+                                                            bgcolor: "background.default",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            backgroundImage: `url(/path-to-location-image-${selectedAI.residence.toLowerCase()}.jpg)`,
+                                                            backgroundSize: "cover",
+                                                            backgroundPosition: "center"
+                                                        }}
+                                                    >
+                                                        <Typography color="text.secondary" sx={{ bgcolor: "rgba(255,255,255,0.8)", px: 2, py: 0.5, borderRadius: 1 }}>
+                                                            {selectedAI.residence} Landscape
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                            </TabPanel>
+                                        </Box>
+                                    </Box>
+                                </DetailCard>
+                            ) : (
+                                <DetailCard sx={{ width: "100%", p: 0 }}>
+                                    <div style={{display: "flex", justifyContent: "center", zIndex: '1'}}>
+                                        <Box sx={{
+                                            height: "100%",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            p: { xs: 3, md: 4 },
+                                            textAlign: "center",
+                                            position: "fixed",
+                                            top: 0,
+
+                                        }}>
+                                            <Box
+                                                sx={{
+                                                    width: 80,
+                                                    height: 80,
+                                                    borderRadius: "50%",
+                                                    backgroundColor: "primary.light",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    mb: 3
+                                                }}
+                                            >
+                                                <PersonIcon sx={{ fontSize: 40, color: "primary.main" }} />
+                                            </Box>
+
+                                            <Typography variant="h5" component="h2" fontWeight="bold" mb={1}>
+                                                Welcome to Metaphysical Studio
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body1"
+                                                color="text.secondary"
+                                                sx={{
+                                                    maxWidth: 500,
+                                                    mb: 4
+                                                }}
+                                            >
+                                                Select a character from the left to begin an immersive conversation experience.
+                                                Each character has unique knowledge and background to explore.
+                                            </Typography>
+
+                                            <Grid container spacing={2} sx={{ maxWidth: 600 }}>
+                                                {[
+                                                    {
+                                                        icon: <PersonIcon />,
+                                                        title: "Diverse Characters",
+                                                        desc: "Explore a range of unique personalities"
+                                                    },
+                                                    {
+                                                        icon: <ChatIcon />,
+                                                        title: "Natural Conversations",
+                                                        desc: "Engage in realistic dialogues"
+                                                    },
+                                                    {
+                                                        icon: <HistoryEduIcon />,
+                                                        title: "Authentic Knowledge",
+                                                        desc: "Learn from detailed subject expertise"
+                                                    },
+                                                    {
+                                                        icon: <LocationOnIcon />,
+                                                        title: "Cultural Immersion",
+                                                        desc: "Experience different perspectives"
+                                                    }
+                                                ].map((feature, index) => (
+                                                    <Grid item xs={12} sm={6} key={index}>
+                                                        <Box sx={{
+                                                            p: 2,
+                                                            border: "1px solid rgba(0,0,0,0.08)",
+                                                            borderRadius: 2,
+                                                            height: "100%",
+                                                            display: "flex",
+                                                            flexDirection: "column",
+                                                            alignItems: "center",
+                                                            textAlign: "center"
+                                                        }}>
+                                                            <Box sx={{
+                                                                color: "primary.main",
+                                                                mb: 1.5
+                                                            }}>
+                                                                {feature.icon}
+                                                            </Box>
+                                                            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                                                                {feature.title}
+                                                            </Typography>
+                                                            <Typography variant="body2" color="text.secondary">
+                                                                {feature.desc}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Grid>
+                                                ))}
+                                            </Grid>
+                                        </Box>
+                                    </div>
+                                </DetailCard>
+                            )}
+                        </Box>
+                    </Box>
+                </Container>
+            </Box>
+        </ThemeProvider>
+    );
 };
 
 export default SelectAI;
