@@ -232,10 +232,11 @@ const ChatScreen: React.FC = () => {
 
       mood = JSON.stringify(json.action?.mood);
       mood = mood.replace(/^"(.*)"$/, "$1");
+      console.log("Got WS visemes: " + visemes);
       console.log("Got WS mood: " + mood);
 
       // Emit an event whenever visemes are updated
-      visemesEmitter.emit("visemesUpdated", { visemes, mood });
+      visemesEmitter.emit("visemeEvent", { visemes, mood });
 
       if (playingRef.current) tickScenario();
     } catch (e) {
@@ -354,7 +355,7 @@ const ChatScreen: React.FC = () => {
           </Canvas>
 
           {/* Leva UI controls */}
-          <Leva hidden={false} />
+          <Leva hidden={false} theme={{ sizes: { rootWidth: "600px" } }} />
         </div>
 
         <div className="chatWrapper">
