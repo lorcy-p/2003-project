@@ -8,7 +8,7 @@ import { useGLTF, Html, useAnimations} from "@react-three/drei";
 import { folder, button, useControls } from "leva";
 import useVisemeAnimationCC4 from "../hooks/useVisemeAnimationCC4";
 import useCharacterAnimation from "../hooks/useCharacterAnimation";
-import { useLipsync } from "../Reallusion/hooks/useLipSync";
+//import { useLipsync } from "../Reallusion/hooks/useLipSync";
 
 export function CC4Test(props) {
   const {nodes, materials, scene } = useGLTF('models/CC4Test.glb')
