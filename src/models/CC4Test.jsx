@@ -16,6 +16,9 @@ export function CC4Test(props) {
   const group = useRef();
   const { client } = props;
 
+  //log every part of every mesh for debug
+  //Object.values(nodes).forEach(mesh => console.log(mesh.name));
+
   // These variables are required for the animation to function but may be made redundant in the future
     //const group = useRef();
     
@@ -217,7 +220,7 @@ export function CC4Test(props) {
     */
 
   // Get useVisemeAnimation from the imported hook
-  const { lerpInfluence } = useVisemeAnimationCC4(group, setFacialExpression, visemeMap, setupMode, nodes);
+  const { lerpInfluence } = useVisemeAnimationCC4(group, setFacialExpression, visemeMap, setupMode, nodes, group);
 
   // Get useCharacterAnimation from the imported hook
   /*const { animation, animations, setAnimation, lerpMorphTarget, setWinkLeft, setWinkRight } = useCharacterAnimation(
