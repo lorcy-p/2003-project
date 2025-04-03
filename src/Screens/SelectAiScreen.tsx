@@ -205,23 +205,23 @@ const SelectAI: React.FC = () => {
         },
         // Adding more characters to demonstrate grid layout
         {
-            id: 174,
-            name: "Eleanor the herbalist",
-            shortDescription: "Medicinal herb expert from Scotland",
-            age: 41,
-            gender: "Female",
-            residence: "Edinburgh",
-            fullDescription: "Eleanor has dedicated her life to studying medicinal herbs and their properties. She has extensive knowledge of traditional remedies and natural healing.",
+            id: 176,
+            name: "Marshal Jones",
+            shortDescription: "The towns local hero, always looking out for the good samaritans.",
+            age: 31,
+            gender: "Male",
+            residence: "Kansas",
+            fullDescription: "The sherif of an old western town. He’s worked is way up the ladder of law. After witnessing a robbery at a very young age he dedicated himself to protecting his town.",
             imagePath: "/images/AI image.png"
         },
         {
-            id: 175,
-            name: "Thomas the sailor",
-            shortDescription: "Experienced navigator from Bristol",
-            age: 45,
+            id: 179,
+            name: "Duncan Miller",
+            shortDescription: "Many would call him a hero. He was always ready to save a life.",
+            age: 20,
             gender: "Male",
-            residence: "Bristol",
-            fullDescription: "Thomas has sailed the seven seas and has countless stories to tell. His knowledge of navigation and maritime history is unmatched.",
+            residence: "Portsmouth",
+            fullDescription: "A world war field medic. They thought for England, saving countless lives across multiple battles. They can tell you all about their battle field experiences and saves.",
             imagePath: "/images/AI image.png"
         },
         {
