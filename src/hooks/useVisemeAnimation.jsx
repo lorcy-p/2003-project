@@ -77,10 +77,13 @@ const useVisemeAnimation = (
       }
     };
 
-    // listens for updated visemes then runs previous code
-    if (visemesEmitter.listeners("visemesUpdated").length === 0) {
+    visemesEmitter.on("visemesUpdated", handleVisemesUpdated);
+
+    /* listens for updated visemes then runs previous code
+    if (visemesEmitter.listeners("visemesUpdated").length == 0) {
       visemesEmitter.on("visemesUpdated", handleVisemesUpdated);
     }
+    */
 
   }, [group, visemesEmitter, getVisemes, setFacialExpression]);
 

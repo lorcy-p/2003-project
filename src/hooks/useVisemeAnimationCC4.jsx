@@ -27,23 +27,33 @@ const useVisemeAnimation = (
       if (mood) setFacialExpression(mood);
       console.log("Received updated visemes:", visemes);
 
+      /*
       if (!group.current) {
         console.error("group.current is undefined. Cannot process visemes.");
         return;
       }
+      */
 
       try {
-        const parsedData = JSON.parse(getVisemes());
+        const rawVisemes = getVisemes();
+        console.log("Raw visemes string:", rawVisemes);
+      
+        const parsedData = JSON.parse(rawVisemes);
+        console.log("Parsed data:", parsedData);
+      
         visemeDataRef.current = parsedData.map(({ t, v }) => ({ t, v }));
+        console.log("viseme data parsed");
         playVisemeAnimation();
       } catch (error) {
         console.error("Error parsing visemes:", error);
       }
+
     };
 
-    if (visemesEmitter.listeners("visemeEvent").length === 0) {
-      visemesEmitter.off("visemeEvent", handleVisemesUpdated);
-      visemesEmitter.on("visemeEvent", handleVisemesUpdated);
+    console.log("Checking and registering listener if needed...");
+    if (visemesEmitter.listeners("visemesUpdated").length === 0) {
+      console.log("Registering visemesUpdated listener");
+      visemesEmitter.on("visemesUpdated", handleVisemesUpdated);
     }
 
     return () => {
@@ -130,14 +140,18 @@ useEffect(() => {
 
 
   const playVisemeAnimation = () => {
-    if (manualJawControl) return;
+    if (manualJawControl) {
+      console.log("manual jaw cancel");
+      return;
+    }
     console.log("playing visemes");
     let lastVisemeTargets = [];
 
     visemeDataRef.current.forEach(({ t, v }, index) => {
       const visemeTargets = visemeMap[v] || [];
       const isSilent = v === "-";
-      const isJawOpen = v === "Open_Jaw" || v === "V_Open";
+      const VOpen =  v === "V_Open";
+      const OpenJaw = v === "Open_Jaw"
 
       setTimeout(() => {
         Object.keys(nodes).forEach((meshName) => {
@@ -160,11 +174,16 @@ useEffect(() => {
           }
         });
 
-        if (isJawOpen) {
-          const jawRotation = new THREE.Euler(-0.3, 0, 0);
+        if (VOpen) {
+          const jawRotation = new THREE.Euler(0, 0, 1.95);
           lerpJawRotation(jawRotation, 300);
-        } else {
-          const neutralRotation = new THREE.Euler(0, 0, 0);
+        } 
+        else if (OpenJaw){
+          const jawRotation = new THREE.Euler(0, 0, 2);
+          lerpJawRotation(jawRotation, 300);
+        }
+        else {
+          const neutralRotation = new THREE.Euler(0, 0, 1.55);
           lerpJawRotation(neutralRotation, 300);
         }
 

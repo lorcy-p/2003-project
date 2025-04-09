@@ -12,7 +12,7 @@ import useCharacterAnimation from "../hooks/useCharacterAnimation";
 
 export function CC4Test(props) {
   const {nodes, materials, scene } = useGLTF('models/CC4Test.glb')
-  const kevinRef = useRef();
+  //const kevinRef = useRef();
   const group = useRef();
   const { client } = props;
 
@@ -223,7 +223,7 @@ export function CC4Test(props) {
   const { lerpInfluence } = useVisemeAnimationCC4(group, setFacialExpression, visemeMap, setupMode, nodes, group);
 
   // Get useCharacterAnimation from the imported hook
-  /*const { animation, animations, setAnimation, lerpMorphTarget, setWinkLeft, setWinkRight } = useCharacterAnimation(
+  const { animation, animations, setAnimation, lerpMorphTarget, setWinkLeft, setWinkRight } = useCharacterAnimation(
     "/models/testanimations.glb",
     group,
     scene,
@@ -233,7 +233,7 @@ export function CC4Test(props) {
     setupMode
   );
   
-  
+  /*
 
   //Leva Controls for debugging
       useControls("FacialExpressions", {
@@ -312,8 +312,7 @@ export function CC4Test(props) {
       
       const [, set] = useControls("MorphTarget", () => morphTargets);
 
-      
-    
+      /*
       const [facialData, setFacialData] = useState([
         {
           Open_Jaw: 0.3,
@@ -344,11 +343,10 @@ export function CC4Test(props) {
         }
       ]);
       
+      useLipsync({facialData, characterRef: kevinRef, nodes, scene});
+      */
 
 
-      //useLipsync({facialData, characterRef: kevinRef, nodes, scene});
-
-      
       return (
         <group {...props} dispose={null} ref={group}>
           <group name="Scene">

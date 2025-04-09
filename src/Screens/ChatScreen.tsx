@@ -18,8 +18,49 @@ interface Message {
 // SVG images
 
 const chatBoxIcon = (
-  
-  <svg viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="1.5"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>cc [#ffffff]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -4039.000000)" fill="#ffffff"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M100,3892 L100,3892 C100,3892.552 99.552,3893 99,3893 L97,3893 C95.895,3893 95,3892.105 95,3891 L95,3887 C95,3885.895 95.895,3885 97,3885 L99,3885 C99.552,3885 100,3885.448 100,3886 C100,3886.552 99.552,3887 99,3887 L98,3887 C97.448,3887 97,3887.448 97,3888 L97,3890 C97,3890.552 97.448,3891 98,3891 L99,3891 C99.552,3891 100,3891.448 100,3892 M93,3892 L93,3892 C93,3892.552 92.552,3893 92,3893 L90,3893 C88.895,3893 88,3892.105 88,3891 L88,3887 C88,3885.895 88.895,3885 90,3885 L92,3885 C92.552,3885 93,3885.448 93,3886 C93,3886.552 92.552,3887 92,3887 L91,3887 C90.448,3887 90,3887.448 90,3888 L90,3890 C90,3890.552 90.448,3891 91,3891 L92,3891 C92.552,3891 93,3891.448 93,3892 M101,3897 L87,3897 C86.448,3897 86,3896.552 86,3896 L86,3882 C86,3881.448 86.448,3881 87,3881 L101,3881 C101.552,3881 102,3881.448 102,3882 L102,3896 C102,3896.552 101.552,3897 101,3897 M84,3881 L84,3897 C84,3898.105 84.895,3899 86,3899 L102,3899 C103.105,3899 104,3898.105 104,3897 L104,3881 C104,3879.895 103.105,3879 102,3879 L86,3879 C84.895,3879 84,3879.895 84,3881" id="cc-[#ffffff]"> </path> </g> </g> </g> </g></svg>
+  <svg
+    viewBox="0 0 20 20"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="#000000"
+  >
+    <g id="SVGRepo_bgCarrier" stroke-width="1.5"></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    ></g>
+    <g id="SVGRepo_iconCarrier">
+      {" "}
+      <title>cc [#ffffff]</title> <desc>Created with Sketch.</desc>{" "}
+      <defs> </defs>{" "}
+      <g
+        id="Page-1"
+        stroke="none"
+        stroke-width="1"
+        fill="none"
+        fill-rule="evenodd"
+      >
+        {" "}
+        <g
+          id="Dribbble-Light-Preview"
+          transform="translate(-140.000000, -4039.000000)"
+          fill="#ffffff"
+        >
+          {" "}
+          <g id="icons" transform="translate(56.000000, 160.000000)">
+            {" "}
+            <path
+              d="M100,3892 L100,3892 C100,3892.552 99.552,3893 99,3893 L97,3893 C95.895,3893 95,3892.105 95,3891 L95,3887 C95,3885.895 95.895,3885 97,3885 L99,3885 C99.552,3885 100,3885.448 100,3886 C100,3886.552 99.552,3887 99,3887 L98,3887 C97.448,3887 97,3887.448 97,3888 L97,3890 C97,3890.552 97.448,3891 98,3891 L99,3891 C99.552,3891 100,3891.448 100,3892 M93,3892 L93,3892 C93,3892.552 92.552,3893 92,3893 L90,3893 C88.895,3893 88,3892.105 88,3891 L88,3887 C88,3885.895 88.895,3885 90,3885 L92,3885 C92.552,3885 93,3885.448 93,3886 C93,3886.552 92.552,3887 92,3887 L91,3887 C90.448,3887 90,3887.448 90,3888 L90,3890 C90,3890.552 90.448,3891 91,3891 L92,3891 C92.552,3891 93,3891.448 93,3892 M101,3897 L87,3897 C86.448,3897 86,3896.552 86,3896 L86,3882 C86,3881.448 86.448,3881 87,3881 L101,3881 C101.552,3881 102,3881.448 102,3882 L102,3896 C102,3896.552 101.552,3897 101,3897 M84,3881 L84,3897 C84,3898.105 84.895,3899 86,3899 L102,3899 C103.105,3899 104,3898.105 104,3897 L104,3881 C104,3879.895 103.105,3879 102,3879 L86,3879 C84.895,3879 84,3879.895 84,3881"
+              id="cc-[#ffffff]"
+            >
+              {" "}
+            </path>{" "}
+          </g>{" "}
+        </g>{" "}
+      </g>{" "}
+    </g>
+  </svg>
 );
 
 const startIcon = (
@@ -71,15 +112,28 @@ const pauseIcon = (
 );
 
 const hangUpIcon = (
-  <svg fill="#ffffff" 
-  viewBox="0 0 24 24" id="hang-up" 
-  data-name="Line Color" xmlns="http://www.w3.org/2000/svg" 
-  stroke="#ffffff"><g id="SVGRepo_bgCarrier" 
-  stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" 
-  stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-  <path id="primary" d="M5.68,15c-.54-.53-1.4-1.39-2.09-2.09a1.48,1.48,0,0,1,.16-2.28,13.61,13.61,0,0,1,16.63,0,1.48,1.48,0,0,1,.16,2.28L18.45,15a.75.75,0,0,1-1,.06,8.24,8.24,0,0,0-2.55-1.49.74.74,0,0,1-.45-.9l.2-.72A.78.78,0,0,0,14,11a10.44,10.44,0,0,0-3.94,0,.77.77,0,0,0-.6.95l.2.72a.74.74,0,0,1-.46.9,8.36,8.36,0,0,0-2.55,1.49A.74.74,0,0,1,5.68,15Z"></path></g>
+  <svg
+    fill="#ffffff"
+    viewBox="0 0 24 24"
+    id="hang-up"
+    data-name="Line Color"
+    xmlns="http://www.w3.org/2000/svg"
+    stroke="#ffffff"
+  >
+    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    ></g>
+    <g id="SVGRepo_iconCarrier">
+      <path
+        id="primary"
+        d="M5.68,15c-.54-.53-1.4-1.39-2.09-2.09a1.48,1.48,0,0,1,.16-2.28,13.61,13.61,0,0,1,16.63,0,1.48,1.48,0,0,1,.16,2.28L18.45,15a.75.75,0,0,1-1,.06,8.24,8.24,0,0,0-2.55-1.49.74.74,0,0,1-.45-.9l.2-.72A.78.78,0,0,0,14,11a10.44,10.44,0,0,0-3.94,0,.77.77,0,0,0-.6.95l.2.72a.74.74,0,0,1-.46.9,8.36,8.36,0,0,0-2.55,1.49A.74.74,0,0,1,5.68,15Z"
+      ></path>
+    </g>
   </svg>
-)
+);
 
 // Variable to hold visemes outside the getter function
 let visemes: string | null = null;
@@ -93,7 +147,7 @@ export function getVisemes() {
   return visemes;
 }
 
-// getter function to access visemes
+// getter function to access mood
 export function getMood() {
   console.log("getting mood");
   return mood;
@@ -148,21 +202,21 @@ const ChatScreen: React.FC = () => {
   const websocketConnected = useRef(false);
 
   useEffect(() => {
-    if (websocketConnected.current==false) {
+    if (websocketConnected.current == false) {
       start_ws(scenarioID);
-      
+
       setTimeout(() => {
-      setPlaying(true);
-      tickScenario();
-      websocketConnected.current = true;
-      },1500);
+        setPlaying(true);
+        tickScenario();
+        websocketConnected.current = true;
+      }, 1500);
       //webSocketRef.current && webSocketRef.current.send(JSON.stringify(" "));
     }
-  
+
     //return () => {
-      //if (socket) {
-        //stop_ws(socket);
-      //}
+    //if (socket) {
+    //stop_ws(socket);
+    //}
     //};
   }, []);
 
@@ -174,7 +228,6 @@ const ChatScreen: React.FC = () => {
     }, keepAliveInterval);
     return () => clearInterval(interval);
   }, [socket]);
-
 
   // Start the websocket
   function start_ws(scenarioId: number = 0) {
@@ -210,14 +263,14 @@ const ChatScreen: React.FC = () => {
 
   // State to store the list of messages
   const [messages, setMessages] = useState<Message[]>([]);
- 
+
   // State to handle the user's input
   const [newMessage, setNewMessage] = useState("");
 
   // Ref for scrolling to the bottom of the chat
   const messageScrollRef = useRef<HTMLDivElement>(null);
 
-// State to determine if AI is "typing"
+  // State to determine if AI is "typing"
   const [isTyping, setIsTyping] = useState(false);
 
   const playNextSpeech = () => {
@@ -282,6 +335,15 @@ const ChatScreen: React.FC = () => {
       console.log("Got WS mood: " + mood);
 
       // Emit an event whenever visemes are updated
+      console.log(
+        "Listeners before emit:",
+        visemesEmitter.listeners("visemesUpdated").length
+      );
+      console.log(
+        "Emitted:",
+        visemesEmitter.emit("visemesUpdated", { visemes, mood })
+      );
+
       visemesEmitter.emit("visemesUpdated", { visemes, mood });
 
       if (playingRef.current) tickScenario();
@@ -395,7 +457,6 @@ const ChatScreen: React.FC = () => {
     webSocketRef.current && webSocketRef.current.send(JSON.stringify(json));
   }
 
-
   return (
     <div className="conversation">
       <div className="container-fluid">
@@ -411,7 +472,6 @@ const ChatScreen: React.FC = () => {
         </div>
 
         <div className="chatWrapper">
-
           {/* Collapsible Chat Card */}
           <div className={`card ${isOpen ? "open" : "collapsed"}`}>
             {isOpen && (
@@ -456,20 +516,20 @@ const ChatScreen: React.FC = () => {
                       )}
                     </div>
                   ))}
-                {isTyping && (
-                        <div className="message messageReceiver">
-                            <div className="receiverName font-corpos">AI Model</div>
-                            <div className="receiverMessage font-corpos">
-                            <span className="typing-ellipsis"></span>
-                            </div>
-                        </div>
-                    )}
+                  {isTyping && (
+                    <div className="message messageReceiver">
+                      <div className="receiverName font-corpos">AI Model</div>
+                      <div className="receiverMessage font-corpos">
+                        <span className="typing-ellipsis"></span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
         </div>
-        
+
         <div className="chatElements">
           {/* Input field for typing new messages */}
           <div className={`inputContainer ${isOpen ? "open" : "collapsed"}`}>
@@ -482,8 +542,8 @@ const ChatScreen: React.FC = () => {
                 value={newMessage} // Bind input value to state
                 onChange={(e) => setNewMessage(e.target.value)} // Update state on input change
                 onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} // Send message on Enter key press
-              />)}
-            
+              />
+            )}
           </div>
 
           <AudioRecorder onAudioRecorded={take_audio} />
