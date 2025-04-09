@@ -6,6 +6,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { Experience } from "../components/Experience";
 import visemesEmitter from "../components/visemeEvents";
 import AudioRecorder from "../components/AudioRecorder";
+import { useNavigate } from "react-router-dom";
 // Define the structure of a message
 interface Message {
   sender: string; // Who sent the message: "user" or "recipient"
@@ -69,6 +70,17 @@ const pauseIcon = (
   </svg>
 );
 
+const hangUpIcon = (
+  <svg fill="#ffffff" 
+  viewBox="0 0 24 24" id="hang-up" 
+  data-name="Line Color" xmlns="http://www.w3.org/2000/svg" 
+  stroke="#ffffff"><g id="SVGRepo_bgCarrier" 
+  stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" 
+  stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+  <path id="primary" d="M5.68,15c-.54-.53-1.4-1.39-2.09-2.09a1.48,1.48,0,0,1,.16-2.28,13.61,13.61,0,0,1,16.63,0,1.48,1.48,0,0,1,.16,2.28L18.45,15a.75.75,0,0,1-1,.06,8.24,8.24,0,0,0-2.55-1.49.74.74,0,0,1-.45-.9l.2-.72A.78.78,0,0,0,14,11a10.44,10.44,0,0,0-3.94,0,.77.77,0,0,0-.6.95l.2.72a.74.74,0,0,1-.46.9,8.36,8.36,0,0,0-2.55,1.49A.74.74,0,0,1,5.68,15Z"></path></g>
+  </svg>
+)
+
 // Variable to hold visemes outside the getter function
 let visemes: string | null = null;
 
@@ -93,7 +105,7 @@ const ChatScreen: React.FC = () => {
   const [playing, setPlaying] = useState(false);
   const [humanCharacter, setHumanCharacter] = useState("");
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-
+  const navigate = useNavigate();
   const keepAliveInterval = 5000;
 
   const webSocketRef = useRef(socket);
@@ -480,6 +492,9 @@ const ChatScreen: React.FC = () => {
             {/* Toggle Button */}
             <button className="toggleButton" onClick={() => setIsOpen(!isOpen)}>
               {chatBoxIcon}
+            </button>
+            <button className="hangUpButton" onClick={() => navigate("/")}>
+              {hangUpIcon}
             </button>
           </div>
         </div>

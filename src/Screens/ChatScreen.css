@@ -6,8 +6,9 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 600px;
+  width: 100vw;
+  max-width: 100vw;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,14 +16,14 @@
   z-index: 1000;
   flex-wrap: wrap;
   gap: 10px;
-
+  background: black;
+  
 }
 /* Input Container at the Bottom Center */
 .inputContainer {
   display: flex;
   align-items: center;
   border-radius: 5px;
-  padding: 10px;
   color: white;
   transition: max-height 0.3s ease-in-out, opacity 0.3s;
 }
@@ -176,11 +177,9 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
-  
+    height: 90vh;
     background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border:  10px solid #000000;
     overflow-y: auto;
 
 
@@ -215,12 +214,13 @@
 .playChat,
 .pauseChat,
 .startScenario,
-.toggleButton {
+.toggleButton,
+.hangUpButton {
   width: 50px; 
   height: 50px; 
   color: white; 
   border: none; 
-  border-radius: 50%; 
+  border-radius: 20%; 
   display: flex;
   justify-content: center; 
   align-items: center;
@@ -277,6 +277,18 @@
 
 .toggleButton:active {
   box-shadow: 0 2px 4px rgba(51, 10, 213, 0.2); 
+}
+
+.hangUpButton {
+  background-color: rgb(181, 0, 0);
+}
+
+.hangUpButton:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.hangUpButton:active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
 .toggleButton svg{
