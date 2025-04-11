@@ -25,7 +25,7 @@ const useVisemeAnimation = (
 
     const handleVisemesUpdated = ({ visemes, mood }) => {
       if (mood) setFacialExpression(mood);
-      console.log("Received updated visemes:", visemes);
+      //console.log("Received updated visemes:", visemes);
 
       /*
       if (!group.current) {
@@ -61,7 +61,7 @@ const useVisemeAnimation = (
     };
   }, [group, visemesEmitter, getVisemes, setFacialExpression]);
 
-  const lerpInfluence = (node, visemeName, targetValue, duration, weight = 0.7) => {
+  const lerpInfluence = (node, visemeName, targetValue, duration, weight = 1 ) => {
     const start = performance.now();
 
     const update = () => {
@@ -158,34 +158,36 @@ useEffect(() => {
           const mesh = nodes[meshName];
 
           if (mesh.morphTargetDictionary) {
-            lastVisemeTargets.forEach((prevViseme) => {
+            lastVisemeTargets.forEach(({ target: prevViseme }) => {
               if (mesh.morphTargetDictionary[prevViseme] !== undefined) {
-                lerpInfluence(mesh, prevViseme, 0, 300, 0.2);
+                lerpInfluence(mesh, prevViseme, 0, 300, 1);
               }
+
+              const neutralRotation = new THREE.Euler(0, 0, 1.55);
+              lerpJawRotation(neutralRotation, 300);
+              
             });
 
             if (!isSilent && visemeTargets.length > 0) {
-              visemeTargets.forEach((visemeTarget) => {
-                if (mesh.morphTargetDictionary[visemeTarget] !== undefined) {
-                  lerpInfluence(mesh, visemeTarget, 1, 300, 0.2);
+              visemeTargets.forEach(({ target, weight }) => {
+                if (mesh.morphTargetDictionary[target] !== undefined) {
+                  lerpInfluence(mesh, target, weight, 300, 1);
                 }
+                if (mesh.morphTargetDictionary[target] == VOpen){
+                  const jawRotation = new THREE.Euler(0, 0, 1.95);
+                  lerpJawRotation(jawRotation, 300)
+                }
+                if (mesh.morphTargetDictionary[target] == OpenJaw){
+                  const jawRotation = new THREE.Euler(0, 0, 2);
+                  lerpJawRotation(jawRotation, 300)
+                }
+
               });
             }
           }
         });
 
-        if (VOpen) {
-          const jawRotation = new THREE.Euler(0, 0, 1.95);
-          lerpJawRotation(jawRotation, 300);
-        } 
-        else if (OpenJaw){
-          const jawRotation = new THREE.Euler(0, 0, 2);
-          lerpJawRotation(jawRotation, 300);
-        }
-        else {
-          const neutralRotation = new THREE.Euler(0, 0, 1.55);
-          lerpJawRotation(neutralRotation, 300);
-        }
+        
 
         lastVisemeTargets = visemeTargets;
       }, t * 1000 + index * 10);
