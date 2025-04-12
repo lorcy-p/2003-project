@@ -199,26 +199,23 @@ const ChatScreen: React.FC = () => {
     setSocket(ws);
   }
 
-  const websocketConnected = useRef(false);
-
+  // Use Effect to connect to the websocket
   useEffect(() => {
-    if (websocketConnected.current == false) {
+
+    // If there are no current websocket connections establish a connection
+    if (!webSocketRef.current) {
       start_ws(scenarioID);
-
-      setTimeout(() => {
-        setPlaying(true);
-        tickScenario();
-        websocketConnected.current = true;
-      }, 1500);
-      //webSocketRef.current && webSocketRef.current.send(JSON.stringify(" "));
     }
+  
+    // When the component unmounts close the connection
+    return () => {
+      if (webSocketRef.current) {
+        webSocketRef.current.close();
+        webSocketRef.current = null;
+      }
+    };
+  }, [scenarioID]); // Add scenarioID as a dependency
 
-    //return () => {
-    //if (socket) {
-    //stop_ws(socket);
-    //}
-    //};
-  }, []);
 
   // Keep websocket alive with a background empty request
   useEffect(() => {
@@ -230,15 +227,19 @@ const ChatScreen: React.FC = () => {
   }, [socket]);
 
   // Start the websocket
-  function start_ws(scenarioId: number = 0) {
-    // Create a websocket connection
+  function start_ws(scenarioId = 0) {
+    
+    // Assign websocket instance to webSocketRef
     const ws = new WebSocket("wss://studio.metaphysical.dev/agents");
-
-    // Set up event listeners
+    webSocketRef.current = ws;
+  
+    // When the connection is opened play and tick the scenario to start communication
     ws.onopen = () => {
       connected(ws, scenarioId);
+      setPlaying(true);
+      tickScenario();
     };
-    ws.onmessage = (e: MessageEvent) => {
+    ws.onmessage = (e) => {
       handleMessage(e.data);
     };
     ws.onerror = (event) => {
@@ -246,13 +247,7 @@ const ChatScreen: React.FC = () => {
     };
     ws.onclose = () => {
       console.log("WebSocket closed");
-      //stop_ws(ws);
     };
-
-    // Clean up when the component unmounts
-    return () => {
-      //ws.close();
-    }; // Close websocket
   }
 
   // Stop the websocket
