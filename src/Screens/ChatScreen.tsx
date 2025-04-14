@@ -389,7 +389,7 @@ const ChatScreen: React.FC = () => {
 
     const json = {
       type: "input",
-      name: humanCharacter,
+      name: "Human",
       audio: base64,
     };
 
@@ -400,7 +400,12 @@ const ChatScreen: React.FC = () => {
         ...prevMessages,
         { sender: "user", text: newMessage, timestamp: getCurrentTime() },
       ]);
+      
+      tickScenario()
+      
     }, 2000);
+
+    
   }
 
   // Function to get the current time in "HH:MM AM/PM" format
