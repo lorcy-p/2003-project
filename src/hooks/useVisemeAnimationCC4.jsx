@@ -151,7 +151,7 @@ useEffect(() => {
       const visemeTargets = visemeMap[v] || [];
       const isSilent = v === "-";
       const VOpen =  v === "V_Open";
-      const OpenJaw = v === "Open_Jaw"
+      const OpenJaw = v === "Jaw_Open"
 
       setTimeout(() => {
         Object.keys(nodes).forEach((meshName) => {
@@ -194,7 +194,7 @@ useEffect(() => {
     });
   };
 
-  return { lerpInfluence };
+  return { lerpInfluence, lerpJawRotation };
 };
 
 export default useVisemeAnimation;
