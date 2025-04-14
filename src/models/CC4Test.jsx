@@ -79,17 +79,27 @@ export function CC4Test(props) {
     */
 
     "e": [
-      { target: "Mouth_Shrug_Upper", weight: 0.2 },
-      { target: "Mouth_Drop_Lower", weight: 0.2 },
-      { target: "Mouth_Down", weight: 0.3 },
-      { target: "Mouth_Pull_Lower_L", weight: 1 },
-      { target: "Mouth_Pull_Lower_R", weight: 1 },
-      { target: "Mouth_Pull_Upper_L", weight: 1 },
-      { target: "Mouth_Pull_Upper_R", weight: 1 },
-      { target: "Mouth_Smile_L", weight: 0.3 },
-      { target: "Mouth_Smile_R", weight: 0.3 },
-      { target: "Jaw_Open", weight: 0.09 },
+      { target: "V_Lip_Open", weight: 1 },
+      { target: "Mouth_Smile_L", weight: 0.25 },
+      { target: "Mouth_Smile_R", weight: 0.25 },
+      { target: "Mouth_Dimple_L", weight: 0.2 },
+      { target: "Mouth_Dimple_R", weight: 0.2 },
+      { target: "Jaw_Open", weight: 0.2 },
     ],
+
+
+    /* 
+    { target: "Mouth_Shrug_Upper", weight: 0.2 },
+    { target: "Mouth_Drop_Lower", weight: 0.2 },
+    { target: "Mouth_Down", weight: 0.3 },
+    { target: "Mouth_Pull_Lower_L", weight: 1 },
+    { target: "Mouth_Pull_Lower_R", weight: 1 },
+    { target: "Mouth_Pull_Upper_L", weight: 1 },
+    { target: "Mouth_Pull_Upper_R", weight: 1 },
+    { target: "Mouth_Smile_L", weight: 0.3 },
+    { target: "Mouth_Smile_R", weight: 0.3 },
+    { target: "Jaw_Open", weight: 0.09 },
+    */
 
     "i": [
       { target: "Mouth_Shrug_Upper", weight: 0.2 },
@@ -343,7 +353,7 @@ export function CC4Test(props) {
 
                   if (target == "Jaw_Open"){
                     console.log("jaw")
-                    if (val > 0.75)
+                    if (val > 0.65)
                       {
                         const jawRotation = new THREE.Euler(0, 0, val * weight + 1.45);
                         lerpJawRotation(jawRotation, 300)
