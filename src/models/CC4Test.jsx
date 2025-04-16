@@ -41,6 +41,7 @@ export function CC4Test(props) {
 
 
   // Map viseme symbols to corresponding morph target names as these may differ per model
+  // Includes weight values for each corresponding morph target
   const visemeMap = {
     // Silence
     "-": [{ target: "Silence", weight: 1 }],
@@ -48,21 +49,22 @@ export function CC4Test(props) {
     "a": [
       { target: "Mouth_Smile_L", weight: 0.23 },
       { target: "Mouth_Smile_R", weight: 0.23 },
+      { target: "Jaw_Forward", weight: 0.37 },
       { target: "Jaw_Open", weight: 0.31 },
     ],
 
     /*
-    { target: "Mouth_Drop_Lower", weight: 0.2 },
-    { target: "Mouth_Frown_L", weight: 0.2 },
-    { target: "Mouth_Frown_R", weight: 0.2 },
-    { target: "V_Tongue_Out", weight: -0.4 },
-    { target: "TongueRotation", weight: 0.12 },
-    { target: "Jaew_Open", weight: 0.2 },
+      { target: "Mouth_Drop_Lower", weight: 0.2 },
+      { target: "Mouth_Frown_L", weight: 0.2 },
+      { target: "Mouth_Frown_R", weight: 0.2 },
+      { target: "V_Tongue_Out", weight: -0.4 },
+      { target: "TongueRotation", weight: 0.12 },
+      { target: "Jaw_Open", weight: 0.2 },
     */
 
     "o": [
       { target: "V_Tight_O", weight: 0.68 },
-      { target: "Jaw_Open", weight: 0.33 },
+
     ],
 
     /*
@@ -84,25 +86,35 @@ export function CC4Test(props) {
       { target: "Mouth_Smile_R", weight: 0.25 },
       { target: "Mouth_Dimple_L", weight: 0.2 },
       { target: "Mouth_Dimple_R", weight: 0.2 },
-      { target: "Jaw_Open", weight: 0.2 },
+
     ],
 
 
     /* 
-    { target: "Mouth_Shrug_Upper", weight: 0.2 },
-    { target: "Mouth_Drop_Lower", weight: 0.2 },
-    { target: "Mouth_Down", weight: 0.3 },
-    { target: "Mouth_Pull_Lower_L", weight: 1 },
-    { target: "Mouth_Pull_Lower_R", weight: 1 },
-    { target: "Mouth_Pull_Upper_L", weight: 1 },
-    { target: "Mouth_Pull_Upper_R", weight: 1 },
-    { target: "Mouth_Smile_L", weight: 0.3 },
-    { target: "Mouth_Smile_R", weight: 0.3 },
-    { target: "Jaw_Open", weight: 0.09 },
+      { target: "Mouth_Shrug_Upper", weight: 0.2 },
+      { target: "Mouth_Drop_Lower", weight: 0.2 },
+      { target: "Mouth_Down", weight: 0.3 },
+      { target: "Mouth_Pull_Lower_L", weight: 1 },
+      { target: "Mouth_Pull_Lower_R", weight: 1 },
+      { target: "Mouth_Pull_Upper_L", weight: 1 },
+      { target: "Mouth_Pull_Upper_R", weight: 1 },
+      { target: "Mouth_Smile_L", weight: 0.3 },
+      { target: "Mouth_Smile_R", weight: 0.3 },
+      { target: "Jaw_Open", weight: 0.09 },
     */
 
     "i": [
-      { target: "Mouth_Shrug_Upper", weight: 0.2 },
+      { target: "Mouth_Smile_Sharp_R", weight: 0.45 },
+      { target: "Mouth_Smile_Sharp_L", weight: 0.45 },
+      { target: "Mouth_Shrug_Upper", weight: 0.38 },
+      { target: "Mouth_Drop_Lower", weight: 0.25 },
+      { target: "Jaw_Forward", weight: 0.25 },
+      { target: "Jaw_Open", weight: 0.2 },
+
+    ],
+
+    /*
+     { target: "Mouth_Shrug_Upper", weight: 0.2 },
       { target: "Mouth_Drop_Lower", weight: 0.21 },
       { target: "Mouth_Down", weight: 0.2 },
       { target: "Jaw_Open", weight: 0.1 },
@@ -116,17 +128,36 @@ export function CC4Test(props) {
       { target: "TongueRotation", weight: -0.2 },
       { target: "TongueUp", weight: 0.2 },
       { target: "V_Tongue_Out", weight: 0.2 }, 
-    ],
+    */
 
     "u": [
+      { target: "Mouth_Funnel_Up_L", weight: 0.5 },
+      { target: "Mouth_Funnel_Up_R", weight: 0.5 },
+      { target: "Mouth_Funnel_Down_L", weight: 0.5 },
+      { target: "Mouth_Funnel_Down_R", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Upper_L", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Upper_R", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Lower_L", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Lower_R", weight: 0.5 },
+      { target: "Mouth_Pull_Upper_L", weight: 0.5 },
+      { target: "Mouth_Pull_Upper_R", weight: 0.5 },
+      { target: "Mouth_Pull_Lower_L", weight: 0.5 },
+      { target: "Mouth_Pull_Lower_R", weight: 0.5 },
+    ],
+
+    /*
       { target: "Mouth_Shrug_Lower", weight: 0.1 },
       { target: "Mouth_Drop_Upper", weight: 0.22 },
       { target: "Mouth_Down", weight: 0.27 },
       { target: "V_Tight_O", weight: 0.8 },
       { target: "Jaw_Open", weight: 0.11 },
-    ],
+    */
 
     "r": [
+      { target: "V_Affricate", weight: 0.75 },
+    ],
+
+    /*
       { target: "Mouth_Drop_Upper", weight: 0.2 },
       { target: "Mouth_Drop_Lower", weight: 0.1 },
       { target: "Mouth_Down", weight: 0.22 },
@@ -141,9 +172,14 @@ export function CC4Test(props) {
       { target: "Jaw_Open", weight: 0.05 },
       { target: "TongueUp", weight: 0.2 },
       { target: "TongueRotation", weight: -0.3 },
-    ],
+    */
 
     "s": [
+      { target: "V_Wide", weight: 0.6 },
+      { target: "V_Lip_Open", weight: 1 },
+    ],
+
+    /*
       { target: "V_Open", weight: 0.3 },
       { target: "Mouth_Drop_Lower", weight: 0.85 },
       { target: "Mouth_Smile_L", weight: 0.27 },
@@ -152,9 +188,15 @@ export function CC4Test(props) {
       { target: "Mouth_Roll_In_Upper_R", weight: 0.2 },
       { target: "V_Wide", weight: 0.3 },
       { target: "Jaw_Open", weight: 0.05 },
-    ],
+    */
 
     "n": [
+      { target: "V_Lip_Open", weight: 0.8 },
+      { target: "V_Tight", weight: 0.12 },
+      { target: "Mouth_Drop_Lower", weight: 0.21 },
+    ],
+
+    /*
       { target: "Mouth_Drop_Lower", weight: 0.5 },
       { target: "Mouth_Down", weight: 0.22 },
       { target: "Mouth_Pull_Lower_L", weight: 1 },
@@ -165,9 +207,21 @@ export function CC4Test(props) {
       { target: "Jaw_Open", weight: 0.08 },
       { target: "TongueRotation", weight: -0.3 },
       { target: "TongueUp", weight: 0.22 },
-    ],
+    */
 
     "th": [
+      { target: "Mouth_Drop_Lower", weight: 0.2 },
+      { target: "Mouth_Shrug_Upper", weight: 0.25 },
+      { target: "Mouth_Stretch_L", weight: 0.1 },
+      { target: "Mouth_Stretch_R", weight: 0.1 },
+      { target: "V_Lip_Open", weight: 0.5 },
+      { target: "V_Tongue_Out", weight: 0.5 },
+      { target: "Jaw_Open", weight: 0.2},
+      { target: "Jaw_Forward", weight: 0.42},
+      { target: "Tongue_Up", weight: 0.5 },
+    ],
+
+    /*
       { target: "Mouth_Drop_Lower", weight: 0.2 },
       { target: "Mouth_Shrug_Upper", weight: 0.25 },
       { target: "Mouth_Stretch_L", weight: 0.1 },
@@ -177,14 +231,24 @@ export function CC4Test(props) {
       { target: "Jaw_Open", weight: 0.12 },
       { target: "TongueUp", weight: 0.22 },
       { target: "TongueRotation", weight: -0.3 },
-    ],
+    */
 
     "f": [
+      { target: "V_Dental_Lip", weight: 1 },
+      { target: "Mouth_Smile_Sharp_L", weight: 0.3 },
+      { target: "Mouth_Smile_Sharp_R", weight: 0.3 },
+      { target: "Mouth_Pull_Lower_L", weight: .5 },
+      { target: "Mouth_Pull_Lower_R", weight: .5 },
+      { target: "Mouth_Drop_Lower", weight: 0.4 },
+      { target: "Jaw_Forward", weight: .25 },
+    ],
+
+    /*
       { target: "V_Dental_Lip", weight: 1 },
       { target: "Mouth_Funnel_Down_L", weight: 0.2 },
       { target: "Mouth_Funnel_Down_R", weight: 0.2 },
       { target: "Mouth_Drop_Upper", weight: 0.25 },
-    ],
+    */
 
     "d": [
       { target: "Mouth_Shrug_Upper", weight: 0.35 },
@@ -194,18 +258,48 @@ export function CC4Test(props) {
       { target: "Mouth_Roll_Out_Lower_R", weight: 0.5 },
       { target: "V_Lip_Open", weight: 0.5 },
       { target: "Jaw_Open", weight: 0.07 },
+      { target: "Jaw_Forward", weight: 0.3 },
       { target: "TongueRotation", weight: -0.6 },
       { target: "TongueUp", weight: 0.22 },
     ],
 
     "k": [
+      { target: "V_Wide", weight: 0.6 },
+      { target: "V_Affricate", weight: 0.25 },
+      { target: "V_Lip_Open", weight: 1 },
+
+    ],
+
+    /*
       { target: "Mouth_Drop_Lower", weight: 0.6 },
       { target: "Mouth_Shrug_Upper", weight: 0.1 },
       { target: "Jaw_Open", weight: 0.06 },
       { target: "V_Wide", weight: 0.1 },
-    ],
+    */
 
     "p": [
+      { target: "V_Explosive", weight: 1 },
+      { target: "Mouth_Pucker_Up_L", weight: 0.25 },
+      { target: "Mouth_Pucker_Up_R", weight: 0.25 },
+      { target: "Mouth_Pucker_Down_L", weight: 0.25 },
+      { target: "Mouth_Pucker_Down_R", weight: 0.25 },
+      { target: "Mouth_Push_Upper_L", weight: 0.25 },
+      { target: "Mouth_Push_Upper_R", weight: 0.25 },
+      { target: "Mouth_Push_Lower_L", weight: 0.25 },
+      { target: "Mouth_Push_Lower_R", weight: 0.25 },
+    ],
+
+    /*
+      { target: "V_Explosive", weight: 1 },
+      { target: "Mouth_Roll_In_Upper_L", weight: 0.3 },
+      { target: "Mouth_Roll_In_Upper_R", weight: 0.3 },
+      { target: "Mouth_Roll_In_Lower_L", weight: 0.3 },
+      { target: "Mouth_Roll_In_Lower_R", weight: 0.3 },
+      { target: "Open_Jaw", weight: 0.1 },
+    */
+
+
+    "m": [
       { target: "V_Explosive", weight: 1 },
       { target: "Mouth_Roll_In_Upper_L", weight: 0.3 },
       { target: "Mouth_Roll_In_Upper_R", weight: 0.3 },
@@ -349,23 +443,47 @@ export function CC4Test(props) {
       
               visemeTargets.forEach(({ target, weight }) => {
                 const index = mesh.morphTargetDictionary[target];
+                let finalRotation = null;
+                let maxWeight = 0;
                 if (index !== undefined) {
 
-                  if (target == "Jaw_Open"){
-                    console.log("jaw")
-                    if (val > 0.65)
-                      {
-                        const jawRotation = new THREE.Euler(0, 0, val * weight + 1.45);
-                        lerpJawRotation(jawRotation, 300)
-                      }
-                    else{
-                       const neutralRotation = new THREE.Euler(0, 0, 1.55);
-                       lerpJawRotation(neutralRotation, 300)
-                      }
+                  if (target === "Jaw_Open" && weight > maxWeight) {
+                    const minRotation = 1.55;
+                    const maxRotation = 2.0;
+                    const influence = val * weight;
+                    const mappedRotation = minRotation + (maxRotation - minRotation) * influence;
+                  
+                    finalRotation = new THREE.Euler(0, 0, mappedRotation);
                   }
+
+                  // V_Tight_O
+                  if (target == "V_Tight_O" && weight > maxWeight){
+                    const minRotation = 1.55;
+                    const maxRotation = 1.75;
+                    const influence = val * weight;
+                    const mappedRotation = minRotation + (maxRotation - minRotation) * influence;
+                  
+                    finalRotation = new THREE.Euler(0, 0, mappedRotation);
+                  }
+
+                  // V_Lip_Open and V_Affricate
+                  if ((target == "V_Lip_Open" || target == "V_Affricate" ) && weight > maxWeight){
+                    const minRotation = 1.55;
+                    const maxRotation = 1.60;
+                    const influence = val * weight;
+                    const mappedRotation = minRotation + (maxRotation - minRotation) * influence;
+                  
+                    finalRotation = new THREE.Euler(0, 0, mappedRotation);
+                  }
+
+                  
 
                     // Apply weighted influence
                   lerpInfluence(mesh, target, val * weight, 0.1);
+
+                  if (finalRotation) {
+                    lerpJawRotation(finalRotation, 300);
+                  }
                   
                 }
 
