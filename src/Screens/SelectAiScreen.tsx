@@ -19,9 +19,10 @@ import PersonIcon from "@mui/icons-material/Person";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ChatIcon from "@mui/icons-material/Chat";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-// customised MUI theme
-const theme = createTheme({
+// Base theme 
+const baseTheme = createTheme({
     palette: {
         primary: {
             main: "#3a5ad9",
@@ -44,19 +45,23 @@ const theme = createTheme({
         fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
         h1: {
             fontWeight: 800,
-            letterSpacing: "-0.025em"
+            letterSpacing: "-0.025em",
+            fontSize: "clamp(1.5rem, 5vw, 2.5rem)"
         },
         h2: {
             fontWeight: 700,
-            letterSpacing: "-0.025em"
+            letterSpacing: "-0.025em",
+            fontSize: "clamp(1.3rem, 4vw, 2rem)"
         },
         h5: {
             fontWeight: 600,
-            letterSpacing: "-0.015em"
+            letterSpacing: "-0.015em",
+            fontSize: "clamp(1.1rem, 3vw, 1.5rem)"
         },
         h6: {
             fontWeight: 600,
-            letterSpacing: "-0.01em"
+            letterSpacing: "-0.01em",
+            fontSize: "clamp(1rem, 2.5vw, 1.25rem)"
         },
         button: {
             fontWeight: 600
@@ -64,15 +69,24 @@ const theme = createTheme({
     },
     shape: {
         borderRadius: 12
-    },
+    }
+});
+
+// full theme with component overrides
+const theme = createTheme(baseTheme, {
     components: {
         MuiButton: {
             styleOverrides: {
                 root: {
                     textTransform: "none",
                     fontWeight: 600,
-                    padding: "10px 20px",
-                    boxShadow: "none"
+                    padding: "8px 16px",
+                    boxShadow: "none",
+                    fontSize: "0.875rem",
+                    [baseTheme.breakpoints.up('sm')]: {
+                        padding: "10px 20px",
+                        fontSize: "0.9375rem"
+                    }
                 },
                 containedPrimary: {
                     "&:hover": {
@@ -94,25 +108,30 @@ const theme = createTheme({
                 root: {
                     textTransform: "none",
                     fontWeight: 600,
-                    fontSize: "0.95rem",
-                    minHeight: 48
+                    fontSize: "0.85rem",
+                    minHeight: 48,
+                    padding: "8px 12px",
+                    [baseTheme.breakpoints.up('sm')]: {
+                        fontSize: "0.95rem",
+                        padding: "12px 16px"
+                    }
+                }
+            }
+        },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    '& .MuiInputBase-root': {
+                        fontSize: '0.875rem',
+                        [baseTheme.breakpoints.up('sm')]: {
+                            fontSize: '0.9375rem'
+                        }
+                    }
                 }
             }
         }
     }
 });
-
-// Define the AI character interface
-interface AICharacter {
-    id: number;
-    name: string;
-    shortDescription: string;
-    age: number;
-    gender: string;
-    residence: string;
-    fullDescription: string;
-    imagePath: string;
-}
 
 // Styled components
 const CharacterCard = styled(Card, {
@@ -137,6 +156,17 @@ const DetailCard = styled(Card)(({ theme }) => ({
     overflow: "hidden",
     display: "flex",
     flexDirection: "column"
+}));
+
+const StickyDetailCard = styled(DetailCard)(({ theme }) => ({
+    position: 'sticky',
+    top: theme.spacing(8),
+    height: 'calc(100vh - 64px)',
+    overflowY: 'auto',
+    [theme.breakpoints.down('sm')]: {
+        top: theme.spacing(12),
+        height: 'calc(100vh - 96px)'
+    }
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -170,7 +200,7 @@ function TabPanel(props: TabPanelProps) {
                 flex: value === index ? 1 : 0
             }}
         >
-            {value === index && <Box sx={{ p: { xs: 2, md: 3 } }}>{children}</Box>}
+            {value === index && <Box sx={{ p: { xs: 2, sm: 3 } }}>{children}</Box>}
         </div>
     );
 }
@@ -180,6 +210,8 @@ const SelectAI: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedAI, setSelectedAI] = useState<AICharacter | null>(null);
     const [tabValue, setTabValue] = useState(0);
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
     // Sample AI character data
     const aiCharacters: AICharacter[] = [
@@ -203,7 +235,6 @@ const SelectAI: React.FC = () => {
             fullDescription: "Wade has been smithing since he was a young lad. His father made sure to teach him all the tricks he needs to make high quality products.",
             imagePath: "/images/AI image.png"
         },
-        // Adding more characters to demonstrate grid layout
         {
             id: 176,
             name: "Marshal Jones",
@@ -296,17 +327,38 @@ const SelectAI: React.FC = () => {
                 backgroundColor: "background.default",
                 minHeight: "100vh",
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
+                overflowX: 'hidden', 
+                width: '100vw' 
             }}>
-                <Container maxWidth="xl" sx={{ flex: 1, display: "flex", flexDirection: "column", py: 3 }}>
+                <Container 
+                    maxWidth="xl" 
+                    sx={{ 
+                        flex: 1, 
+                        display: "flex", 
+                        flexDirection: "column", 
+                        py: { xs: 2, sm: 3 },
+                        px: { xs: 2, sm: 3 },
+                        overflowX: 'hidden', 
+                        width: '100%' 
+                    }}
+                >
                     {/* Header */}
                     <Box sx={{
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        mb: 3
+                        mb: { xs: 2, sm: 3 },
+                        flexDirection: isSmallScreen ? 'column' : 'row',
+                        gap: isSmallScreen ? 2 : 0,
+                        width: '100%',
+                        overflowX: 'hidden' 
                     }}>
-                        <Box>
+                        <Box sx={{ 
+                            textAlign: isSmallScreen ? 'center' : 'left',
+                            mb: isSmallScreen ? 1 : 0,
+                            width: '100%'
+                        }}>
                             <Typography variant="h5" component="h1" fontWeight="bold" color="primary">
                                 Metaphysical
                             </Typography>
@@ -314,14 +366,15 @@ const SelectAI: React.FC = () => {
                                 height: 3,
                                 width: 40,
                                 bgcolor: "primary.main",
-                                mt: 0.5
+                                mt: 0.5,
+                                mx: isSmallScreen ? 'auto' : 'inherit'
                             }} />
                             <Typography variant="subtitle1" color="text.secondary">
                                 Studio
                             </Typography>
                         </Box>
 
-                        {/* Search bar moved to header for better space utilization */}
+                        {/* Search bar */}
                         <TextField
                             placeholder="Search characters..."
                             value={searchQuery}
@@ -336,11 +389,10 @@ const SelectAI: React.FC = () => {
                                 ),
                             }}
                             sx={{
-                                width: { xs: "50%", sm: "40%", md: "30%" },
+                                width: isSmallScreen ? '100%' : (isMediumScreen ? '60%' : '40%'),
                                 "& .MuiOutlinedInput-root": {
                                     borderRadius: 8
-                                },
-                                zIndex: "2"
+                                }
                             }}
                         />
                     </Box>
@@ -350,19 +402,23 @@ const SelectAI: React.FC = () => {
                         flex: 1,
                         display: "flex",
                         flexDirection: { xs: "column", md: "row" },
-                        gap: 3
+                        gap: { xs: 2, sm: 3 },
+                        width: '100%',
+                        overflowX: 'hidden' 
                     }}>
-                        {/* Character grid - takes less space for more sleek look */}
+                        {/* Character grid */}
                         <Box sx={{
-                            width: { xs: "100%", md: "35%" },
+                            width: { xs: "100%", md: "35%", lg: "30%" },
                             display: "flex",
-                            flexDirection: "column"
+                            flexDirection: "column",
+                            overflowX: 'hidden' 
                         }}>
                             <Box sx={{
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
-                                mb: 2
+                                mb: 2,
+                                width: '100%'
                             }}>
                                 <Typography variant="h6">Characters</Typography>
                                 <Chip
@@ -378,6 +434,7 @@ const SelectAI: React.FC = () => {
                                 overflowY: "auto",
                                 pr: { xs: 0, md: 1 },
                                 py: 0.5,
+                                width: '100%',
                                 "&::-webkit-scrollbar": {
                                     width: "6px",
                                     borderRadius: "3px"
@@ -387,7 +444,7 @@ const SelectAI: React.FC = () => {
                                     borderRadius: "3px"
                                 }
                             }}>
-                                <Grid container spacing={2}>
+                                <Grid container spacing={{ xs: 1.5, sm: 2 }}>
                                     {filteredCharacters.map((character) => (
                                         <Grid item xs={12} sm={6} md={12} lg={6} key={character.id}>
                                             <CharacterCard
@@ -396,12 +453,22 @@ const SelectAI: React.FC = () => {
                                             >
                                                 <CardMedia
                                                     component="img"
-                                                    height="120"
+                                                    height={isSmallScreen ? "140" : "120"}
                                                     image={character.imagePath}
                                                     alt={character.name}
                                                 />
-                                                <CardContent sx={{ p: 2, pb: "16px !important", flex: 1 }}>
-                                                    <Typography variant="subtitle1" fontWeight="medium" gutterBottom noWrap>
+                                                <CardContent sx={{ 
+                                                    p: { xs: 1.5, sm: 2 }, 
+                                                    pb: "16px !important", 
+                                                    flex: 1 
+                                                }}>
+                                                    <Typography 
+                                                        variant="subtitle1" 
+                                                        fontWeight="medium" 
+                                                        gutterBottom 
+                                                        noWrap
+                                                        sx={{ fontSize: { xs: '0.9375rem', sm: '1rem' } }}
+                                                    >
                                                         {character.name}
                                                     </Typography>
                                                     <Typography
@@ -412,21 +479,30 @@ const SelectAI: React.FC = () => {
                                                             WebkitLineClamp: 2,
                                                             WebkitBoxOrient: 'vertical',
                                                             overflow: 'hidden',
-                                                            textOverflow: 'ellipsis'
+                                                            textOverflow: 'ellipsis',
+                                                            fontSize: { xs: '0.8125rem', sm: '0.875rem' }
                                                         }}
                                                     >
                                                         {character.shortDescription}
                                                     </Typography>
 
                                                     {/* Small info pills */}
-                                                    <Box sx={{ display: "flex", gap: 1, mt: 1.5, flexWrap: "wrap" }}>
+                                                    <Box sx={{ 
+                                                        display: "flex", 
+                                                        gap: 1, 
+                                                        mt: 1.5, 
+                                                        flexWrap: "wrap" 
+                                                    }}>
                                                         <Chip
                                                             label={character.residence}
                                                             size="small"
                                                             sx={{
                                                                 height: 24,
-                                                                fontSize: "0.75rem",
-                                                                bgcolor: "background.default"
+                                                                fontSize: "0.7rem",
+                                                                bgcolor: "background.default",
+                                                                [theme.breakpoints.up('sm')]: {
+                                                                    fontSize: "0.75rem"
+                                                                }
                                                             }}
                                                         />
                                                         <Chip
@@ -434,8 +510,11 @@ const SelectAI: React.FC = () => {
                                                             size="small"
                                                             sx={{
                                                                 height: 24,
-                                                                fontSize: "0.75rem",
-                                                                bgcolor: "background.default"
+                                                                fontSize: "0.7rem",
+                                                                bgcolor: "background.default",
+                                                                [theme.breakpoints.up('sm')]: {
+                                                                    fontSize: "0.75rem"
+                                                                }
                                                             }}
                                                         />
                                                     </Box>
@@ -447,7 +526,7 @@ const SelectAI: React.FC = () => {
 
                                 {filteredCharacters.length === 0 && (
                                     <Box sx={{
-                                        p: 4,
+                                        p: { xs: 3, sm: 4 },
                                         display: "flex",
                                         flexDirection: "column",
                                         alignItems: "center",
@@ -466,40 +545,48 @@ const SelectAI: React.FC = () => {
 
                         {/* Character details section */}
                         <Box sx={{
-                            width: { xs: "100%", md: "65%" },
-                            display: "flex"
+                            width: { xs: "100%", md: "65%", lg: "70%" },
+                            display: "flex",
+                            mt: { xs: selectedAI ? 0 : 2, md: 0 },
+                            position: 'relative',
+                            overflowX: 'hidden' 
                         }}>
                             {selectedAI ? (
-                                <DetailCard sx={{ width: "100%" }}>
+                                <DetailCard sx={{ 
+                                    width: "100%",
+                                    overflowX: 'hidden' 
+                                }}>
                                     {/* Character header with image */}
                                     <Box sx={{
                                         display: "flex",
-                                        p: { xs: 2, md: 3 },
-                                        gap: 3,
+                                        p: { xs: 2, sm: 3 },
+                                        gap: { xs: 2, sm: 3 },
                                         borderBottom: "1px solid rgba(0,0,0,0.08)",
                                         flexDirection: { xs: "column", sm: "row" },
-                                        alignItems: { xs: "center", sm: "flex-start" }
+                                        alignItems: { xs: "center", sm: "flex-start" },
+                                        width: '100%'
                                     }}>
                                         <Box
                                             component="img"
                                             src={selectedAI.imagePath}
                                             alt={selectedAI.name}
                                             sx={{
-                                                width: { xs: "100%", sm: 120 },
-                                                height: { xs: 200, sm: 120 },
+                                                width: { xs: "100%", sm: 120, md: 140 },
+                                                height: { xs: 180, sm: 120, md: 140 },
                                                 objectFit: "cover",
                                                 borderRadius: 1.5,
                                                 flexShrink: 0
                                             }}
                                         />
 
-                                        <Box sx={{ flex: 1 }}>
+                                        <Box sx={{ flex: 1, width: '100%' }}>
                                             <Box sx={{
                                                 display: "flex",
                                                 justifyContent: "space-between",
                                                 alignItems: "flex-start",
-                                                flexDirection: { xs: "column", md: "row" },
-                                                gap: { xs: 1, md: 0 }
+                                                flexDirection: { xs: "column", sm: "row" },
+                                                gap: { xs: 1, sm: 0 },
+                                                mb: { xs: 1, sm: 0 }
                                             }}>
                                                 <Typography variant="h5" component="h2" fontWeight="bold">
                                                     {selectedAI.name}
@@ -508,23 +595,40 @@ const SelectAI: React.FC = () => {
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
-                                                    size="small"
+                                                    size={isSmallScreen ? "small" : "medium"}
                                                     startIcon={<ChatIcon />}
                                                     onClick={beginChatting}
                                                     sx={{
                                                         borderRadius: 6,
-                                                        px: 2
+                                                        px: 2,
+                                                        mt: { xs: 1, sm: 0 },
+                                                        alignSelf: { xs: 'stretch', sm: 'flex-start' }
                                                     }}
                                                 >
                                                     Start Conversation
                                                 </Button>
                                             </Box>
 
-                                            <Typography variant="body1" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
+                                            <Typography 
+                                                variant="body1" 
+                                                color="text.secondary" 
+                                                sx={{ 
+                                                    mt: 1, 
+                                                    mb: 2,
+                                                    fontSize: { xs: '0.875rem', sm: '0.9375rem' }
+                                                }}
+                                            >
                                                 {selectedAI.shortDescription}
                                             </Typography>
 
-                                            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                                            <Box sx={{ 
+                                                display: "flex", 
+                                                gap: 1, 
+                                                flexWrap: "wrap",
+                                                '& .MuiChip-root': {
+                                                    fontSize: { xs: '0.75rem', sm: '0.8125rem' }
+                                                }
+                                            }}>
                                                 <Chip
                                                     icon={<PersonIcon fontSize="small" />}
                                                     label={`${selectedAI.age}, ${selectedAI.gender}`}
@@ -542,29 +646,35 @@ const SelectAI: React.FC = () => {
                                     </Box>
 
                                     {/* Tabs section */}
-                                    <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                                    <Box sx={{ 
+                                        display: "flex", 
+                                        flexDirection: "column", 
+                                        flex: 1,
+                                        overflowX: 'hidden' 
+                                    }}>
                                         <StyledTabs
                                             value={tabValue}
                                             onChange={handleTabChange}
                                             aria-label="character details tabs"
-                                            variant="fullWidth"
+                                            variant={isSmallScreen ? "scrollable" : "fullWidth"}
+                                            scrollButtons={isSmallScreen ? "auto" : false}
                                         >
                                             <Tab
-                                                icon={<PersonIcon />}
+                                                icon={isSmallScreen ? <PersonIcon fontSize="small" /> : <PersonIcon />}
                                                 label="About"
                                                 id="character-tab-0"
                                                 aria-controls="character-tabpanel-0"
                                                 iconPosition="start"
                                             />
                                             <Tab
-                                                icon={<HistoryEduIcon />}
+                                                icon={isSmallScreen ? <HistoryEduIcon fontSize="small" /> : <HistoryEduIcon />}
                                                 label="Background"
                                                 id="character-tab-1"
                                                 aria-controls="character-tabpanel-1"
                                                 iconPosition="start"
                                             />
                                             <Tab
-                                                icon={<LocationOnIcon />}
+                                                icon={isSmallScreen ? <LocationOnIcon fontSize="small" /> : <LocationOnIcon />}
                                                 label="Location"
                                                 id="character-tab-2"
                                                 aria-controls="character-tabpanel-2"
@@ -576,17 +686,26 @@ const SelectAI: React.FC = () => {
                                             display: "flex",
                                             flexDirection: "column",
                                             flex: 1,
-                                            overflow: "hidden"
+                                            overflow: "hidden",
+                                            overflowX: 'hidden' 
                                         }}>
                                             {/* About Tab */}
                                             <TabPanel value={tabValue} index={0}>
                                                 <Typography variant="h6" gutterBottom>Profile</Typography>
 
-                                                <Typography variant="body1" paragraph>
+                                                <Typography 
+                                                    variant="body1" 
+                                                    paragraph
+                                                    sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}
+                                                >
                                                     {selectedAI.fullDescription}
                                                 </Typography>
 
-                                                <Typography variant="body1" paragraph>
+                                                <Typography 
+                                                    variant="body1" 
+                                                    paragraph
+                                                    sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}
+                                                >
                                                     {selectedAI.name} loves to share their knowledge and experiences with interested listeners. Their expertise has been developed over many years of practice and study.
                                                 </Typography>
 
@@ -597,10 +716,14 @@ const SelectAI: React.FC = () => {
                                                     mt: 2,
                                                     display: "flex",
                                                     alignItems: "flex-start",
-                                                    gap: 2
+                                                    gap: 1
                                                 }}>
                                                     <ChatIcon color="primary" fontSize="small" sx={{ mt: 0.5 }} />
-                                                    <Typography variant="body2" color="primary.dark">
+                                                    <Typography 
+                                                        variant="body2" 
+                                                        color="primary.dark"
+                                                        sx={{ fontSize: { xs: '0.8125rem', sm: '0.875rem' } }}
+                                                    >
                                                         <strong>Conversation Tip:</strong> Ask {selectedAI.name} about their daily routine and what aspects of their work they find most rewarding.
                                                     </Typography>
                                                 </Box>
@@ -610,19 +733,35 @@ const SelectAI: React.FC = () => {
                                             <TabPanel value={tabValue} index={1}>
                                                 <Typography variant="h6" gutterBottom>Experience & History</Typography>
 
-                                                <Typography variant="body1" paragraph>
+                                                <Typography 
+                                                    variant="body1" 
+                                                    paragraph
+                                                    sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}
+                                                >
                                                     {selectedAI.name} began their career at a young age, learning the traditional methods and techniques that have been passed down through generations.
                                                 </Typography>
 
-                                                <Typography variant="body1" paragraph>
+                                                <Typography 
+                                                    variant="body1" 
+                                                    paragraph
+                                                    sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}
+                                                >
                                                     With {selectedAI.age} years of life experience, they've seen many changes in their field and adapted their practices while maintaining respect for tradition.
                                                 </Typography>
 
-                                                <Typography variant="subtitle1" fontWeight="medium" gutterBottom sx={{ mt: 3 }}>
+                                                <Typography 
+                                                    variant="subtitle1" 
+                                                    fontWeight="medium" 
+                                                    gutterBottom 
+                                                    sx={{ 
+                                                        mt: 3,
+                                                        fontSize: { xs: '0.9375rem', sm: '1rem' }
+                                                    }}
+                                                >
                                                     Topics of Expertise
                                                 </Typography>
 
-                                                <Grid container spacing={2} sx={{ mt: 0.5 }}>
+                                                <Grid container spacing={{ xs: 1, sm: 2 }} sx={{ mt: 0.5 }}>
                                                     {[
                                                         "Traditional techniques",
                                                         "Historical knowledge",
@@ -631,12 +770,18 @@ const SelectAI: React.FC = () => {
                                                     ].map((topic, index) => (
                                                         <Grid item xs={12} sm={6} key={index}>
                                                             <Box sx={{
-                                                                p: 1.5,
+                                                                p: { xs: 1, sm: 1.5 },
                                                                 border: "1px solid rgba(0,0,0,0.08)",
                                                                 borderRadius: 1.5,
-                                                                bgcolor: "background.default"
+                                                                bgcolor: "background.default",
+                                                                height: '100%'
                                                             }}>
-                                                                <Typography variant="body2">{topic}</Typography>
+                                                                <Typography 
+                                                                    variant="body2"
+                                                                    sx={{ fontSize: { xs: '0.8125rem', sm: '0.875rem' } }}
+                                                                >
+                                                                    {topic}
+                                                                </Typography>
                                                             </Box>
                                                         </Grid>
                                                     ))}
@@ -647,11 +792,19 @@ const SelectAI: React.FC = () => {
                                             <TabPanel value={tabValue} index={2}>
                                                 <Typography variant="h6" gutterBottom>Life in {selectedAI.residence}</Typography>
 
-                                                <Typography variant="body1" paragraph>
+                                                <Typography 
+                                                    variant="body1" 
+                                                    paragraph
+                                                    sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}
+                                                >
                                                     {selectedAI.name} has deep connections to {selectedAI.residence}, where their work is influenced by local traditions and community needs.
                                                 </Typography>
 
-                                                <Typography variant="body1" paragraph>
+                                                <Typography 
+                                                    variant="body1" 
+                                                    paragraph
+                                                    sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}
+                                                >
                                                     The unique environment and culture of {selectedAI.residence} have shaped their skills and perspective in countless ways.
                                                 </Typography>
 
@@ -664,7 +817,7 @@ const SelectAI: React.FC = () => {
                                                 }}>
                                                     <Box
                                                         sx={{
-                                                            height: 200,
+                                                            height: { xs: 150, sm: 200 },
                                                             bgcolor: "background.default",
                                                             display: "flex",
                                                             alignItems: "center",
@@ -674,7 +827,16 @@ const SelectAI: React.FC = () => {
                                                             backgroundPosition: "center"
                                                         }}
                                                     >
-                                                        <Typography color="text.secondary" sx={{ bgcolor: "rgba(255,255,255,0.8)", px: 2, py: 0.5, borderRadius: 1 }}>
+                                                        <Typography 
+                                                            color="text.secondary" 
+                                                            sx={{ 
+                                                                bgcolor: "rgba(255,255,255,0.8)", 
+                                                                px: 2, 
+                                                                py: 0.5, 
+                                                                borderRadius: 1,
+                                                                fontSize: { xs: '0.8125rem', sm: '0.875rem' }
+                                                            }}
+                                                        >
                                                             {selectedAI.residence} Landscape
                                                         </Typography>
                                                     </Box>
@@ -684,104 +846,122 @@ const SelectAI: React.FC = () => {
                                     </Box>
                                 </DetailCard>
                             ) : (
-                                <DetailCard sx={{ width: "100%", p: 0 }}>
-                                    <div style={{display: "flex", justifyContent: "center", zIndex: '1'}}>
-                                        <Box sx={{
-                                            height: "100%",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            p: { xs: 3, md: 4 },
-                                            textAlign: "center",
-                                            position: "fixed",
-                                            top: 0,
-
-                                        }}>
-                                            <Box
-                                                sx={{
-                                                    width: 80,
-                                                    height: 80,
-                                                    borderRadius: "50%",
-                                                    backgroundColor: "primary.light",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    mb: 3
-                                                }}
-                                            >
-                                                <PersonIcon sx={{ fontSize: 40, color: "primary.main" }} />
-                                            </Box>
-
-                                            <Typography variant="h5" component="h2" fontWeight="bold" mb={1}>
-                                                Welcome to Metaphysical Studio
-                                            </Typography>
-
-                                            <Typography
-                                                variant="body1"
-                                                color="text.secondary"
-                                                sx={{
-                                                    maxWidth: 500,
-                                                    mb: 4
-                                                }}
-                                            >
-                                                Select a character from the left to begin an immersive conversation experience.
-                                                Each character has unique knowledge and background to explore.
-                                            </Typography>
-
-                                            <Grid container spacing={2} sx={{ maxWidth: 600 }}>
-                                                {[
-                                                    {
-                                                        icon: <PersonIcon />,
-                                                        title: "Diverse Characters",
-                                                        desc: "Explore a range of unique personalities"
-                                                    },
-                                                    {
-                                                        icon: <ChatIcon />,
-                                                        title: "Natural Conversations",
-                                                        desc: "Engage in realistic dialogues"
-                                                    },
-                                                    {
-                                                        icon: <HistoryEduIcon />,
-                                                        title: "Authentic Knowledge",
-                                                        desc: "Learn from detailed subject expertise"
-                                                    },
-                                                    {
-                                                        icon: <LocationOnIcon />,
-                                                        title: "Cultural Immersion",
-                                                        desc: "Experience different perspectives"
-                                                    }
-                                                ].map((feature, index) => (
-                                                    <Grid item xs={12} sm={6} key={index}>
-                                                        <Box sx={{
-                                                            p: 2,
-                                                            border: "1px solid rgba(0,0,0,0.08)",
-                                                            borderRadius: 2,
-                                                            height: "100%",
-                                                            display: "flex",
-                                                            flexDirection: "column",
-                                                            alignItems: "center",
-                                                            textAlign: "center"
-                                                        }}>
-                                                            <Box sx={{
-                                                                color: "primary.main",
-                                                                mb: 1.5
-                                                            }}>
-                                                                {feature.icon}
-                                                            </Box>
-                                                            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                                                                {feature.title}
-                                                            </Typography>
-                                                            <Typography variant="body2" color="text.secondary">
-                                                                {feature.desc}
-                                                            </Typography>
-                                                        </Box>
-                                                    </Grid>
-                                                ))}
-                                            </Grid>
+                                <StickyDetailCard sx={{ 
+                                    width: "100%",
+                                    overflowX: 'hidden' 
+                                }}>
+                                    <Box sx={{
+                                        height: "100%",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        p: { xs: 2, sm: 3, md: 4 },
+                                        textAlign: "center",
+                                        width: '100%'
+                                    }}>
+                                        <Box
+                                            sx={{
+                                                width: { xs: 60, sm: 80 },
+                                                height: { xs: 60, sm: 80 },
+                                                borderRadius: "50%",
+                                                backgroundColor: "primary.light",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                mb: { xs: 2, sm: 3 }
+                                            }}
+                                        >
+                                            <PersonIcon sx={{ 
+                                                fontSize: { xs: 30, sm: 40 }, 
+                                                color: "primary.main" 
+                                            }} />
                                         </Box>
-                                    </div>
-                                </DetailCard>
+
+                                        <Typography 
+                                            variant="h5" 
+                                            component="h2" 
+                                            fontWeight="bold" 
+                                            mb={1}
+                                            sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}
+                                        >
+                                            Welcome to Metaphysical Studio
+                                        </Typography>
+
+                                        <Typography
+                                            variant="body1"
+                                            color="text.secondary"
+                                            sx={{
+                                                maxWidth: 500,
+                                                mb: { xs: 3, sm: 4 },
+                                                fontSize: { xs: '0.875rem', sm: '0.9375rem' }
+                                            }}
+                                        >
+                                            Select a character from the left to begin an immersive conversation experience.
+                                            Each character has unique knowledge and background to explore.
+                                        </Typography>
+
+                                        <Grid container spacing={{ xs: 1.5, sm: 2 }} sx={{ maxWidth: 600 }}>
+                                            {[
+                                                {
+                                                    icon: <PersonIcon fontSize={isSmallScreen ? "small" : "medium"} />,
+                                                    title: "Diverse Characters",
+                                                    desc: "Explore a range of unique personalities"
+                                                },
+                                                {
+                                                    icon: <ChatIcon fontSize={isSmallScreen ? "small" : "medium"} />,
+                                                    title: "Natural Conversations",
+                                                    desc: "Engage in realistic dialogues"
+                                                },
+                                                {
+                                                    icon: <HistoryEduIcon fontSize={isSmallScreen ? "small" : "medium"} />,
+                                                    title: "Authentic Knowledge",
+                                                    desc: "Learn from detailed subject expertise"
+                                                },
+                                                {
+                                                    icon: <LocationOnIcon fontSize={isSmallScreen ? "small" : "medium"} />,
+                                                    title: "Cultural Immersion",
+                                                    desc: "Experience different perspectives"
+                                                }
+                                            ].map((feature, index) => (
+                                                <Grid item xs={12} sm={6} key={index}>
+                                                    <Box sx={{
+                                                        p: { xs: 1.5, sm: 2 },
+                                                        border: "1px solid rgba(0,0,0,0.08)",
+                                                        borderRadius: 2,
+                                                        height: "100%",
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        alignItems: "center",
+                                                        textAlign: "center"
+                                                    }}>
+                                                        <Box sx={{
+                                                            color: "primary.main",
+                                                            mb: { xs: 1, sm: 1.5 }
+                                                        }}>
+                                                            {feature.icon}
+                                                        </Box>
+                                                        <Typography 
+                                                            variant="subtitle2" 
+                                                            fontWeight="bold" 
+                                                            gutterBottom
+                                                            sx={{ fontSize: { xs: '0.8125rem', sm: '0.875rem' } }}
+                                                        >
+                                                            {feature.title}
+                                                        </Typography>
+                                                        <Typography 
+                                                            variant="body2" 
+                                                            color="text.secondary"
+                                                            sx={{ fontSize: { xs: '0.75rem', sm: '0.8125rem' } }}
+                                                        >
+                                                            {feature.desc}
+                                                        </Typography>
+                                                    </Box>
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    </Box>
+                                </StickyDetailCard>
                             )}
                         </Box>
                     </Box>
