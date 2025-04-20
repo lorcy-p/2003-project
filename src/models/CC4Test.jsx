@@ -497,39 +497,6 @@ export function CC4Test(props) {
       
       useControls("Visemes", () => visemeControls);
 
-      /*
-      const [facialData, setFacialData] = useState([
-        {
-          Open_Jaw: 0.3,
-          Eye_Blink_L: 0.0,
-          Eye_Blink_R: 0.0,
-          Mouth_Smile: 0.5,
-          TongueRotation: 0.1,
-          TongueUp: 0.2,
-          V_Tongue_Out: 0.0
-        },
-        {
-          Open_Jaw: 0.5,
-          Eye_Blink_L: 0.1,
-          Eye_Blink_R: 0.0,
-          Mouth_Smile: 0.3,
-          TongueRotation: 0.2,
-          TongueUp: 0.1,
-          V_Tongue_Out: 0.1
-        },
-        {
-          Open_Jaw: 0.2,
-          Eye_Blink_L: 0.0,
-          Eye_Blink_R: 0.1,
-          Mouth_Smile: 0.4,
-          TongueRotation: 0.3,
-          TongueUp: 0.3,
-          V_Tongue_Out: 0.2
-        }
-      ]);
-      
-      useLipsync({facialData, characterRef: kevinRef, nodes, scene});
-      */
 
 
       return (
