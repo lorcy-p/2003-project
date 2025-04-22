@@ -10,5 +10,5 @@ Jack has been given advice on animations. Each model has to be animated separate
  Tasks to complete for the next sprint:
 Complete a polished prototype
 Record and rehearse presentation video
- Next client meeting : 23/01/2025
+ Next client meeting : 03/02/2025
 

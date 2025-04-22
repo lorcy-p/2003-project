@@ -14,8 +14,8 @@
 
 body {
   margin: 0;
-  background-color: #ffff;
-  background-image: linear-gradient(45deg, #60a5fa 0%, #ddd6f3 50%); /* changed to fit figma style */
+  background-color: 	#FFF2F2;
+  font-family: 'Times New Roman', serif;
 }
 
 body.greenScreen {

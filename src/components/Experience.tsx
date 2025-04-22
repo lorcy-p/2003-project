@@ -3,11 +3,15 @@ import {
   ContactShadows,
   Environment,
   Text,
+  useTexture,
 } from "@react-three/drei";
 import React from "react";
 import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { useChat } from "../hooks/useChat";
-import { TestAvatar } from "./TestAvatar";
+import { Avatar } from "../models/Avatar";
+import { CC4Test } from "../models/CC4Test";
+import { useThree } from "@react-three/fiber";
+import * as THREE from "three";
 
 // Simple loading response ui
 const Dots: FC<React.ComponentProps<"group">> = (props) => {
@@ -58,14 +62,21 @@ export const Experience: FC = () => {
     }
   }, [cameraZoomed]);
 
+  const Background = () => {
+    const texture = useTexture("Textures/FarmRoad.jpg");
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const { scene } = useThree();
+    scene.background = texture;
+    return null;
+  };
+
   return (
     <>
       <CameraControls ref={cameraControls} />
+      <Background />
+      <CC4Test />
       <Environment preset="sunset" />
-      <Suspense>
-        <Dots position-y={1.83} position-x={-0.09} />
-      </Suspense>
-      <TestAvatar />
+
       <ContactShadows opacity={0.7} />
     </>
   );
