@@ -8,13 +8,13 @@ import { useGLTF, Html, useAnimations} from "@react-three/drei";
 import { folder, button, useControls } from "leva";
 import * as THREE from "three";
 import useVisemeAnimationCC4 from "../hooks/useVisemeAnimationCC4";
-import useCharacterAnimation from "../hooks/useCharacterAnimation";
+import useCharacterAnimationCC4 from "../hooks/useCharacterAnimationCC4";
 //import { useLipsync } from "../Reallusion/hooks/useLipSync";
 
 export function CC4Test(props) {
-  const {nodes, materials, scene } = useGLTF('models/CC4Test.glb')
-  //const kevinRef = useRef();
+  const {nodes, materials, scene } = useGLTF('models/CC4KevinMerged.glb')
   const group = useRef();
+
 
   //log every part of every mesh for debug
   //Object.values(nodes).forEach(mesh => console.log(mesh.name));
@@ -325,14 +325,11 @@ export function CC4Test(props) {
   const { lerpInfluence, lerpJawRotation } = useVisemeAnimationCC4(group, setFacialExpression, visemeMap, setupMode, nodes, group);
 
   // Get useCharacterAnimation from the imported hook
-  const { animation, animations, setAnimation, lerpMorphTarget, setWinkLeft, setWinkRight } = useCharacterAnimation(
-    "/models/testanimations.glb",
+  const { animation, animations, setAnimation} = useCharacterAnimationCC4(
+    "/models/CC4KevinMerged.glb",
     group,
     scene,
     nodes, 
-    facialExpressions, 
-    facialExpression,
-    setupMode
   );
   
   
@@ -382,6 +379,8 @@ export function CC4Test(props) {
         }),
       });
     
+
+
 
       const morphTargets = Object.keys(nodes).reduce((acc, nodeName) => {
         const node = nodes[nodeName];
