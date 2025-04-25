@@ -15,7 +15,6 @@ export function CC4Test(props) {
   const {nodes, materials, scene } = useGLTF('models/CC4Test.glb')
   //const kevinRef = useRef();
   const group = useRef();
-  const { client } = props;
 
   //log every part of every mesh for debug
   //Object.values(nodes).forEach(mesh => console.log(mesh.name));
@@ -321,19 +320,6 @@ export function CC4Test(props) {
 
   };
 
-  /*
-    
-    "sh": ["V_Open"],
-    "l": ["V_Open"],
-    "oh": ["V_Open"],
-    "ow": ["V_Open"],
-    "oy": ["V_Open"],
-    "ai": ["V_Open"],
-    "h": ["V_Open"],
-    "er": ["V_Open"],
-    "ar": ["V_Open"],
-
-    */
 
   // Get useVisemeAnimation from the imported hook
   const { lerpInfluence, lerpJawRotation } = useVisemeAnimationCC4(group, setFacialExpression, visemeMap, setupMode, nodes, group);
@@ -349,7 +335,7 @@ export function CC4Test(props) {
     setupMode
   );
   
-  /*
+  
 
   //Leva Controls for debugging
       useControls("FacialExpressions", {
@@ -395,7 +381,7 @@ export function CC4Test(props) {
           console.log(JSON.stringify(emotionValues, null, 2));
         }),
       });
-    */
+    
 
       const morphTargets = Object.keys(nodes).reduce((acc, nodeName) => {
         const node = nodes[nodeName];
