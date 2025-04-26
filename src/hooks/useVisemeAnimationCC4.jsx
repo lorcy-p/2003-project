@@ -161,7 +161,8 @@ useEffect(() => {
                 lerpInfluence(mesh, prevViseme, 0, 500, 1);
               }
 
-              if (mesh.morphTargetDictionary[prevViseme] == "Jaw_Open") {
+              if (mesh.morphTargetDictionary[prevViseme] == "Jaw_Open" || mesh.morphTargetDictionary[prevViseme] == "V_Tight_O" || 
+                mesh.morphTargetDictionary[prevViseme] == "V_Lip_Open" || mesh.morphTargetDictionary[prevViseme] == "V_Affricate") {
                 const neutralRotation = new THREE.Euler(0, 0, 1.55);
                 lerpJawRotation(neutralRotation, 500);
               }

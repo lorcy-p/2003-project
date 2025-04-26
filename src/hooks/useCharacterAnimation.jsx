@@ -27,8 +27,21 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
   const { actions, mixer } = useAnimations(animations, group);
 
   const [animation, setAnimation] = useState(
-    animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name
-  );
+        animations.find((a) => a.name === "Idle") ? "Idle" : animations[3].name // Check if Idle animation exists otherwise use first animation
+      );
+
+  // to check names of animations in glb file
+  /*
+  useEffect(() => {
+    if (animations.length) {
+      animations.forEach((clip, index) => {
+        console.log(`Animation ${index}: ${clip.name || `Unnamed_${index}`}`)
+      })
+    } else {
+      console.log('No animations found in the GLB file.')
+    }
+  }, [animations])
+  */
 
   const [blink, setBlink] = useState(false);
   const [winkLeft, setWinkLeft] = useState(false);

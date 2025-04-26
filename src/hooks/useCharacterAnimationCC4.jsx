@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import * as THREE from "three";
 import { useAnimations, useGLTF} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import visemesEmitter from "../components/visemeEvents";
 
 /*
 
@@ -56,10 +57,7 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
 
 
     console.log('Playing:', animation);
-    Object.entries(actions).forEach(([name, act]) => {
-     console.log(`${name}: ${act.isRunning()}`);
-    });
-  
+
     return () => {
       if (actions[animation]) {
         actions[animation].fadeOut(0.5);

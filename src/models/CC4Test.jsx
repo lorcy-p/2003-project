@@ -12,7 +12,7 @@ import useCharacterAnimationCC4 from "../hooks/useCharacterAnimationCC4";
 //import { useLipsync } from "../Reallusion/hooks/useLipSync";
 
 export function CC4Test(props) {
-  const {nodes, materials, scene } = useGLTF('models/CC4KevinMerged.glb')
+  const {nodes, materials, scene } = useGLTF('models/CC4KevinAnimations.glb')
   const group = useRef();
 
 
@@ -326,62 +326,25 @@ export function CC4Test(props) {
 
   // Get useCharacterAnimation from the imported hook
   const { animation, animations, setAnimation} = useCharacterAnimationCC4(
-    "/models/CC4KevinMerged.glb",
+    "/models/CC4KevinAnimations.glb",
     group,
     scene,
     nodes, 
   );
+
+  
   
   
 
   //Leva Controls for debugging
-      useControls("FacialExpressions", {
-        winkLeft: button(() => {
-          setWinkLeft(true);
-          setTimeout(() => setWinkLeft(false), 300);
-        }),
-        winkRight: button(() => {
-          setWinkRight(true);
-          setTimeout(() => setWinkRight(false), 300);
-        }),
+      useControls("Animations", {
         animation: {
           value: animation,
           options: animations.map((a) => a.name),
           onChange: (value) => setAnimation(value),
         },
-        facialExpression: {
-          options: Object.keys(facialExpressions),
-          onChange: (value) => {if (setupMode) 
-            {setFacialExpression(value)}},
-        },
-        enableSetupMode: button(() => {
-          setupMode = true;
-        }),
-        disableSetupMode: button(() => {
-          setupMode = false;
-        }),
-        logMorphTargetValues: button(() => {
-          const emotionValues = {};
-          Object.keys(nodes.CC_Base_Body002.morphTargetDictionary).forEach((key) => {
-            if (key === "eyeBlinkLeft" || key === "eyeBlinkRight") {
-              return; // eyes wink/blink are handled separately
-            }
-            const value =
-              nodes.CC_Base_Body002.morphTargetInfluences[
-                nodes.CC_Base_Body002.morphTargetDictionary[key]
-              ];
-            if (value > 0.01) {
-              emotionValues[key] = value;
-            }
-            console.log(nodes.CC_Base_Body002.morphTargetDictionary);
-          });
-          console.log(JSON.stringify(emotionValues, null, 2));
-        }),
       });
     
-
-
-
       const morphTargets = Object.keys(nodes).reduce((acc, nodeName) => {
         const node = nodes[nodeName];
       
