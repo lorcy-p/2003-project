@@ -13,6 +13,11 @@ import {
     InputAdornment,
     TextField,
     Typography,
+    Avatar,
+    Menu,
+    MenuItem,
+    IconButton,
+    Divider,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
@@ -20,19 +25,25 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ChatIcon from "@mui/icons-material/Chat";
 import SearchIcon from "@mui/icons-material/Search";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import theme from "../components/Theme";
 import characters from "../data/characters";
+import useAuth from "../hooks/useAuth";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
 // Featured characters data - matches your SelectAI screen format
-const featuredCharacters = characters;
+const featuredCharacters = characters.slice(0, 3); // Only show 3 featured characters
 
 const HomePage = () => {
     const navigate = useNavigate();
+    const { isAuthenticated, userToken, logout } = useAuth();
 
     // Refs for GSAP animations
     const headerRef = useRef(null);
@@ -40,20 +51,57 @@ const HomePage = () => {
     const charactersRef = useRef(null);
     const featuresRef = useRef(null);
     const searchRef = useRef(null);
+    const ctaButtonsRef = useRef(null);
 
-    // Navigate to character selection
+    // User menu state
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleUserMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleUserMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    // Navigation functions
     const goToSelectAI = () => {
-        navigate("/characters");
+        if (isAuthenticated) {
+            navigate("/characters");
+        } else {
+            navigate("/login", { state: { from: "/characters" } });
+        }
         window.scrollTo({
             top: 0,
-            behavior: 'smooth' // This makes the scroll smooth
+            behavior: 'smooth'
         });
+    };
+
+    const goToLogin = () => {
+        navigate("/login");
+    };
+
+    const goToSignup = () => {
+        navigate("/signup");
+    };
+
+    const handleLogout = () => {
+        logout();
+        handleUserMenuClose();
+        // Optional: Show a toast notification that logout was successful
     };
 
     // Navigate to specific character
     const startWithCharacter = (characterId: number) => {
-        localStorage.setItem('AI_ID', characterId.toString());
-        navigate('/chat');
+        if (isAuthenticated) {
+            localStorage.setItem('AI_ID', characterId.toString());
+            navigate('/chat');
+        } else {
+            // Save the intended destination
+            localStorage.setItem('intended_character', characterId.toString());
+            navigate('/login', { state: { from: "/chat" } });
+        }
     };
 
     // Initialize animations
@@ -77,12 +125,24 @@ const HomePage = () => {
         );
 
         // Search bar appear with slight bounce
-        tl.fromTo(
-            searchRef.current,
-            { scale: 0.8, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.5)" },
-            "-=0.2"
-        );
+        if (searchRef.current) {
+            tl.fromTo(
+                searchRef.current,
+                { scale: 0.8, opacity: 0 },
+                { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.5)" },
+                "-=0.2"
+            );
+        }
+
+        // CTA buttons animation
+        if (ctaButtonsRef.current) {
+            tl.fromTo(
+                ctaButtonsRef.current.children,
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, stagger: 0.1, duration: 0.4 },
+                "-=0.3"
+            );
+        }
 
         // Characters scroll-triggered animation
         gsap.fromTo(
@@ -152,7 +212,7 @@ const HomePage = () => {
                         justifyContent: "space-between",
                         alignItems: "center"
                     }}>
-                        <Box>
+                        <Box sx={{ cursor: "pointer" }} onClick={() => navigate("/")}>
                             <Typography variant="h5" component="h1" fontWeight="bold" color="primary">
                                 Metaphysical
                             </Typography>
@@ -167,26 +227,128 @@ const HomePage = () => {
                             </Typography>
                         </Box>
 
-                        {/* Search bar */}
-                        <Box ref={searchRef}>
-                            <TextField
-                                placeholder="Search characters..."
-                                variant="outlined"
-                                size="small"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon fontSize="small" />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                sx={{
-                                    width: { xs: "100%", sm: 240 },
-                                    "& .MuiOutlinedInput-root": {
-                                        borderRadius: 8
-                                    }
-                                }}
-                            />
+                        {/* Right side navigation - conditionally rendered based on auth state */}
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                            {isAuthenticated ? (
+                                <>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        startIcon={<ChatIcon />}
+                                        onClick={goToSelectAI}
+                                        size="small"
+                                        sx={{
+                                            borderRadius: 6,
+                                            display: { xs: "none", md: "flex" }
+                                        }}
+                                    >
+                                        My Characters
+                                    </Button>
+
+                                    <Box>
+                                        <IconButton
+                                            onClick={handleUserMenuClick}
+                                            size="small"
+                                            sx={{ ml: 1 }}
+                                            aria-controls={open ? "user-menu" : undefined}
+                                            aria-haspopup="true"
+                                            aria-expanded={open ? "true" : undefined}
+                                        >
+                                            <Avatar
+                                                sx={{
+                                                    width: 40,
+                                                    height: 40,
+                                                    bgcolor: "primary.main"
+                                                }}
+                                            >
+                                                <PersonIcon />
+                                            </Avatar>
+                                            <KeyboardArrowDownIcon
+                                                fontSize="small"
+                                                sx={{
+                                                    ml: 0.5,
+                                                    color: "text.secondary"
+                                                }}
+                                            />
+                                        </IconButton>
+                                        <Menu
+                                            id="user-menu"
+                                            anchorEl={anchorEl}
+                                            open={open}
+                                            onClose={handleUserMenuClose}
+                                            MenuListProps={{
+                                                'aria-labelledby': 'user-button',
+                                            }}
+                                            PaperProps={{
+                                                elevation: 3,
+                                                sx: {
+                                                    borderRadius: 2,
+                                                    mt: 1.5,
+                                                    minWidth: 180,
+                                                    overflow: 'visible',
+                                                    '&:before': {
+                                                        content: '""',
+                                                        display: 'block',
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        right: 20,
+                                                        width: 10,
+                                                        height: 10,
+                                                        bgcolor: 'background.paper',
+                                                        transform: 'translateY(-50%) rotate(45deg)',
+                                                        zIndex: 0,
+                                                    },
+                                                },
+                                            }}
+                                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                        >
+                                            <MenuItem onClick={() => {
+                                                handleUserMenuClose();
+                                                navigate("/profile");
+                                            }}>
+                                                <AccountCircleIcon fontSize="small" sx={{ mr: 1.5 }} />
+                                                Profile
+                                            </MenuItem>
+                                            <MenuItem onClick={() => {
+                                                handleUserMenuClose();
+                                                navigate("/characters");
+                                            }}>
+                                                <ChatIcon fontSize="small" sx={{ mr: 1.5 }} />
+                                                My Characters
+                                            </MenuItem>
+                                            <Divider />
+                                            <MenuItem onClick={handleLogout}>
+                                                <LogoutIcon fontSize="small" sx={{ mr: 1.5 }} />
+                                                Logout
+                                            </MenuItem>
+                                        </Menu>
+                                    </Box>
+                                </>
+                            ) : (
+                                <Box ref={ctaButtonsRef} sx={{ display: "flex", gap: 2 }}>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={goToSignup}
+                                        sx={{
+                                            borderRadius: 6,
+                                            display: { xs: "none", sm: "block" }
+                                        }}
+                                    >
+                                        Sign Up
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        startIcon={<LoginIcon />}
+                                        onClick={goToLogin}
+                                        sx={{ borderRadius: 6 }}
+                                    >
+                                        Login
+                                    </Button>
+                                </Box>
+                            )}
                         </Box>
                     </Box>
                 </Container>
@@ -288,9 +450,46 @@ const HomePage = () => {
                                             py: 1.5,
                                         }}
                                     >
-                                        Explore Characters
+                                        {isAuthenticated ? "Explore Characters" : "Get Started"}
                                     </Button>
+
+                                    {!isAuthenticated && (
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            size="large"
+                                            onClick={goToLogin}
+                                            sx={{
+                                                borderRadius: 6,
+                                                px: 3,
+                                                py: 1.5,
+                                            }}
+                                        >
+                                            Learn More
+                                        </Button>
+                                    )}
                                 </Box>
+
+                                {/* Auth Status Indication */}
+                                {isAuthenticated && (
+                                    <Box
+                                        className="hero-element"
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            bgcolor: "primary.light",
+                                            p: 1.5,
+                                            borderRadius: 2,
+                                            width: "fit-content"
+                                        }}
+                                    >
+                                        <ChatIcon color="primary" fontSize="small" />
+                                        <Typography variant="body2" color="primary.dark">
+                                            You're logged in and ready to start conversations!
+                                        </Typography>
+                                    </Box>
+                                )}
                             </Grid>
 
                             {/* Hero Image/Featured Character */}
@@ -333,7 +532,7 @@ const HomePage = () => {
 
                                             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mt: 2 }}>
                                                 <Chip
-                                                    label="8 available"
+                                                    label={`${characters.length} available`}
                                                     size="small"
                                                     color="primary"
                                                     variant="outlined"
@@ -591,17 +790,68 @@ const HomePage = () => {
                                 variant="contained"
                                 color="primary"
                                 size="large"
-                                endIcon={<ChevronRightIcon />}
-                                onClick={goToSelectAI}
+                                endIcon={isAuthenticated ? <ChevronRightIcon /> : <LoginIcon />}
+                                onClick={isAuthenticated ? goToSelectAI : goToLogin}
                                 sx={{
                                     borderRadius: 6,
                                     px: 4,
                                     py: 1.5,
                                 }}
                             >
-                                Start Exploring
+                                {isAuthenticated ? "Start Exploring" : "Sign In to Explore"}
                             </Button>
                         </Box>
+                    </Container>
+                </Box>
+
+                {/* Footer with auth state indicator */}
+                <Box sx={{
+                    py: 3,
+                    bgcolor: "background.paper",
+                    borderTop: "1px solid rgba(0,0,0,0.06)"
+                }}>
+                    <Container maxWidth="xl">
+                        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant="body2" color="text.secondary">
+                                    © {new Date().getFullYear()} Metaphysical Studio. All rights reserved.
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={6} sx={{ textAlign: { xs: "left", sm: "right" } }}>
+                                {isAuthenticated ? (
+                                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "flex-start", sm: "flex-end" }, gap: 1 }}>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Logged in as User
+                                        </Typography>
+                                        <Button
+                                            size="small"
+                                            startIcon={<LogoutIcon fontSize="small" />}
+                                            onClick={handleLogout}
+                                        >
+                                            Logout
+                                        </Button>
+                                    </Box>
+                                ) : (
+                                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "flex-start", sm: "flex-end" }, gap: 1 }}>
+                                        <Button
+                                            size="small"
+                                            onClick={goToSignup}
+                                        >
+                                            Sign Up
+                                        </Button>
+                                        <Button
+                                            size="small"
+                                            variant="outlined"
+                                            startIcon={<LoginIcon fontSize="small" />}
+                                            onClick={goToLogin}
+                                            sx={{ borderRadius: 4 }}
+                                        >
+                                            Login
+                                        </Button>
+                                    </Box>
+                                )}
+                            </Grid>
+                        </Grid>
                     </Container>
                 </Box>
             </Box>
