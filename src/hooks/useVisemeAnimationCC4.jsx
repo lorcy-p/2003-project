@@ -150,8 +150,6 @@ useEffect(() => {
     visemeDataRef.current.forEach(({ t, v }, index) => {
       const visemeTargets = visemeMap[v] || [];
       const isSilent = v === "-";
-      const VOpen =  v === "V_Open";
-      const OpenJaw = v === "Jaw_Open"
 
       setTimeout(() => {
         Object.keys(nodes).forEach((meshName) => {
@@ -160,28 +158,57 @@ useEffect(() => {
           if (mesh.morphTargetDictionary) {
             lastVisemeTargets.forEach(({ target: prevViseme }) => {
               if (mesh.morphTargetDictionary[prevViseme] !== undefined) {
-                lerpInfluence(mesh, prevViseme, 0, 300, 1);
+                lerpInfluence(mesh, prevViseme, 0, 500, 1);
               }
 
-              const neutralRotation = new THREE.Euler(0, 0, 1.55);
-              lerpJawRotation(neutralRotation, 300);
-              
+              if (mesh.morphTargetDictionary[prevViseme] == "Jaw_Open") {
+                const neutralRotation = new THREE.Euler(0, 0, 1.55);
+                lerpJawRotation(neutralRotation, 500);
+              }
+
             });
 
             if (!isSilent && visemeTargets.length > 0) {
+              let finalRotation = null;
+              let maxWeight = 0;
+            
               visemeTargets.forEach(({ target, weight }) => {
-                if (mesh.morphTargetDictionary[target] !== undefined) {
-                  lerpInfluence(mesh, target, weight, 300, 1);
+                const morphIndex = mesh.morphTargetDictionary[target];
+            
+                if (target  === "Jaw_Open" && weight > maxWeight) {
+                  maxWeight = weight;
+                  const minRotation = 1.55;
+                  const maxRotation = 2.0;
+                  const mappedRotation = minRotation + (maxRotation - minRotation) * weight;
+                  finalRotation = new THREE.Euler(0, 0, mappedRotation);
                 }
-                if (mesh.morphTargetDictionary[target] == VOpen){
-                  const jawRotation = new THREE.Euler(0, 0, 1.95);
-                  lerpJawRotation(jawRotation, 300)
+            
+                if (target  === "V_Tight_O" && weight > maxWeight) {
+                  maxWeight = weight;
+                  const minRotation = 1.55;
+                  const maxRotation = 1.75;
+                  const mappedRotation = minRotation + (maxRotation - minRotation) * weight;
+                  finalRotation = new THREE.Euler(0, 0, mappedRotation);
                 }
-                if (mesh.morphTargetDictionary[target] == OpenJaw){
-                  const jawRotation = new THREE.Euler(0, 0, 2);
-                  lerpJawRotation(jawRotation, 300)
+            
+                if ((target  === "V_Lip_Open" || target  === "V_Affricate" )&& weight > maxWeight) {
+                  maxWeight = weight;
+                  const minRotation = 1.55;
+                  const maxRotation = 1.60;
+                  const mappedRotation = minRotation + (maxRotation - minRotation) * weight;
+                  finalRotation = new THREE.Euler(0, 0, mappedRotation);
+                }
+            
+                // Still apply influence per target
+                if (morphIndex  !== undefined) {
+                  lerpInfluence(mesh, target, weight, 500, 1);
                 }
 
+                 // Apply final jaw rotation only once
+                if (finalRotation) {
+                  //console.log("Applying jaw rotation:", finalRotation.z.toFixed(3));
+                  lerpJawRotation(finalRotation, 500);
+                }
               });
             }
           }
