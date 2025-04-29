@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -133,20 +133,22 @@ const SelectAI: React.FC = () => {
                         alignItems: "center",
                         mb: 3
                     }}>
-                        <Box>
-                            <Typography variant="h5" component="h1" fontWeight="bold" color="primary">
-                                Metaphysical
-                            </Typography>
-                            <Box sx={{
-                                height: 3,
-                                width: 40,
-                                bgcolor: "primary.main",
-                                mt: 0.5
-                            }} />
-                            <Typography variant="subtitle1" color="text.secondary">
-                                Studio
-                            </Typography>
-                        </Box>
+                        <Link to={'/'}>
+                            <Box>
+                                <Typography variant="h5" component="h1" fontWeight="bold" color="primary">
+                                    Metaphysical
+                                </Typography>
+                                <Box sx={{
+                                    height: 3,
+                                    width: 40,
+                                    bgcolor: "primary.main",
+                                    mt: 0.5
+                                }} />
+                                <Typography variant="subtitle1" color="text.secondary">
+                                    Studio
+                                </Typography>
+                            </Box>
+                        </Link>
 
                         {/* Search bar moved to header for better space utilization */}
                         <TextField
