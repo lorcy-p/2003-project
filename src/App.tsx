@@ -11,6 +11,7 @@ import LoginScreen from "./Screens/LoginScreen";
 import HomeScreen from "./Screens/HomeScreen";
 import ProtectedRoute from "./components/ProtectedRoute";
 import useAuth from './hooks/useAuth';
+import SignupScreen from "./Screens/SignupScreen";
 
 const App: FC = () => {
   const { isAuthenticated, userToken, userId, login, logout } = useAuth();
@@ -19,6 +20,7 @@ const App: FC = () => {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginScreen />} />
+          <Route path="/signup" element={<SignupScreen />} />
           <Route path="/" element={<HomeScreen />} />
             <Route path="/characters" element={
                 <ProtectedRoute

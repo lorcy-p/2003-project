@@ -600,7 +600,14 @@ const HomePage = () => {
                 {/* Featured Characters Section */}
                 <Box sx={{ pt: 3, pb: 8, bgcolor: "background.paper" }}>
                     <Container maxWidth="xl">
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                mb: 4
+                            }}
+                        >
                             <Typography variant="h5" component="h2" fontWeight="bold">
                                 Featured Characters
                             </Typography>
@@ -615,87 +622,104 @@ const HomePage = () => {
                             </Button>
                         </Box>
 
-                        <Grid container spacing={3} ref={charactersRef}>
+                        <Box
+                            ref={charactersRef}
+                            sx={{
+                                display: "grid",
+                                gap: 3,
+                                gridTemplateColumns: {
+                                    xs: "1fr",
+                                    sm: "1fr 1fr",
+                                    md: "1fr 1fr 1fr"
+                                }
+                            }}
+                        >
                             {featuredCharacters.map((character) => (
-                                <Grid item xs={12} sm={6} md={4} key={character.id}>
-                                    <Card
-                                        className="character-card"
-                                        onClick={() => startWithCharacter(character.id)}
-                                        sx={{
-                                            cursor: "pointer",
-                                            height: "100%",
-                                            transition: "all 0.2s ease",
-                                            border: "1px solid rgba(0,0,0,0.04)",
-                                            "&:hover": {
-                                                transform: "translateY(-8px)",
-                                                boxShadow: "0 15px 30px rgba(0,0,0,0.1)"
-                                            }
-                                        }}
-                                    >
-                                        <CardMedia
-                                            component="img"
-                                            height={180}
-                                            image={character.imagePath}
-                                            alt={character.name}
-                                        />
-                                        <CardContent sx={{ p: 2.5 }}>
-                                            <Typography variant="h6" component="h3" fontWeight="bold" gutterBottom>
-                                                {character.name}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="text.secondary"
-                                                sx={{
-                                                    mb: 2,
-                                                    display: '-webkit-box',
-                                                    WebkitLineClamp: 2,
-                                                    WebkitBoxOrient: 'vertical',
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                    height: 40
-                                                }}
-                                            >
-                                                {character.shortDescription}
-                                            </Typography>
+                                <Box
+                                    key={character.id}
+                                    sx={{
+                                        height: "100%",
+                                        borderRadius: 2,
+                                        transition: "all 0.2s ease",
+                                        border: "1px solid rgba(0,0,0,0.04)",
+                                        cursor: "pointer",
+                                        "&:hover": {
+                                            transform: "translateY(-8px)",
+                                            boxShadow: "0 15px 30px rgba(0,0,0,0.1)"
+                                        }
+                                    }}
+                                    onClick={() => startWithCharacter(character.id)}
+                                    className="character-card"
+                                >
+                                    <CardMedia
+                                        component="img"
+                                        height={180}
+                                        image={character.imagePath}
+                                        alt={character.name}
+                                    />
+                                    <CardContent sx={{ p: 2.5 }}>
+                                        <Typography
+                                            variant="h6"
+                                            component="h3"
+                                            fontWeight="bold"
+                                            gutterBottom
+                                        >
+                                            {character.name}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                            sx={{
+                                                mb: 2,
+                                                display: "-webkit-box",
+                                                WebkitLineClamp: 2,
+                                                WebkitBoxOrient: "vertical",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                height: 40
+                                            }}
+                                        >
+                                            {character.shortDescription}
+                                        </Typography>
 
-                                            <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
-                                                <Chip
-                                                    label={character.residence}
-                                                    size="small"
-                                                    sx={{
-                                                        height: 24,
-                                                        fontSize: "0.75rem",
-                                                        bgcolor: "background.default"
-                                                    }}
-                                                />
-                                                <Chip
-                                                    label={`Age: ${character.age}`}
-                                                    size="small"
-                                                    sx={{
-                                                        height: 24,
-                                                        fontSize: "0.75rem",
-                                                        bgcolor: "background.default"
-                                                    }}
-                                                />
-                                            </Box>
-
-                                            <Button
-                                                variant="outlined"
-                                                color="primary"
-                                                fullWidth
-                                                startIcon={<ChatIcon />}
+                                        <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+                                            <Chip
+                                                label={character.residence}
                                                 size="small"
-                                                sx={{ borderRadius: 6 }}
-                                            >
-                                                Start Conversation
-                                            </Button>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
+                                                sx={{
+                                                    height: 24,
+                                                    fontSize: "0.75rem",
+                                                    bgcolor: "background.default"
+                                                }}
+                                            />
+                                            <Chip
+                                                label={`Age: ${character.age}`}
+                                                size="small"
+                                                sx={{
+                                                    height: 24,
+                                                    fontSize: "0.75rem",
+                                                    bgcolor: "background.default"
+                                                }}
+                                            />
+                                        </Box>
+
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            fullWidth
+                                            startIcon={<ChatIcon />}
+                                            size="small"
+                                            sx={{ borderRadius: 6 }}
+                                        >
+                                            Start Conversation
+                                        </Button>
+                                    </CardContent>
+                                </Box>
                             ))}
-                        </Grid>
+                        </Box>
                     </Container>
                 </Box>
+
 
                 {/* Features Section */}
                 <Box sx={{ py: 8, bgcolor: "background.default" }}>
