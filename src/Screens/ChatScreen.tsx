@@ -20,7 +20,8 @@ import {
   Paper,
   Divider,
   Fade,
-  useTheme
+  useTheme,
+  CircularProgress
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
@@ -279,6 +280,9 @@ const ChatScreen: React.FC = () => {
   // State to store the list of messages
   const [messages, setMessages] = useState<Message[]>([]);
 
+  //State to store wether threejs is loading the scene
+  const [isLoading, setIsLoading] = useState(true); 
+
   // State to handle the user's input
   const [newMessage, setNewMessage] = useState("");
 
@@ -396,6 +400,33 @@ const ChatScreen: React.FC = () => {
       setIsTyping(true);
     }
   };
+
+  const LoadingOverlay = () => (
+    <Fade in={true} timeout={500}>
+      <Box sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        color: 'white'
+      }}>
+        <CircularProgress color="inherit" size={60} thickness={4} />
+        <Typography variant="h6" sx={{ mt: 3 }}>
+          Loading 3D Environment...
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          This may take a few moments
+        </Typography>
+      </Box>
+    </Fade>
+  );
 
   // Take audio input
   async function take_audio(base64: string) {
@@ -538,10 +569,17 @@ const ChatScreen: React.FC = () => {
             height: { xs: "60vh", md: "70vh" },
             zIndex: 1
           }}>
-            <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }}>
+            <Canvas shadows camera={{ position: [0, 0, 1], fov: 30 }} onCreated={() => setIsLoading(false)}>
               <Experience />
             </Canvas>
-            <Loader />
+            <Loader 
+            dataInterpolation={(p) => {
+              if (p === 1) setIsLoading(false);
+              return `Loading ${Math.round(p * 100)}%`;
+            }}
+            />
+            <canvas/>
+            {isLoading && <LoadingOverlay />}
             <Leva hidden={false} />
           </Box>
 
