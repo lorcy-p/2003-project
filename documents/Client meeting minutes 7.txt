@@ -1,0 +1,17 @@
+20/02/2025
+
+Participants : Jack, Jass, Joshua, Lorcan
+
+What happened:
+
+Client pleased with progress
+Client suggests that the code should be refactored soon to allow for future expansion
+An issue with the audio input has been discussed
+
+Tasks to complete for next sprint:
+
+refactor code
+fix audio input bug
+
+Date of next meeting : 06/03/2025
+ 
