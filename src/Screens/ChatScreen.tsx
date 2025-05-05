@@ -7,6 +7,9 @@ import { Experience } from "../components/Experience";
 import visemesEmitter from "../components/visemeEvents";
 import AudioRecorder from "../components/AudioRecorder";
 import { useNavigate } from "react-router-dom";
+import useSound from 'use-sound';
+import diallingTone from '../../public/audio/dialling_tone.mp3';
+import callConnected from '../../public/audio/call_connected.mp3';
 import {
   Box,
   Button,
@@ -519,6 +522,25 @@ const ChatScreen: React.FC = () => {
     </Box>
   );
 
+  // declare the play and stop functions for each of the sounds
+  const [play, { stop }] = useSound(diallingTone);
+  const [play1, { stop: stop1 }] = useSound(callConnected);
+
+
+  // effect hook for the control of dialling and call connected sounds
+  useEffect(() => {
+    if (isLoading) {
+      play();
+    }else{
+      stop();
+      play1();
+      setTimeout(() => {
+        stop1();
+      }, 1000);
+
+    }
+  }, [play, isLoading]); 
+
   // Take audio input
   async function take_audio(base64: string) {
     console.log(`Got audio for ${humanCharacter} ${base64}`);
@@ -675,238 +697,239 @@ const ChatScreen: React.FC = () => {
           </Box>
 
           {/* Chat Interface */}
-          <Container maxWidth="lg" sx={{
-            flex: 1,
-            position: "relative",
-            zIndex: 2,
-            mt: isOpen ? -25 : -5,
-            mb: 2
-          }}>
-            <Card sx={{
-              width: "100%",
-              maxHeight: "50vh",
-              border: "1px solid rgba(0,0,0,0.04)",
-              boxShadow: "0 15px 35px rgba(0,0,0,0.1)",
-              borderRadius: 3,
-              overflow: "visible",
-              display: isOpen ? "flex" : "none",
-              flexDirection: "column"
+          {!isLoading && (
+            <Container maxWidth="lg" sx={{
+              flex: 1,
+              position: "relative",
+              zIndex: 2,
+              mt: isOpen ? -25 : -5,
+              mb: 2
             }}>
-              <CardContent sx={{
-                p: 3,
-                flex: 1,
-                overflowY: "auto"
-              }} ref={messageScrollRef}>
-                {messages.map((message, index) => (
-                    <Box
-                        key={index}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: message.sender === "user" ? "flex-end" : "flex-start",
-                          mb: 2
-                        }}
-                    >
-                      {message.sender === "recipient" && (
-                          <Box sx={{ mb: 0.5 }}>
-                            <Typography
-                                variant="subtitle2"
-                                color="primary.main"
-                                fontWeight="bold"
-                                sx={{ fontFamily: "'Corpos', sans-serif" }}
-                            >
-                              AI Model
-                            </Typography>
-                          </Box>
-                      )}
-
-                      <Paper
-                          elevation={0}
+              <Card sx={{
+                width: "100%",
+                maxHeight: "50vh",
+                border: "1px solid rgba(0,0,0,0.04)",
+                boxShadow: "0 15px 35px rgba(0,0,0,0.1)",
+                borderRadius: 3,
+                overflow: "visible",
+                display: isOpen ? "flex" : "none",
+                flexDirection: "column"
+              }}>
+                <CardContent sx={{
+                  p: 3,
+                  flex: 1,
+                  overflowY: "auto"
+                }} ref={messageScrollRef}>
+                  {messages.map((message, index) => (
+                      <Box
+                          key={index}
                           sx={{
-                            p: 2,
-                            borderRadius: 2,
-                            maxWidth: "80%",
-                            backgroundColor: message.sender === "user"
-                                ? "primary.main"
-                                : "rgba(0,0,0,0.04)",
-                            color: message.sender === "user" ? "white" : "text.primary",
-                            fontFamily: message.sender === "recipient"
-                                ? "'Corpos', sans-serif"
-                                : "inherit"
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: message.sender === "user" ? "flex-end" : "flex-start",
+                            mb: 2
                           }}
                       >
-                        <Typography variant="body1">
-                          {message.text}
-                        </Typography>
-
-                        {message.attachment && (
-                            <Box sx={{ mt: 1 }}>
-                              <img
-                                  src={message.attachment}
-                                  alt="attachment"
-                                  style={{ maxWidth: "100%", borderRadius: "8px" }}
-                              />
+                        {message.sender === "recipient" && (
+                            <Box sx={{ mb: 0.5 }}>
+                              <Typography
+                                  variant="subtitle2"
+                                  color="primary.main"
+                                  fontWeight="bold"
+                                  sx={{ fontFamily: "'Corpos', sans-serif" }}
+                              >
+                                AI Model
+                              </Typography>
                             </Box>
                         )}
-                      </Paper>
 
-                      <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{ mt: 0.5 }}
-                      >
-                        {message.timestamp}
-                      </Typography>
-
-                      {message.sender === "recipient" && (
-                          <Divider sx={{ width: "100%", my: 1.5 }} />
-                      )}
-                    </Box>
-                ))}
-
-                {/* Typing indicator */}
-                {isTyping && (
-                    <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                          mb: 2
-                        }}
-                    >
-                      <Box sx={{ mb: 0.5 }}>
-                        <Typography
-                            variant="subtitle2"
-                            color="primary.main"
-                            fontWeight="bold"
-                            sx={{ fontFamily: "'Corpos', sans-serif" }}
+                        <Paper
+                            elevation={0}
+                            sx={{
+                              p: 2,
+                              borderRadius: 2,
+                              maxWidth: "80%",
+                              backgroundColor: message.sender === "user"
+                                  ? "primary.main"
+                                  : "rgba(0,0,0,0.04)",
+                              color: message.sender === "user" ? "white" : "text.primary",
+                              fontFamily: message.sender === "recipient"
+                                  ? "'Corpos', sans-serif"
+                                  : "inherit"
+                            }}
                         >
-                          AI Model
-                        </Typography>
-                      </Box>
+                          <Typography variant="body1">
+                            {message.text}
+                          </Typography>
 
-                      <Paper
-                          elevation={0}
+                          {message.attachment && (
+                              <Box sx={{ mt: 1 }}>
+                                <img
+                                    src={message.attachment}
+                                    alt="attachment"
+                                    style={{ maxWidth: "100%", borderRadius: "8px" }}
+                                />
+                              </Box>
+                          )}
+                        </Paper>
+
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ mt: 0.5 }}
+                        >
+                          {message.timestamp}
+                        </Typography>
+
+                        {message.sender === "recipient" && (
+                            <Divider sx={{ width: "100%", my: 1.5 }} />
+                        )}
+                      </Box>
+                  ))}
+
+                  {/* Typing indicator */}
+                  {isTyping && (
+                      <Box
                           sx={{
-                            p: 2,
-                            borderRadius: 2,
-                            backgroundColor: "rgba(0,0,0,0.04)",
-                            fontFamily: "'Corpos', sans-serif"
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            mb: 2
                           }}
                       >
-                        <Box className="typing-ellipsis" sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          "& .dot": {
-                            width: "8px",
-                            height: "8px",
-                            margin: "0 2px",
-                            borderRadius: "50%",
-                            backgroundColor: "text.secondary",
-                            animation: "typingAnimation 1.4s infinite ease-in-out",
-                          },
-                          "& .dot:nth-of-type(2)": {
-                            animationDelay: "0.2s"
-                          },
-                          "& .dot:nth-of-type(3)": {
-                            animationDelay: "0.4s"
-                          },
-                          "@keyframes typingAnimation": {
-                            "0%, 100%": {
-                              transform: "translateY(0)"
-                            },
-                            "50%": {
-                              transform: "translateY(-5px)"
-                            }
-                          }
-                        }}>
-                          <Box className="dot" />
-                          <Box className="dot" />
-                          <Box className="dot" />
+                        <Box sx={{ mb: 0.5 }}>
+                          <Typography
+                              variant="subtitle2"
+                              color="primary.main"
+                              fontWeight="bold"
+                              sx={{ fontFamily: "'Corpos', sans-serif" }}
+                          >
+                            AI Model
+                          </Typography>
                         </Box>
-                      </Paper>
-                    </Box>
-                )}
-              </CardContent>
 
-              {/* Message Input Field */}
-              <Box sx={{
-                p: 2,
-                borderTop: "1px solid rgba(0,0,0,0.05)",
-                display: "flex",
-                alignItems: "center"
-              }}>
-                <TextField
-                    fullWidth
-                    placeholder="Type message here..."
-                    variant="outlined"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                    InputProps={{
-                      sx: {
-                        borderRadius: 6,
-                        pr: 1
-                      },
-                      endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                                onClick={handleSendMessage}
-                                disabled={!newMessage.trim()}
-                                color="primary"
-                                sx={{ mr: -1 }}
-                            >
-                              <SendIcon />
-                            </IconButton>
-                          </InputAdornment>
-                      )
-                    }}
-                    sx={{ mr: 1 }}
-                />
+                        <Paper
+                            elevation={0}
+                            sx={{
+                              p: 2,
+                              borderRadius: 2,
+                              backgroundColor: "rgba(0,0,0,0.04)",
+                              fontFamily: "'Corpos', sans-serif"
+                            }}
+                        >
+                          <Box className="typing-ellipsis" sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            "& .dot": {
+                              width: "8px",
+                              height: "8px",
+                              margin: "0 2px",
+                              borderRadius: "50%",
+                              backgroundColor: "text.secondary",
+                              animation: "typingAnimation 1.4s infinite ease-in-out",
+                            },
+                            "& .dot:nth-of-type(2)": {
+                              animationDelay: "0.2s"
+                            },
+                            "& .dot:nth-of-type(3)": {
+                              animationDelay: "0.4s"
+                            },
+                            "@keyframes typingAnimation": {
+                              "0%, 100%": {
+                                transform: "translateY(0)"
+                              },
+                              "50%": {
+                                transform: "translateY(-5px)"
+                              }
+                            }
+                          }}>
+                            <Box className="dot" />
+                            <Box className="dot" />
+                            <Box className="dot" />
+                          </Box>
+                        </Paper>
+                      </Box>
+                  )}
+                </CardContent>
 
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <AudioRecorder onAudioRecorded={take_audio} />
+                {/* Message Input Field */}
+                <Box sx={{
+                  p: 2,
+                  borderTop: "1px solid rgba(0,0,0,0.05)",
+                  display: "flex",
+                  alignItems: "center"
+                }}>
+                  <TextField
+                      fullWidth
+                      placeholder="Type message here..."
+                      variant="outlined"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                      InputProps={{
+                        sx: {
+                          borderRadius: 6,
+                          pr: 1
+                        },
+                        endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                  onClick={handleSendMessage}
+                                  disabled={!newMessage.trim()}
+                                  color="primary"
+                                  sx={{ mr: -1 }}
+                              >
+                                <SendIcon />
+                              </IconButton>
+                            </InputAdornment>
+                        )
+                      }}
+                      sx={{ mr: 1 }}
+                  />
+
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <AudioRecorder onAudioRecorded={take_audio} />
+                  </Box>
                 </Box>
+              </Card>
+
+              {/* Control Buttons */}
+              <Box sx={{
+                display: "flex",
+                justifyContent: "center",
+                mt: 2,
+                gap: 2
+              }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<ChatIcon />}
+                    onClick={() => setIsOpen(!isOpen)}
+                    sx={{
+                      borderRadius: 6,
+                      px: 3,
+                      boxShadow: "0 8px 16px rgba(58, 90, 217, 0.15)"
+                    }}
+                >
+                  {isOpen ? "Hide Transcript" : "Show Transcript"}
+                </Button>
+
+                <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<CallEndIcon />}
+                    onClick={() => navigate("/")}
+                    sx={{
+                      borderRadius: 6,
+                      px: 3,
+                      boxShadow: "0 8px 16px rgba(211, 47, 47, 0.15)"
+                    }}
+                >
+                  End Call
+                </Button>
               </Box>
-            </Card>
-
-            {/* Control Buttons */}
-            <Box sx={{
-              display: "flex",
-              justifyContent: "center",
-              mt: 2,
-              gap: 2
-            }}>
-              <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<ChatIcon />}
-                  onClick={() => setIsOpen(!isOpen)}
-                  sx={{
-                    borderRadius: 6,
-                    px: 3,
-                    boxShadow: "0 8px 16px rgba(58, 90, 217, 0.15)"
-                  }}
-              >
-                {isOpen ? "Hide Transcript" : "Show Transcript"}
-              </Button>
-
-              <Button
-                  variant="contained"
-                  color="error"
-                  startIcon={<CallEndIcon />}
-                  onClick={() => navigate("/")}
-                  sx={{
-                    borderRadius: 6,
-                    px: 3,
-                    boxShadow: "0 8px 16px rgba(211, 47, 47, 0.15)"
-                  }}
-              >
-                End Call
-              </Button>
-            </Box>
-          </Container>
-
+            </Container>
+          )}
           {/* Floating decorative elements */}
           <Box
               sx={{
