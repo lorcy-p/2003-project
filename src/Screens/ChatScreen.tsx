@@ -21,7 +21,9 @@ import {
   Divider,
   Fade,
   useTheme,
-  CircularProgress
+  CircularProgress,
+  Avatar,
+  LinearProgress
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
@@ -281,7 +283,7 @@ const ChatScreen: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   //State to store wether threejs is loading the scene
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
 
   // State to handle the user's input
   const [newMessage, setNewMessage] = useState("");
@@ -402,30 +404,119 @@ const ChatScreen: React.FC = () => {
   };
 
   const LoadingOverlay = () => (
-    <Fade in={true} timeout={500}>
-      <Box sx={{
-        position: 'absolute',
+    <Box 
+      sx={{
+        position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(0,0,0,0.7)',
+        bgcolor: 'background.paper',
+        zIndex: 9999,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 9999,
-        color: 'white'
-      }}>
-        <CircularProgress color="inherit" size={60} thickness={4} />
-        <Typography variant="h6" sx={{ mt: 3 }}>
-          Loading 3D Environment...
+        backdropFilter: 'blur(4px)',
+        transition: 'opacity 0.5s ease-out',
+      }}
+    >
+      <Box 
+        sx={{
+          textAlign: 'center',
+          maxWidth: 500,
+          px: 4,
+          animation: 'fadeIn 0.5s ease-in',
+          '@keyframes fadeIn': {
+            '0%': { opacity: 0, transform: 'translateY(20px)' },
+            '100%': { opacity: 1, transform: 'translateY(0)' }
+          }
+        }}
+      >
+        <Avatar 
+          sx={{
+            width: 120,
+            height: 120,
+            mb: 3,
+            bgcolor: 'primary.main',
+            mx: 'auto',
+            animation: 'pulse 2s infinite ease-in-out',
+            '@keyframes pulse': {
+              '0%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(58, 90, 217, 0.4)' },
+              '70%': { transform: 'scale(1.05)', boxShadow: '0 0 0 10px rgba(58, 90, 217, 0)' },
+              '100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(58, 90, 217, 0)' }
+            }
+          }}
+        >
+          <ChatIcon sx={{ fontSize: 60 }} />
+        </Avatar>
+        
+        <Typography 
+          variant="h5" 
+          gutterBottom
+          sx={{
+            fontWeight: 600,
+            mb: 2,
+            color: 'text.primary',
+          }}
+        >
+          Preparing Your AI Session
         </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          This may take a few moments
+        
+        <Typography 
+          variant="body1"
+          sx={{
+            mb: 4,
+            color: 'text.secondary',
+          }}
+        >
+          Loading 3D environment and AI models...
+        </Typography>
+        
+        <Box 
+          sx={{ 
+            width: '100%',
+            maxWidth: 400,
+            mx: 'auto',
+            position: 'relative',
+            height: 8,
+            borderRadius: 4,
+            overflow: 'hidden',
+            bgcolor: 'rgba(58, 90, 217, 0.1)',
+            mb: 2
+          }}
+        >
+          <Box 
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              height: '100%',
+              width: '100%',
+              bgcolor: 'primary.main',
+              animation: 'loadingBar 2s infinite ease-in-out',
+              transformOrigin: 'left center',
+              '@keyframes loadingBar': {
+                '0%': { transform: 'scaleX(0)', opacity: 0.6 },
+                '50%': { transform: 'scaleX(1)', opacity: 1 },
+                '100%': { transform: 'scaleX(0)', opacity: 0.6, transformOrigin: 'right center' }
+              }
+            }}
+          />
+        </Box>
+        
+        <Typography 
+          variant="caption"
+          sx={{
+            display: 'block',
+            color: 'text.disabled',
+            fontStyle: 'italic',
+          }}
+        >
+          This may take a few moments...
         </Typography>
       </Box>
-    </Fade>
+    </Box>
   );
 
   // Take audio input
