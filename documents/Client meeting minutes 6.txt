@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 03/02/2025
 
 Participants : Jack, Jass, Joshua, Lorcan
@@ -22,29 +21,4 @@ Alter ui to be a more game-like environment
 
 
 Date of next meeting : 20/2/2025
-=======
-03/02/2025
-
-Participants : Jack, Jass, Joshua, Lorcan
-
- What happened:
-
-Showed the prototype to client - model animations 
-Client says that the visimes are not all correctly being displayed. Feedback for the fix has been received. Averaging the animations instead of adding them.
-Talked to client about the audio input being displayed. Feedback has been received.
-Client would like a background for the model - a more game environment 
-Client would like suggestions for new models
-Possibly add hand movements for the model when communicating
-refactor code to ensure sustainability for future development
-could create some more interesting models
-
-
- Tasks to complete for next sprint:
-
-Provide suggestions for new models
-Alter ui to be a more game-like environment
-
-
-Date of next meeting : 20/2/2025
->>>>>>> 08e7abe3bf90899b0eb6d2830098827917004546
  

@@ -1,0 +1,18 @@
+client meeting minutes 14/04
+
+
+
+what was discussed 
+
+Client mentioned trouble downloading new models for Jack
+Issue with microphone input discussed with client - his side is receiving the audio correctly, however is taking an abnormal time to respond which may automatically close the socket.
+Client has agreed to get another model
+Audio issue has been fixed
+
+Tasks to complete for next sprint:
+
+Start working on final report
+Set up docker for testing
+Add weights to viseme map to make animations look more realistic
+update facial expressions
+

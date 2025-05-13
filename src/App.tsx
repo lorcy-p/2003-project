@@ -8,14 +8,28 @@ import ChatScreen from './Screens/ChatScreen';
 import SelectAI from "./Screens/SelectAiScreen";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginScreen from "./Screens/LoginScreen";
+import HomeScreen from "./Screens/HomeScreen";
+import ProtectedRoute from "./components/ProtectedRoute";
+import useAuth from './hooks/useAuth';
+import SignupScreen from "./Screens/SignupScreen";
 
 const App: FC = () => {
+  const { isAuthenticated, userToken, userId, login, logout } = useAuth();
   return (
     <>
       <Router>
         <Routes>
           <Route path="/login" element={<LoginScreen />} />
-          <Route path="/" element={<SelectAI />} />
+          <Route path="/signup" element={<SignupScreen />} />
+          <Route path="/" element={<HomeScreen />} />
+            <Route path="/characters" element={
+                <ProtectedRoute
+                    isAuthenticated={isAuthenticated}
+                    authenticationPath="/login"
+                >
+                    <SelectAI />
+                </ProtectedRoute>
+            } />
           <Route path="/chat" element={<ChatScreen />} />
         </Routes>
       </Router>

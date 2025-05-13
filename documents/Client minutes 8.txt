@@ -1,0 +1,17 @@
+06/03/2025
+
+Participants : Jack, Jass, Joshua, Lorcan
+
+What happened:
+
+Jack showed where to get new models for the client, client pleased
+Client happy with the new scenarios, added them to the websocket
+Client suggests that the branches sould be merged
+
+Tasks to complete for next sprint:
+
+Implement CC4 models
+Merge animation branch
+
+Date of next meeting : 20/03/2025
+ 

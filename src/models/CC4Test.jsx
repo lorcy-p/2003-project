@@ -8,14 +8,13 @@ import { useGLTF, Html, useAnimations} from "@react-three/drei";
 import { folder, button, useControls } from "leva";
 import * as THREE from "three";
 import useVisemeAnimationCC4 from "../hooks/useVisemeAnimationCC4";
-import useCharacterAnimation from "../hooks/useCharacterAnimation";
+import useCharacterAnimationCC4 from "../hooks/useCharacterAnimationCC4";
 //import { useLipsync } from "../Reallusion/hooks/useLipSync";
 
 export function CC4Test(props) {
-  const {nodes, materials, scene } = useGLTF('models/CC4Test.glb')
-  //const kevinRef = useRef();
+  const {nodes, materials, scene } = useGLTF('models/CC4KevinAnimations.glb')
   const group = useRef();
-  const { client } = props;
+
 
   //log every part of every mesh for debug
   //Object.values(nodes).forEach(mesh => console.log(mesh.name));
@@ -321,82 +320,31 @@ export function CC4Test(props) {
 
   };
 
-  /*
-    
-    "sh": ["V_Open"],
-    "l": ["V_Open"],
-    "oh": ["V_Open"],
-    "ow": ["V_Open"],
-    "oy": ["V_Open"],
-    "ai": ["V_Open"],
-    "h": ["V_Open"],
-    "er": ["V_Open"],
-    "ar": ["V_Open"],
-
-    */
 
   // Get useVisemeAnimation from the imported hook
   const { lerpInfluence, lerpJawRotation } = useVisemeAnimationCC4(group, setFacialExpression, visemeMap, setupMode, nodes, group);
 
   // Get useCharacterAnimation from the imported hook
-  const { animation, animations, setAnimation, lerpMorphTarget, setWinkLeft, setWinkRight } = useCharacterAnimation(
-    "/models/testanimations.glb",
+  const { animation, animations, setAnimation} = useCharacterAnimationCC4(
+    "/models/CC4KevinAnimations.glb",
     group,
     scene,
     nodes, 
-    facialExpressions, 
-    facialExpression,
-    setupMode
   );
+
   
-  /*
+  
+  
 
   //Leva Controls for debugging
-      useControls("FacialExpressions", {
-        winkLeft: button(() => {
-          setWinkLeft(true);
-          setTimeout(() => setWinkLeft(false), 300);
-        }),
-        winkRight: button(() => {
-          setWinkRight(true);
-          setTimeout(() => setWinkRight(false), 300);
-        }),
+      useControls("Animations", {
         animation: {
           value: animation,
           options: animations.map((a) => a.name),
           onChange: (value) => setAnimation(value),
         },
-        facialExpression: {
-          options: Object.keys(facialExpressions),
-          onChange: (value) => {if (setupMode) 
-            {setFacialExpression(value)}},
-        },
-        enableSetupMode: button(() => {
-          setupMode = true;
-        }),
-        disableSetupMode: button(() => {
-          setupMode = false;
-        }),
-        logMorphTargetValues: button(() => {
-          const emotionValues = {};
-          Object.keys(nodes.CC_Base_Body002.morphTargetDictionary).forEach((key) => {
-            if (key === "eyeBlinkLeft" || key === "eyeBlinkRight") {
-              return; // eyes wink/blink are handled separately
-            }
-            const value =
-              nodes.CC_Base_Body002.morphTargetInfluences[
-                nodes.CC_Base_Body002.morphTargetDictionary[key]
-              ];
-            if (value > 0.01) {
-              emotionValues[key] = value;
-            }
-            console.log(nodes.CC_Base_Body002.morphTargetDictionary);
-          });
-          console.log(JSON.stringify(emotionValues, null, 2));
-        }),
       });
-    */
-
+    
       const morphTargets = Object.keys(nodes).reduce((acc, nodeName) => {
         const node = nodes[nodeName];
       

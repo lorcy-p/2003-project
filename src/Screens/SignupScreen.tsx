@@ -12,23 +12,27 @@ import {
     Link,
     Alert,
     Divider,
-    useTheme
+    useTheme,
+    Checkbox,
+    FormControlLabel
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
-import LoginIcon from "@mui/icons-material/Login";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonIcon from "@mui/icons-material/Person";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import theme from "../components/Theme";
-import useAuth from "../hooks/useAuth";
 
-const LoginScreen: React.FC = () => {
+const SignupScreen: React.FC = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
     const muiTheme = useTheme();
 
+    const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [agreeToTerms, setAgreeToTerms] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -36,8 +40,18 @@ const LoginScreen: React.FC = () => {
         event.preventDefault();
 
         // Input validation
-        if (!email || !password) {
-            setError("Both email and password are required");
+        if (!fullName || !email || !password || !confirmPassword) {
+            setError("All fields are required");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+
+        if (!agreeToTerms) {
+            setError("You must agree to the Terms of Service and Privacy Policy");
             return;
         }
 
@@ -45,72 +59,52 @@ const LoginScreen: React.FC = () => {
         setError("");
 
         try {
-            // Prepare login data
-            const loginData = new URLSearchParams({
-                username: email,
-                password: password,
-            });
+            // Simulate API call for registration
+            setIsLoading(true);
+            setError("");
 
-            // Call the API
-            // const response = await fetch("https://studio.metaphysical.dev/agents/login", {
-            //     method: "POST",
-            //     body: loginData,
-            // });
-            // actual validation has been suspended since the auth api doesn't work. Simulation purposes only for now.
-
-            const response = new Promise(resolve => {
+            // Create a promise that simulates an API response
+            const response = await new Promise<{ok: boolean, json: () => Promise<any>}>(resolve => {
                 setTimeout(() => {
-                    // Simulating a successful login response
-                    const dummyLoginData = {
+                    // Simulating a successful registration response
+                    const dummyRegisterData = {
                         success: true,
-                        jwt: 'dummy.jwt.token', // Dummy JWT token
-                        userId: '12345' // Dummy user ID
+                        jwt: 'dummy.registration.token',
+                        userId: 'new-user-12345'
                     };
 
                     // Simulating a successful response
                     resolve({
                         ok: true,
-                        json: () => Promise.resolve(dummyLoginData)
+                        json: () => Promise.resolve(dummyRegisterData)
                     });
                 }, 2000); // resolves after 2 seconds
             });
 
-            (async () => {
-                try {
-                    const res = await response;
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.jwt) {
+                    // Store JWT in localStorage
+                    localStorage.setItem("JWT", data.jwt);
 
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data.success && data.jwt) {
-                            // Store JWT in localStorage
-                            localStorage.setItem("JWT", data.jwt);
-
-                            // Use our auth hook to update authentication state
-                            login(data.jwt, data.userId || "user-id"); // Use actual userId if available
-
-                            // Redirect to characters selection page
-                            navigate("/");
-                        } else {
-                            setError("Login failed. Please check your credentials.");
-                        }
-                    } else {
-                        setError("Authentication failed. Please try again.");
-                    }
-                } catch (error) {
-                    setError("An error occurred during login.");
+                    // Redirect to home page
+                    navigate("/");
+                } else {
+                    setError("Registration failed. Please check your information and try again.");
                 }
-            })();
-
+            } else {
+                setError("Account creation failed. Please try again.");
+            }
         } catch (err) {
-            console.error("Login error:", err);
-            setError("An error occurred during login. Please try again later.");
+            console.error("Registration error:", err);
+            setError("An error occurred during registration. Please try again later.");
         } finally {
             setIsLoading(false);
         }
     };
 
-    const goToSignUp = () => {
-        navigate("/signup");
+    const goToLogin = () => {
+        navigate("/login");
     };
 
     const goToHome = () => {
@@ -132,7 +126,7 @@ const LoginScreen: React.FC = () => {
                     position: "absolute",
                     width: "50%",
                     height: "60%",
-                    right: -100,
+                    left: -100,
                     top: -100,
                     background: "radial-gradient(circle, rgba(58, 90, 217, 0.08) 0%, rgba(58, 90, 217, 0) 70%)",
                     borderRadius: "50%",
@@ -143,7 +137,7 @@ const LoginScreen: React.FC = () => {
                     position: "absolute",
                     width: "30%",
                     height: "40%",
-                    left: -50,
+                    right: -50,
                     bottom: -50,
                     background: "radial-gradient(circle, rgba(58, 90, 217, 0.05) 0%, rgba(58, 90, 217, 0) 70%)",
                     borderRadius: "50%",
@@ -174,7 +168,7 @@ const LoginScreen: React.FC = () => {
                     </Box>
                 </Container>
 
-                {/* Login Content */}
+                {/* Signup Content */}
                 <Container
                     maxWidth="sm"
                     sx={{
@@ -198,15 +192,15 @@ const LoginScreen: React.FC = () => {
                         justifyContent: "center",
                         mb: 3
                     }}>
-                        <PersonIcon sx={{ fontSize: 40, color: "primary.main" }} />
+                        <PersonAddIcon sx={{ fontSize: 40, color: "primary.main" }} />
                     </Box>
 
                     <Typography variant="h4" component="h1" fontWeight="bold" textAlign="center" gutterBottom>
-                        Welcome Back
+                        Create Account
                     </Typography>
 
                     <Typography variant="body1" color="text.secondary" textAlign="center" sx={{ mb: 4 }}>
-                        Sign in to continue your conversations with extraordinary characters
+                        Join the community and start conversing with extraordinary characters
                     </Typography>
 
                     <Card
@@ -226,8 +220,30 @@ const LoginScreen: React.FC = () => {
                                 </Alert>
                             )}
 
-                            {/* Login Form */}
+                            {/* Signup Form */}
                             <form onSubmit={handleSubmit}>
+                                <TextField
+                                    fullWidth
+                                    label="Full Name"
+                                    variant="outlined"
+                                    margin="normal"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    required
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AccountCircleIcon color="action" />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    sx={{
+                                        "& .MuiOutlinedInput-root": {
+                                            borderRadius: 2
+                                        }
+                                    }}
+                                />
+
                                 <TextField
                                     fullWidth
                                     label="Email Address"
@@ -270,16 +286,57 @@ const LoginScreen: React.FC = () => {
                                     sx={{
                                         "& .MuiOutlinedInput-root": {
                                             borderRadius: 2
-                                        },
-                                        mb: 1
+                                        }
                                     }}
                                 />
 
-                                <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3 }}>
-                                    <Link href="#" variant="body2" color="primary.main" underline="hover">
-                                        Forgot password?
-                                    </Link>
-                                </Box>
+                                <TextField
+                                    fullWidth
+                                    label="Confirm Password"
+                                    variant="outlined"
+                                    margin="normal"
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <LockIcon color="action" />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    sx={{
+                                        "& .MuiOutlinedInput-root": {
+                                            borderRadius: 2
+                                        },
+                                        mb: 2
+                                    }}
+                                />
+
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            color="primary"
+                                            checked={agreeToTerms}
+                                            onChange={(e) => setAgreeToTerms(e.target.checked)}
+                                            required
+                                        />
+                                    }
+                                    label={
+                                        <Typography variant="body2">
+                                            I agree to the{" "}
+                                            <Link href="#" color="primary" underline="hover">
+                                                Terms of Service
+                                            </Link>{" "}
+                                            and{" "}
+                                            <Link href="#" color="primary" underline="hover">
+                                                Privacy Policy
+                                            </Link>
+                                        </Typography>
+                                    }
+                                    sx={{ mb: 2 }}
+                                />
 
                                 <Button
                                     type="submit"
@@ -287,7 +344,7 @@ const LoginScreen: React.FC = () => {
                                     variant="contained"
                                     color="primary"
                                     size="large"
-                                    startIcon={<LoginIcon />}
+                                    startIcon={<PersonAddIcon />}
                                     disabled={isLoading}
                                     sx={{
                                         borderRadius: 6,
@@ -295,7 +352,7 @@ const LoginScreen: React.FC = () => {
                                         mb: 2
                                     }}
                                 >
-                                    {isLoading ? "Signing in..." : "Sign In"}
+                                    {isLoading ? "Creating Account..." : "Create Account"}
                                 </Button>
                             </form>
 
@@ -310,13 +367,13 @@ const LoginScreen: React.FC = () => {
                                 variant="outlined"
                                 color="primary"
                                 size="large"
-                                onClick={goToSignUp}
+                                onClick={goToLogin}
                                 sx={{
                                     borderRadius: 6,
                                     py: 1.5
                                 }}
                             >
-                                Create an Account
+                                Sign In Instead
                             </Button>
                         </CardContent>
                     </Card>
@@ -326,7 +383,7 @@ const LoginScreen: React.FC = () => {
                         sx={{
                             position: "absolute",
                             top: "15%",
-                            right: "5%",
+                            left: "5%",
                             width: 50,
                             height: 50,
                             borderRadius: "12px",
@@ -335,18 +392,18 @@ const LoginScreen: React.FC = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             boxShadow: "0 8px 20px rgba(58, 90, 217, 0.15)",
-                            transform: "rotate(10deg)",
+                            transform: "rotate(-10deg)",
                             zIndex: 0,
                         }}
                     >
-                        <EmailIcon color="primary" sx={{ fontSize: 25 }} />
+                        <PersonIcon color="primary" sx={{ fontSize: 25 }} />
                     </Box>
 
                     <Box
                         sx={{
                             position: "absolute",
                             bottom: "20%",
-                            left: "5%",
+                            right: "5%",
                             width: 40,
                             height: 40,
                             borderRadius: "10px",
@@ -355,11 +412,11 @@ const LoginScreen: React.FC = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             boxShadow: "0 8px 20px rgba(0, 0, 0, 0.08)",
-                            transform: "rotate(-8deg)",
+                            transform: "rotate(8deg)",
                             zIndex: 0,
                         }}
                     >
-                        <LockIcon color="primary" sx={{ fontSize: 20 }} />
+                        <EmailIcon color="primary" sx={{ fontSize: 20 }} />
                     </Box>
                 </Container>
             </Box>
@@ -367,4 +424,4 @@ const LoginScreen: React.FC = () => {
     );
 };
 
-export default LoginScreen;
+export default SignupScreen;

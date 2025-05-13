@@ -1,0 +1,15 @@
+20/03/2025
+
+Participants : Jack, Jass, Joshua, Lorcan
+
+What happened:
+
+Jack showed progress with new models, client happy with them
+Client helped us to fix a persistent audio input issue
+
+Tasks to complete for next sprint:
+
+Finish viseme animation for new models
+Add new scenarios to the application
+
+Date of next meeting : 14/04/2025
