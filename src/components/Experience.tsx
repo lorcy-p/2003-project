@@ -8,6 +8,7 @@ import {
 import React from "react";
 import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { useChat } from "../hooks/useChat";
+import { Smith } from "../models/BlacksmithTest";
 import { Avatar } from "../models/Avatar";
 import { CC4Test } from "../models/CC4Test";
 import { useThree } from "@react-three/fiber";
@@ -74,10 +75,8 @@ export const Experience: FC = () => {
     <>
       <CameraControls ref={cameraControls} />
       <Background />
-      <CC4Test />
+      <Smith />
       <Environment preset="sunset" />
-
-      <ContactShadows opacity={0.7} />
     </>
   );
 };
