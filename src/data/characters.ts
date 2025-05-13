@@ -18,7 +18,7 @@ const characters: AICharacter[] = [
         gender: "Male",
         residence: "Cornwall",
         fullDescription: "Fred is a pig farmer by blood. His love for pig farming started at a very young age and it is all he had dedicated his life to. He can tell you anything you need to know about pigs.",
-        imagePath: "/images/AI image.png"
+        imagePath: "/images/fred.png"
     },
     {
         id: 173,
@@ -28,7 +28,7 @@ const characters: AICharacter[] = [
         gender: "Male",
         residence: "London",
         fullDescription: "Wade has been smithing since he was a young lad. His father made sure to teach him all the tricks he needs to make high quality products.",
-        imagePath: "/images/AI image.png"
+        imagePath: "/images/forge guy.png"
     },
     // Adding more characters to demonstrate grid layout
     {

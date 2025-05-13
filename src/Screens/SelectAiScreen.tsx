@@ -229,7 +229,7 @@ const SelectAI: React.FC = () => {
                                                     image={character.imagePath}
                                                     alt={character.name}
                                                 />
-                                                <CardContent sx={{ p: 2, pb: "16px !important", flex: 1 }}>
+                                                <CardContent sx={{ width: "600px", p: 2, pb: "16px !important", flex: 1 }}>
                                                     <Typography variant="subtitle1" fontWeight="medium" gutterBottom noWrap>
                                                         {character.name}
                                                     </Typography>
