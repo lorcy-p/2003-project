@@ -75,7 +75,7 @@ export const Experience: FC = () => {
     <>
       <CameraControls ref={cameraControls} />
       <Background />
-      <Smith />
+      <CC4Test />
       <Environment preset="sunset" />
     </>
   );
