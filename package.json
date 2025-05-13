@@ -19,7 +19,7 @@
     "@react-three/xr": "^5.7.1",
     "@types/three": "0.152.1",
     "eventemitter3": "^5.0.1",
-    "gsap": "^3.12.7",
+    "gsap": "^3.13.0",
     "leva": "^0.9.35",
     "lucide-react": "^0.484.0",
     "mui": "^0.0.1",
