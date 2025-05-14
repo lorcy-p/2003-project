@@ -8,9 +8,10 @@ import {
 import React from "react";
 import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { useChat } from "../hooks/useChat";
-import { Smith } from "../models/BlacksmithTest";
+import { Smith } from "../models/CC4Blacksmith";
 import { Avatar } from "../models/Avatar";
 import { CC4Test } from "../models/CC4Test";
+import { Medic } from "../models/CC4Medic";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -73,7 +74,7 @@ export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
       173: "Textures/Forge.png",
     };
 
-    const texturePath = textureMap[scenarioID] || "Textures/Default.png";
+    const texturePath = textureMap[scenarioID] || "Textures/FarmRoad.jpg";
     const texture = useTexture(texturePath);
     texture.colorSpace = THREE.SRGBColorSpace;
     const { scene } = useThree();
@@ -87,10 +88,10 @@ export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
         return <CC4Test />;
       case 173:
         return <Smith />;
-      case 1:
-        return <Avatar />;
+      case 179:
+        return <Medic />;
       default:
-        return <Text fontSize={0.2}>Unknown Scenario</Text>;
+        return <Avatar />;
     }
   };
 
