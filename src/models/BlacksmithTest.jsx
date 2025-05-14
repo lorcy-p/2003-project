@@ -11,7 +11,7 @@ import useVisemeAnimationCC4 from "../hooks/useVisemeAnimationCC4";
 import useCharacterAnimationCC4 from "../hooks/useCharacterAnimationCC4";
 
 export function Smith(props) {
-  const {nodes, materials, scene } = useGLTF('models/BlacksmithTest.glb')
+  const {nodes, materials, scene } = useGLTF('models/CC4BlacksmithAnimations.glb')
   const group = useRef();
 
 
@@ -27,6 +27,434 @@ export function Smith(props) {
       }
     });
   }, [scene]);
+
+
+  // These variables are required for the animation to function but may be made redundant in the future
+    //const group = useRef();
+    
+    let setupMode = false;
+    const [facialExpression, setFacialExpression] = useState("");
+
+
+  // Possible facial expressions are set per model to accomodate for available visemes
+  const facialExpressions = {
+    default: {},
+    test: {
+      viseme_CH: 0.75,
+      viseme_SS: 0.79,
+      eyeSquintLeft: 1,
+      eyeSquintRight: 1,
+      eyeWideRight: 1
+    },
+  };
+
+
+  // Map viseme symbols to corresponding morph target names as these may differ per model
+  // Includes weight values for each corresponding morph target
+  const visemeMap = {
+    // Silence
+    "-": [{ target: "Silence", weight: 1 }],
+
+    "a": [
+      { target: "Mouth_Smile_L", weight: 0.23 },
+      { target: "Mouth_Smile_R", weight: 0.23 },
+      { target: "Jaw_Forward", weight: 0.37 },
+      { target: "Jaw_Open", weight: 0.31 },
+    ],
+
+    /*
+      { target: "Mouth_Drop_Lower", weight: 0.2 },
+      { target: "Mouth_Frown_L", weight: 0.2 },
+      { target: "Mouth_Frown_R", weight: 0.2 },
+      { target: "V_Tongue_Out", weight: -0.4 },
+      { target: "TongueRotation", weight: 0.12 },
+      { target: "Jaw_Open", weight: 0.2 },
+    */
+
+    "o": [
+      { target: "V_Tight_O", weight: 0.68 },
+
+    ],
+
+    /*
+      { target: "Mouth_Shrug_Upper", weight: 0.3 },
+      { target: "Mouth_Drop_Lower", weight: 0.2 },
+      { target: "Mouth_Down", weight: 0.3 },
+      { target: "Mouth_Pull_Lower_L", weight: 1 },
+      { target: "Mouth_Pull_Lower_R", weight: 1 },
+      { target: "Mouth_Pull_Upper_L", weight: 1 },
+      { target: "Mouth_Pull_Upper_R", weight: 1 },
+      { target: "Mouth_Smile_L", weight: 0.3 },
+      { target: "Mouth_Smile_R", weight: 0.3 },
+      { target: "Open_Jaw", weight: 0.12 },
+    */
+
+    "e": [
+      { target: "V_Lip_Open", weight: 1 },
+      { target: "Mouth_Smile_L", weight: 0.25 },
+      { target: "Mouth_Smile_R", weight: 0.25 },
+      { target: "Mouth_Dimple_L", weight: 0.2 },
+      { target: "Mouth_Dimple_R", weight: 0.2 },
+
+    ],
+
+
+    /* 
+      { target: "Mouth_Shrug_Upper", weight: 0.2 },
+      { target: "Mouth_Drop_Lower", weight: 0.2 },
+      { target: "Mouth_Down", weight: 0.3 },
+      { target: "Mouth_Pull_Lower_L", weight: 1 },
+      { target: "Mouth_Pull_Lower_R", weight: 1 },
+      { target: "Mouth_Pull_Upper_L", weight: 1 },
+      { target: "Mouth_Pull_Upper_R", weight: 1 },
+      { target: "Mouth_Smile_L", weight: 0.3 },
+      { target: "Mouth_Smile_R", weight: 0.3 },
+      { target: "Jaw_Open", weight: 0.09 },
+    */
+
+    "i": [
+      { target: "Mouth_Smile_Sharp_R", weight: 0.45 },
+      { target: "Mouth_Smile_Sharp_L", weight: 0.45 },
+      { target: "Mouth_Shrug_Upper", weight: 0.38 },
+      { target: "Mouth_Drop_Lower", weight: 0.25 },
+      { target: "Jaw_Forward", weight: 0.25 },
+      { target: "Jaw_Open", weight: 0.2 },
+
+    ],
+
+    /*
+     { target: "Mouth_Shrug_Upper", weight: 0.2 },
+      { target: "Mouth_Drop_Lower", weight: 0.21 },
+      { target: "Mouth_Down", weight: 0.2 },
+      { target: "Jaw_Open", weight: 0.1 },
+      { target: "Mouth_Frown_L", weight: 0.15 },
+      { target: "Mouth_Frown_R", weight: 0.15 },
+      { target: "Mouth_Pull_Upper_L", weight: 1 },
+      { target: "Mouth_Pull_Upper_R", weight: 1 },
+      { target: "Mouth_Pull_Lower_L", weight: 1 },
+      { target: "Mouth_Pull_Lower_R", weight: 1 },
+      { target: "V_Lip_Open", weight: 0.5 },
+      { target: "TongueRotation", weight: -0.2 },
+      { target: "TongueUp", weight: 0.2 },
+      { target: "V_Tongue_Out", weight: 0.2 }, 
+    */
+
+    "u": [
+      { target: "Mouth_Funnel_Up_L", weight: 0.5 },
+      { target: "Mouth_Funnel_Up_R", weight: 0.5 },
+      { target: "Mouth_Funnel_Down_L", weight: 0.5 },
+      { target: "Mouth_Funnel_Down_R", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Upper_L", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Upper_R", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Lower_L", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Lower_R", weight: 0.5 },
+      { target: "Mouth_Pull_Upper_L", weight: 0.5 },
+      { target: "Mouth_Pull_Upper_R", weight: 0.5 },
+      { target: "Mouth_Pull_Lower_L", weight: 0.5 },
+      { target: "Mouth_Pull_Lower_R", weight: 0.5 },
+    ],
+
+    /*
+      { target: "Mouth_Shrug_Lower", weight: 0.1 },
+      { target: "Mouth_Drop_Upper", weight: 0.22 },
+      { target: "Mouth_Down", weight: 0.27 },
+      { target: "V_Tight_O", weight: 0.8 },
+      { target: "Jaw_Open", weight: 0.11 },
+    */
+
+    "r": [
+      { target: "V_Affricate", weight: 0.75 },
+    ],
+
+    /*
+      { target: "Mouth_Drop_Upper", weight: 0.2 },
+      { target: "Mouth_Drop_Lower", weight: 0.1 },
+      { target: "Mouth_Down", weight: 0.22 },
+      { target: "Mouth_Blow_L", weight: 0.3 },
+      { target: "Mouth_Blow_R", weight: 0.3 },
+      { target: "Mouth_Pull_Lower_L", weight: 1 },
+      { target: "Mouth_Pull_Lower_R", weight: 1 },
+      { target: "Mouth_Roll_Out_Lower_L", weight: 0.7 },
+      { target: "Mouth_Roll_Out_Lower_R", weight: 0.7 },
+      { target: "V_Affricate", weight: 0.4 },
+      { target: "V_Lip_Open", weight: 0.4 },
+      { target: "Jaw_Open", weight: 0.05 },
+      { target: "TongueUp", weight: 0.2 },
+      { target: "TongueRotation", weight: -0.3 },
+    */
+
+    "s": [
+      { target: "V_Wide", weight: 0.6 },
+      { target: "V_Lip_Open", weight: 1 },
+    ],
+
+    /*
+      { target: "V_Open", weight: 0.3 },
+      { target: "Mouth_Drop_Lower", weight: 0.85 },
+      { target: "Mouth_Smile_L", weight: 0.27 },
+      { target: "Mouth_Smile_R", weight: 0.27 },
+      { target: "Mouth_Roll_In_Upper_L", weight: 0.2 },
+      { target: "Mouth_Roll_In_Upper_R", weight: 0.2 },
+      { target: "V_Wide", weight: 0.3 },
+      { target: "Jaw_Open", weight: 0.05 },
+    */
+
+    "n": [
+      { target: "V_Lip_Open", weight: 0.8 },
+      { target: "V_Tight", weight: 0.12 },
+      { target: "Mouth_Drop_Lower", weight: 0.21 },
+    ],
+
+    /*
+      { target: "Mouth_Drop_Lower", weight: 0.5 },
+      { target: "Mouth_Down", weight: 0.22 },
+      { target: "Mouth_Pull_Lower_L", weight: 1 },
+      { target: "Mouth_Pull_Lower_R", weight: 1 },
+      { target: "Mouth_Roll_Out_Lower_L", weight: 0.8 },
+      { target: "Mouth_Roll_Out_Lower_R", weight: 0.8 },
+      { target: "V_Affricate", weight: 0.7 },
+      { target: "Jaw_Open", weight: 0.08 },
+      { target: "TongueRotation", weight: -0.3 },
+      { target: "TongueUp", weight: 0.22 },
+    */
+
+    "th": [
+      { target: "Mouth_Drop_Lower", weight: 0.2 },
+      { target: "Mouth_Shrug_Upper", weight: 0.25 },
+      { target: "Mouth_Stretch_L", weight: 0.1 },
+      { target: "Mouth_Stretch_R", weight: 0.1 },
+      { target: "V_Lip_Open", weight: 0.5 },
+      { target: "V_Tongue_Out", weight: 0.5 },
+      { target: "Jaw_Open", weight: 0.2},
+      { target: "Jaw_Forward", weight: 0.42},
+      { target: "Tongue_Up", weight: 0.5 },
+    ],
+
+    /*
+      { target: "Mouth_Drop_Lower", weight: 0.2 },
+      { target: "Mouth_Shrug_Upper", weight: 0.25 },
+      { target: "Mouth_Stretch_L", weight: 0.1 },
+      { target: "Mouth_Stretch_R", weight: 0.1 },
+      { target: "V_Lip_Open", weight: 0.4 },
+      { target: "V_Tongue_Out", weight: 1 },
+      { target: "Jaw_Open", weight: 0.12 },
+      { target: "TongueUp", weight: 0.22 },
+      { target: "TongueRotation", weight: -0.3 },
+    */
+
+    "f": [
+      { target: "V_Dental_Lip", weight: 1 },
+      { target: "Mouth_Smile_Sharp_L", weight: 0.3 },
+      { target: "Mouth_Smile_Sharp_R", weight: 0.3 },
+      { target: "Mouth_Pull_Lower_L", weight: .5 },
+      { target: "Mouth_Pull_Lower_R", weight: .5 },
+      { target: "Mouth_Drop_Lower", weight: 0.4 },
+      { target: "Jaw_Forward", weight: .25 },
+    ],
+
+    /*
+      { target: "V_Dental_Lip", weight: 1 },
+      { target: "Mouth_Funnel_Down_L", weight: 0.2 },
+      { target: "Mouth_Funnel_Down_R", weight: 0.2 },
+      { target: "Mouth_Drop_Upper", weight: 0.25 },
+    */
+
+    "d": [
+      { target: "Mouth_Shrug_Upper", weight: 0.35 },
+      { target: "Mouth_Stretch_L", weight: 0.35 },
+      { target: "Mouth_Stretch_R", weight: 0.35 },
+      { target: "Mouth_Roll_Out_Lower_L", weight: 0.5 },
+      { target: "Mouth_Roll_Out_Lower_R", weight: 0.5 },
+      { target: "V_Lip_Open", weight: 0.5 },
+      { target: "Jaw_Open", weight: 0.07 },
+      { target: "Jaw_Forward", weight: 0.3 },
+      { target: "TongueRotation", weight: -0.6 },
+      { target: "TongueUp", weight: 0.22 },
+    ],
+
+    "k": [
+      { target: "V_Wide", weight: 0.6 },
+      { target: "V_Affricate", weight: 0.25 },
+      { target: "V_Lip_Open", weight: 1 },
+
+    ],
+
+    /*
+      { target: "Mouth_Drop_Lower", weight: 0.6 },
+      { target: "Mouth_Shrug_Upper", weight: 0.1 },
+      { target: "Jaw_Open", weight: 0.06 },
+      { target: "V_Wide", weight: 0.1 },
+    */
+
+    "p": [
+      { target: "V_Explosive", weight: 1 },
+      { target: "Mouth_Pucker_Up_L", weight: 0.25 },
+      { target: "Mouth_Pucker_Up_R", weight: 0.25 },
+      { target: "Mouth_Pucker_Down_L", weight: 0.25 },
+      { target: "Mouth_Pucker_Down_R", weight: 0.25 },
+      { target: "Mouth_Push_Upper_L", weight: 0.25 },
+      { target: "Mouth_Push_Upper_R", weight: 0.25 },
+      { target: "Mouth_Push_Lower_L", weight: 0.25 },
+      { target: "Mouth_Push_Lower_R", weight: 0.25 },
+    ],
+
+    /*
+      { target: "V_Explosive", weight: 1 },
+      { target: "Mouth_Roll_In_Upper_L", weight: 0.3 },
+      { target: "Mouth_Roll_In_Upper_R", weight: 0.3 },
+      { target: "Mouth_Roll_In_Lower_L", weight: 0.3 },
+      { target: "Mouth_Roll_In_Lower_R", weight: 0.3 },
+      { target: "Open_Jaw", weight: 0.1 },
+    */
+
+
+    "m": [
+      { target: "V_Explosive", weight: 1 },
+      { target: "Mouth_Roll_In_Upper_L", weight: 0.3 },
+      { target: "Mouth_Roll_In_Upper_R", weight: 0.3 },
+      { target: "Mouth_Roll_In_Lower_L", weight: 0.3 },
+      { target: "Mouth_Roll_In_Lower_R", weight: 0.3 },
+      { target: "Open_Jaw", weight: 0.1 },
+    ],
+
+    "ch": [
+      { target: "Mouth_Drop_Lower", weight: 0.4 },
+      { target: "Mouth_Down", weight: 0.22 },
+      { target: "Mouth_Roll_Out_Lower_L", weight: 0.7 },
+      { target: "Mouth_Roll_Out_Lower_R", weight: 0.7 },
+      { target: "V_Affricate", weight: 0.7 },
+      { target: "Jaw_Open", weight: 0.06 },
+      { target: "TongueRotation", weight: -0.1 },
+      { target: "TongueUp", weight: 0.22 },
+    ],
+
+  };
+
+
+  // Get useVisemeAnimation from the imported hook
+  const { lerpInfluence, lerpJawRotation } = useVisemeAnimationCC4(group, setFacialExpression, visemeMap, setupMode, nodes, group);
+
+  // Get useCharacterAnimation from the imported hook
+  const { animation, animations, setAnimation} = useCharacterAnimationCC4(
+    "models/CC4BlacksmithAnimations.glb",
+    group,
+    scene,
+    nodes, 
+  );
+
+  
+  
+  
+
+  //Leva Controls for debugging
+      useControls("Animations", {
+        animation: {
+          value: animation,
+          options: animations.map((a) => a.name),
+          onChange: (value) => setAnimation(value),
+        },
+      });
+    
+      const morphTargets = Object.keys(nodes).reduce((acc, nodeName) => {
+        const node = nodes[nodeName];
+      
+        if (node.morphTargetDictionary && node.morphTargetInfluences) {
+          Object.keys(node.morphTargetDictionary).forEach((key) => {
+            // Use only the morph target name (without node name)
+            if (!acc[key]) {
+              acc[key] = {
+                label: key,
+                value: 0, // Default to 0
+                min: 0,
+                max: 1,
+                onChange: (val) => {
+                  // Apply the value to ALL meshes that have this morph target
+                  Object.keys(nodes).forEach((meshName) => {
+                    const mesh = nodes[meshName];
+                    if (mesh.morphTargetDictionary && mesh.morphTargetDictionary[key] !== undefined) {
+                      lerpInfluence(mesh, key, val, 0.1);
+                    }
+                  });
+                },
+              };
+            }
+          });
+        }
+      
+        return acc;
+      }, {});
+      
+      const [, set] = useControls("MorphTarget", () => morphTargets);
+
+      const visemeControls = Object.keys(visemeMap).reduce((acc, visemeKey) => {
+        acc[visemeKey] = {
+          value: 0,
+          min: 0,
+          max: 1,
+          step: 0.01,
+          onChange: (val) => {
+            const visemeTargets = visemeMap[visemeKey];
+      
+            Object.keys(nodes).forEach((meshName) => {
+              const mesh = nodes[meshName];
+              if (!mesh.morphTargetDictionary || !mesh.morphTargetInfluences) return;
+      
+              visemeTargets.forEach(({ target, weight }) => {
+                const index = mesh.morphTargetDictionary[target];
+                let finalRotation = null;
+                let maxWeight = 0;
+                if (index !== undefined) {
+
+                  if (target === "Jaw_Open" && weight > maxWeight) {
+                    const minRotation = 1.55;
+                    const maxRotation = 2.0;
+                    const influence = val * weight;
+                    const mappedRotation = minRotation + (maxRotation - minRotation) * influence;
+                  
+                    finalRotation = new THREE.Euler(0, 0, mappedRotation);
+                  }
+
+                  // V_Tight_O
+                  if (target == "V_Tight_O" && weight > maxWeight){
+                    const minRotation = 1.55;
+                    const maxRotation = 1.75;
+                    const influence = val * weight;
+                    const mappedRotation = minRotation + (maxRotation - minRotation) * influence;
+                  
+                    finalRotation = new THREE.Euler(0, 0, mappedRotation);
+                  }
+
+                  // V_Lip_Open and V_Affricate
+                  if ((target == "V_Lip_Open" || target == "V_Affricate" ) && weight > maxWeight){
+                    const minRotation = 1.55;
+                    const maxRotation = 1.60;
+                    const influence = val * weight;
+                    const mappedRotation = minRotation + (maxRotation - minRotation) * influence;
+                  
+                    finalRotation = new THREE.Euler(0, 0, mappedRotation);
+                  }
+
+                  
+
+                    // Apply weighted influence
+                  lerpInfluence(mesh, target, val * weight, 0.1);
+
+                  if (finalRotation) {
+                    lerpJawRotation(finalRotation, 300);
+                  }
+                  
+                }
+
+              });
+            });
+          },
+        };
+      
+        return acc;
+      }, {});
+      
+      useControls("Visemes", () => visemeControls);
+
   
 
 

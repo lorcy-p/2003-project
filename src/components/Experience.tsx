@@ -14,6 +14,10 @@ import { CC4Test } from "../models/CC4Test";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
+type ExperienceProps = {
+  scenarioID: number;
+};
+
 // Simple loading response ui
 const Dots: FC<React.ComponentProps<"group">> = (props) => {
   const { loading } = useChat();
@@ -47,7 +51,7 @@ const Dots: FC<React.ComponentProps<"group">> = (props) => {
   );
 };
 
-export const Experience: FC = () => {
+export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
   const cameraControls = useRef<CameraControls>(null);
   const { cameraZoomed } = useChat();
 
@@ -63,19 +67,42 @@ export const Experience: FC = () => {
     }
   }, [cameraZoomed]);
 
-  const Background = () => {
-    const texture = useTexture("Textures/FarmRoad.jpg");
+  const Background: FC<{ scenarioID: number }> = ({ scenarioID }) => {
+    const textureMap: Record<number, string> = {
+      166: "Textures/FarmRoad.jpg",
+      173: "Textures/Forge.png",
+    };
+
+    const texturePath = textureMap[scenarioID] || "Textures/Default.png";
+    const texture = useTexture(texturePath);
     texture.colorSpace = THREE.SRGBColorSpace;
     const { scene } = useThree();
     scene.background = texture;
     return null;
   };
 
+  const RenderScenario = ({ scenarioID }: { scenarioID: number }) => {
+    switch (scenarioID) {
+      case 166:
+        return <CC4Test />;
+      case 173:
+        return <Smith />;
+      case 1:
+        return <Avatar />;
+      default:
+        return <Text fontSize={0.2}>Unknown Scenario</Text>;
+    }
+  };
+
   return (
     <>
       <CameraControls ref={cameraControls} />
-      <Background />
-      <CC4Test />
+      <Background scenarioID={scenarioID} />
+
+      <Suspense fallback={<Dots position={[-0.5, 1, 0]} />}>
+        <RenderScenario scenarioID={scenarioID} />
+      </Suspense>
+
       <Environment preset="sunset" />
     </>
   );

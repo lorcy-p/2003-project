@@ -721,7 +721,7 @@ const ChatScreen: React.FC = () => {
             camera={{ position: [0, 0, 1], fov: 30 }}
             onCreated={() => setIsLoading(false)}
           >
-            <Experience />
+            <Experience scenarioID={scenarioID} />
           </Canvas>
           <Loader
             dataInterpolation={(p) => {
