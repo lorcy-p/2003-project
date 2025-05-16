@@ -52,10 +52,14 @@ const useVisemeAnimation = (
     };
 
     console.log("Checking and registering listener if needed...");
-    if (visemesEmitter.listeners("visemesUpdated").length === 0) {
-      console.log("Registering visemesUpdated listener");
-      visemesEmitter.on("visemesUpdated", handleVisemesUpdated);
-    }
+    console.log("Registering visemesUpdated listener for this model");
+    visemesEmitter.on("visemesUpdated", handleVisemesUpdated);
+
+    return () => {
+      console.log("Removing visemesUpdated listener for this model");
+      visemesEmitter.off("visemesUpdated", handleVisemesUpdated);
+    };
+
 
     return () => {
       visemesEmitter.off("visemeEvent", handleVisemesUpdated);
@@ -222,7 +226,7 @@ useEffect(() => {
 
         lastVisemeTargets = visemeTargets;
 
-        
+
       }, t * 1000 + index * 10);
 
       
