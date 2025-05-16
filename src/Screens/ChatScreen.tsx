@@ -723,7 +723,6 @@ const ChatScreen: React.FC = () => {
           >
             <Experience scenarioID={scenarioID} />
           </Canvas>
-          
           <canvas />
           {isLoading && <LoadingOverlay />}
           <Leva hidden={false} />
