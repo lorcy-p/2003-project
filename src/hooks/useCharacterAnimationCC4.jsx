@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { useAnimations, useGLTF} from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import visemesEmitter from "../components/visemeEvents";
+import emitter from '../components/eventEmitter';
 
 /*
 
@@ -28,12 +29,28 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
   const { actions, mixer } = useAnimations(animations, group);
 
   const [animation, setAnimation] = useState(
-    animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name
-  );
+  animations.find((a) => a.name.trim().toLowerCase() === "idle")?.name || animations[0]?.name
+);
+
 
   const [blink, setBlink] = useState(false);
   const [winkLeft, setWinkLeft] = useState(false);
   const [winkRight, setWinkRight] = useState(false);
+
+  useEffect(() => {
+      const onStart = () => setAnimation("Talk"); // or your talking animation name
+      const onEnd = () => setAnimation("Idle");
+
+      emitter.on("visemeStart", onStart);
+      emitter.on("visemeEnd", onEnd);
+
+      return () => {
+        emitter.off("visemeStart", onStart);
+        emitter.off("visemeEnd", onEnd);
+      };
+     }, []);
+
+  
 
 
   // Full Body Animations
@@ -63,6 +80,7 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
         actions[animation].fadeOut(0.5);
       }
     };
+
       
     
   }, [animation, actions]);

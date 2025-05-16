@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useControls } from "leva";
 import visemesEmitter from "../components/visemeEvents";
+import emitter from '../components/eventEmitter';
 import { getVisemes } from "../Screens/ChatScreen";
 
 const useVisemeAnimation = (
@@ -140,6 +141,8 @@ useEffect(() => {
 
 
   const playVisemeAnimation = () => {
+    emitter.emit('visemeStart');
+
     if (manualJawControl) {
       console.log("manual jaw cancel");
       return;
@@ -219,6 +222,10 @@ useEffect(() => {
 
         lastVisemeTargets = visemeTargets;
       }, t * 1000 + index * 10);
+
+      setTimeout(() => {
+        emitter.emit('visemeEnd');
+      }, estimatedDuration);
     });
   };
 

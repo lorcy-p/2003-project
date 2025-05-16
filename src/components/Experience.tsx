@@ -5,7 +5,7 @@ import {
   Text,
   useTexture,
 } from "@react-three/drei";
-import React from "react";
+import React, { useMemo } from "react";
 import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { useChat } from "../hooks/useChat";
 import { Smith } from "../models/CC4Blacksmith";
@@ -68,32 +68,37 @@ export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
     }
   }, [cameraZoomed]);
 
-  const Background: FC<{ scenarioID: number }> = ({ scenarioID }) => {
+  const Background = React.memo(({ scenarioID }: { scenarioID: number }) => {
     const textureMap: Record<number, string> = {
       166: "Textures/FarmRoad.jpg",
       173: "Textures/Forge.png",
+      179: "Textures/MedicTent.jpg",
     };
 
     const texturePath = textureMap[scenarioID] || "Textures/FarmRoad.jpg";
     const texture = useTexture(texturePath);
     texture.colorSpace = THREE.SRGBColorSpace;
-    const { scene } = useThree();
-    scene.background = texture;
-    return null;
-  };
 
-  const RenderScenario = ({ scenarioID }: { scenarioID: number }) => {
+    const { scene } = useThree();
+    useEffect(() => {
+      scene.background = texture;
+    }, [scene, texture]);
+
+    return null;
+  });
+
+  const scenarioModel = useMemo(() => {
     switch (scenarioID) {
       case 166:
-        return <CC4Test />;
+        return <CC4Test key={166} />;
       case 173:
-        return <Smith />;
+        return <Smith key={173} />;
       case 179:
-        return <Medic />;
+        return <Medic key={179} />;
       default:
-        return <Avatar />;
+        return <Avatar key={0} />;
     }
-  };
+  }, [scenarioID]);
 
   return (
     <>
@@ -101,7 +106,7 @@ export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
       <Background scenarioID={scenarioID} />
 
       <Suspense fallback={<Dots position={[-0.5, 1, 0]} />}>
-        <RenderScenario scenarioID={scenarioID} />
+        {scenarioModel}
       </Suspense>
 
       <Environment preset="sunset" />
