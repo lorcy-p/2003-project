@@ -1,5 +1,9 @@
 // Audio recording component
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
+import {IconButton} from "@mui/material";
+
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
 
 const sampleRate = 8000;
 
@@ -13,11 +17,35 @@ interface AudioRecorderProps {
   onAudioRecorded: (audioBase64: string) => void;
 }
 
+import Snackbar from '@mui/material/Snackbar';
+
 const AudioRecorder: React.FC<AudioRecorderProps> = (
   { onAudioRecorded }) => {
     const [isRecording, setIsRecording] = useState(false);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioStreamRef = useRef<MediaStream | null>(null);
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    useEffect(() => {
+        if (isRecording){
+            startRecording().then(r => console.log("Started audio recording"));
+            setSnackbarMessage(
+                <>
+                    You can now speak to the model, please click the <MicOffIcon fontSize="small" /> button to stop.
+                </>
+            );
+
+            setSnackbarOpen(true);
+        }else{
+            stopRecording();
+            setSnackbarMessage('Your message is being processed');
+
+            setSnackbarOpen(true);
+            console.log("Stopped audio recording")
+        }
+    }, [isRecording]);
 
     async function handleAudioBlob(blob: Blob)
     {
@@ -112,14 +140,27 @@ const AudioRecorder: React.FC<AudioRecorderProps> = (
     return (
       <>
       
-        <button className="recordAudio" 
-            onMouseDown={startRecording}
-            onMouseUp={stopRecording}
-            onMouseLeave={stopRecording}
-            onTouchStart={startRecording}
-            onTouchEnd={stopRecording}>
-          {microphoneIcon}
-        </button></>
+        <IconButton className="recordAudio"
+                    sx={{
+                        backgroundColor: "white",
+                        opacity: '1',
+                        '&:hover': {
+                            backgroundColor: "whitesmoke"
+                        }
+                    }}
+            onClick={() => {
+                setIsRecording(!isRecording);
+            }}>
+            {isRecording ? (<MicOffIcon />) : (<MicIcon />)}
+        </IconButton>
+          <Snackbar
+            open={snackbarOpen}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            autoHideDuration={3500}
+            message={snackbarMessage}
+            onClose={() => {setSnackbarOpen(false); setSnackbarMessage('')}}
+          />
+        </>
     );
   };
 

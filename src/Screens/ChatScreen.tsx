@@ -559,10 +559,10 @@ const ChatScreen: React.FC = () => {
     console.log(`Got audio for ${humanCharacter} ${base64}`);
 
     // Create a temporary message while awaiting the response
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: "user", text: "Processing...", timestamp: getCurrentTime() },
-    ]);
+    // setMessages((prevMessages) => [
+    //   ...prevMessages,
+    //   { sender: "user", text: "Processing...", timestamp: getCurrentTime() },
+    // ]);
 
     const json = {
       type: "input",
@@ -983,6 +983,7 @@ const ChatScreen: React.FC = () => {
               >
                 End Call
               </Button>
+              <AudioRecorder onAudioRecorded={take_audio} />
             </Box>
           </Container>
         )}
