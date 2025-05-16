@@ -28,19 +28,9 @@ const characters: AICharacter[] = [
         gender: "Male",
         residence: "London",
         fullDescription: "Wade has been smithing since he was a young lad. His father made sure to teach him all the tricks he needs to make high quality products.",
-        imagePath: "/images/forge guy.png"
+        imagePath: "/images/blacksmith.png"
     },
     // Adding more characters to demonstrate grid layout
-    {
-        id: 176,
-        name: "Marshal Jones",
-        shortDescription: "The towns local hero, always looking out for the good samaritans.",
-        age: 31,
-        gender: "Male",
-        residence: "Kansas",
-        fullDescription: "The sherif of an old western town. He’s worked is way up the ladder of law. After witnessing a robbery at a very young age he dedicated himself to protecting his town.",
-        imagePath: "/images/AI image.png"
-    },
     {
         id: 179,
         name: "Duncan Miller",
@@ -49,6 +39,16 @@ const characters: AICharacter[] = [
         gender: "Male",
         residence: "Portsmouth",
         fullDescription: "A world war field medic. They thought for England, saving countless lives across multiple battles. They can tell you all about their battle field experiences and saves.",
+        imagePath: "/images/medic.png"
+    },
+    {
+        id: 176,
+        name: "Marshal Jones",
+        shortDescription: "The towns local hero, always looking out for the good samaritans.",
+        age: 31,
+        gender: "Male",
+        residence: "Kansas",
+        fullDescription: "The sherif of an old western town. He’s worked is way up the ladder of law. After witnessing a robbery at a very young age he dedicated himself to protecting his town.",
         imagePath: "/images/AI image.png"
     },
     {

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useControls } from "leva";
 import visemesEmitter from "../components/visemeEvents";
+import emitter from '../components/eventEmitter';
 import { getVisemes } from "../Screens/ChatScreen";
 
 const useVisemeAnimation = (
@@ -51,10 +52,14 @@ const useVisemeAnimation = (
     };
 
     console.log("Checking and registering listener if needed...");
-    if (visemesEmitter.listeners("visemesUpdated").length === 0) {
-      console.log("Registering visemesUpdated listener");
-      visemesEmitter.on("visemesUpdated", handleVisemesUpdated);
-    }
+    console.log("Registering visemesUpdated listener for this model");
+    visemesEmitter.on("visemesUpdated", handleVisemesUpdated);
+
+    return () => {
+      console.log("Removing visemesUpdated listener for this model");
+      visemesEmitter.off("visemesUpdated", handleVisemesUpdated);
+    };
+
 
     return () => {
       visemesEmitter.off("visemeEvent", handleVisemesUpdated);
@@ -140,6 +145,8 @@ useEffect(() => {
 
 
   const playVisemeAnimation = () => {
+    emitter.emit('visemeStart');
+
     if (manualJawControl) {
       console.log("manual jaw cancel");
       return;
@@ -218,7 +225,13 @@ useEffect(() => {
         
 
         lastVisemeTargets = visemeTargets;
+
+
       }, t * 1000 + index * 10);
+
+      
+      //emitter.emit('visemeEnd');
+      
     });
   };
 
