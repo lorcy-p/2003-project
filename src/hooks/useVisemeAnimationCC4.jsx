@@ -221,11 +221,13 @@ useEffect(() => {
         
 
         lastVisemeTargets = visemeTargets;
+
+        
       }, t * 1000 + index * 10);
 
-      setTimeout(() => {
-        emitter.emit('visemeEnd');
-      }, estimatedDuration);
+      
+      //emitter.emit('visemeEnd');
+      
     });
   };
 

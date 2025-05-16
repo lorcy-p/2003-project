@@ -723,12 +723,7 @@ const ChatScreen: React.FC = () => {
           >
             <Experience scenarioID={scenarioID} />
           </Canvas>
-          <Loader
-            dataInterpolation={(p) => {
-              if (p === 1) setIsLoading(false);
-              return `Loading ${Math.round(p * 100)}%`;
-            }}
-          />
+          
           <canvas />
           {isLoading && <LoadingOverlay />}
           <Leva hidden={false} />

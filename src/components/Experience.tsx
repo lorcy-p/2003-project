@@ -19,38 +19,6 @@ type ExperienceProps = {
   scenarioID: number;
 };
 
-// Simple loading response ui
-const Dots: FC<React.ComponentProps<"group">> = (props) => {
-  const { loading } = useChat();
-  const [loadingText, setLoadingText] = useState<string>("");
-
-  useEffect(() => {
-    if (loading) {
-      const interval = setInterval(() => {
-        setLoadingText((prevLoadingText) => {
-          if (prevLoadingText.length > 2) {
-            return ".";
-          }
-          return prevLoadingText + ".";
-        });
-      }, 800);
-      return () => clearInterval(interval);
-    } else {
-      setLoadingText("");
-    }
-  }, [loading]);
-
-  if (!loading) return null;
-
-  return (
-    <group {...props}>
-      <Text fontSize={0.14} anchorX={"left"} anchorY={"bottom"}>
-        {loadingText}
-        <meshBasicMaterial attach="material" color="black" />
-      </Text>
-    </group>
-  );
-};
 
 export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
   const cameraControls = useRef<CameraControls>(null);
@@ -105,7 +73,7 @@ export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
       <CameraControls ref={cameraControls} />
       <Background scenarioID={scenarioID} />
 
-      <Suspense fallback={<Dots position={[-0.5, 1, 0]} />}>
+      <Suspense >
         {scenarioModel}
       </Suspense>
 

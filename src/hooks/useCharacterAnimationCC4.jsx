@@ -38,17 +38,17 @@ const useCharacterAnimation = (modelPath, group, scene, nodes, facialExpressions
   const [winkRight, setWinkRight] = useState(false);
 
   useEffect(() => {
-      const onStart = () => setAnimation("Talk"); // or your talking animation name
-      const onEnd = () => setAnimation("Idle");
+    const onStart = () => setAnimation("Talk");
+    const onEnd = () => setAnimation("Idle ");
 
-      emitter.on("visemeStart", onStart);
-      emitter.on("visemeEnd", onEnd);
+    emitter.on("visemeStart", onStart);
+    emitter.on("visemeEnd", onEnd);
 
-      return () => {
-        emitter.off("visemeStart", onStart);
-        emitter.off("visemeEnd", onEnd);
-      };
-     }, []);
+    return () => {
+      emitter.off("visemeStart", onStart);
+      emitter.off("visemeEnd", onEnd);
+    };
+  }, []);
 
   
 
