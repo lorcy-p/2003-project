@@ -32,11 +32,13 @@
     "use-sound": "^5.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.4.0",
+    "@babel/core": "^7.27.1",
+    "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.16",
+    "browserslist": "^4.24.5",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.3",
-    "vite": "^6.2.6"
+    "vite": "^5.4.19"
   },
   "peerDependenciesMeta": {
     "react": {

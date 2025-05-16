@@ -10,9 +10,15 @@ import * as THREE from "three";
 import useVisemeAnimationCC4 from "../hooks/useVisemeAnimationCC4";
 import useCharacterAnimationCC4 from "../hooks/useCharacterAnimationCC4";
 
-export function Medic(props) {
+export function Medic(props, { onReady }) {
   const {nodes, materials, scene } = useGLTF('models//CC4MedicAnimations.glb')
   const group = useRef();
+
+  useEffect(() => {
+      if ({nodes, materials, scene } && onReady) {
+        onReady(); // Notify parent that model is ready
+      }
+    }, [{nodes, materials, scene }, onReady]);
 
   // These variables are required for the animation to function but may be made redundant in the future
     //const group = useRef();

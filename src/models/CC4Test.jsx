@@ -11,9 +11,16 @@ import useVisemeAnimationCC4 from "../hooks/useVisemeAnimationCC4";
 import useCharacterAnimationCC4 from "../hooks/useCharacterAnimationCC4";
 //import { useLipsync } from "../Reallusion/hooks/useLipSync";
 
-export function CC4Test(props) {
+export function CC4Test(props, { onReady }) {
   const {nodes, materials, scene } = useGLTF('models/CC4KevinAnimations.glb')
   const group = useRef();
+
+   useEffect(() => {
+    if ({nodes, materials, scene } && onReady) {
+      onReady(); // Notify parent that model is ready
+    }
+  }, [{nodes, materials, scene }, onReady]);
+
 
 
   //log every part of every mesh for debug

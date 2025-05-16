@@ -17,12 +17,19 @@ import * as THREE from "three";
 
 type ExperienceProps = {
   scenarioID: number;
+  onReady?: () => void;
 };
 
 
-export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
+export const Experience: FC<ExperienceProps> = ({ scenarioID, onReady  }) => {
   const cameraControls = useRef<CameraControls>(null);
   const { cameraZoomed } = useChat();
+
+  useEffect(() => {
+    if (onReady) {
+      onReady(); // Notify when Experience is mounted
+    }
+  }, [onReady]);
 
   useEffect(() => {
     cameraControls.current?.setLookAt(0, 2, 5, 0, 1.5, 0);
@@ -58,13 +65,13 @@ export const Experience: FC<ExperienceProps> = ({ scenarioID }) => {
   const scenarioModel = useMemo(() => {
     switch (scenarioID) {
       case 166:
-        return <CC4Test key={166} />;
+        return <CC4Test key={166} onReady={onReady} />;
       case 173:
-        return <Smith key={173} />;
+        return <Smith key={173} onReady={onReady} />;
       case 179:
-        return <Medic key={179} />;
+        return <Medic key={179} onReady={onReady} />;
       default:
-        return <Avatar key={0} />;
+        return <Avatar key={0}  />;
     }
   }, [scenarioID]);
 

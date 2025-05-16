@@ -10,10 +10,15 @@ import * as THREE from "three";
 import useVisemeAnimationCC4 from "../hooks/useVisemeAnimationCC4";
 import useCharacterAnimationCC4 from "../hooks/useCharacterAnimationCC4";
 
-export function Smith(props) {
+export function Smith(props, { onReady }) {
   const {nodes, materials, scene } = useGLTF('models/CC4BlacksmithAnimations.glb')
   const group = useRef();
 
+  useEffect(() => {
+        if ({nodes, materials, scene } && onReady) {
+          onReady(); // Notify parent that model is ready
+        }
+      }, [{nodes, materials, scene }, onReady]);
 
   useEffect(() => {
     scene.traverse((obj) => {

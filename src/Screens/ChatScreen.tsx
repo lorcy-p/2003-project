@@ -9,8 +9,7 @@ import AudioRecorder from "../components/AudioRecorder";
 import { useNavigate } from "react-router-dom";
 
 import useSound from "use-sound";
-import diallingTone from "../../public/audio/dialling_tone.mp3";
-import callConnected from "../../public/audio/call_connected.mp3";
+
 
 import {
   Box,
@@ -538,8 +537,8 @@ const ChatScreen: React.FC = () => {
   );
 
   // declare the play and stop functions for each of the sounds
-  const [play, { stop }] = useSound(diallingTone);
-  const [play1, { stop: stop1 }] = useSound(callConnected);
+  const [play, { stop }] = useSound("/audio/dialling_tone.mp3");
+  const [play1, { stop: stop1 }] = useSound("/audio/call_connected.mp3");
 
   // effect hook for the control of dialling and call connected sounds
   useEffect(() => {
@@ -719,9 +718,10 @@ const ChatScreen: React.FC = () => {
           <Canvas
             shadows
             camera={{ position: [0, 0, 1], fov: 30 }}
-            onCreated={() => setIsLoading(false)}
+            
+            
           >
-            <Experience scenarioID={scenarioID} />
+            <Experience scenarioID={scenarioID} onReady={() => setIsLoading(false)}/>
           </Canvas>
           <canvas />
           {isLoading && <LoadingOverlay />}
@@ -983,16 +983,6 @@ const ChatScreen: React.FC = () => {
         {/* Floating decorative elements */}
         <Box
           sx={{
-            position: "absolute",
-            top: "25%",
-            right: "5%",
-            width: 50,
-            height: 50,
-            borderRadius: "12px",
-            bgcolor: "primary.light",
-            display: { xs: "none", md: "flex" },
-            alignItems: "center",
-            justifyContent: "center",
             position: "absolute",
             top: "25%",
             right: "5%",
