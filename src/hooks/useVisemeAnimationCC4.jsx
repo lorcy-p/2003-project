@@ -16,10 +16,13 @@ const useVisemeAnimation = (
   const visemeDataRef = useRef([]);
   const [manualJawControl, setManualJawControl] = useState(false);
 
-  const { jawRotationX } = useControls("Jaw Control", {
-    jawRotationX: { value: 0, min: -0.5, max: 0.5, step: 0.01 },
-    manualJawControl: false,
-  });
+   //Jaw Leva
+ const controls = useControls("Jaw Control", {
+  jawRotationX: { value: 0, min: -0.2, max: 0.2, step: 0.01 },
+  jawRotationY: { value: 0, min: -0.5, max: 0.5, step: 0.01 },
+  jawRotationZ: { value: 0, min: 1.55, max: 2, step: 0.01 },
+  manualJawControl: { value: false },
+});
 
   useEffect(() => {
     if (!group.current) return;
@@ -58,12 +61,9 @@ const useVisemeAnimation = (
     return () => {
       console.log("Removing visemesUpdated listener for this model");
       visemesEmitter.off("visemesUpdated", handleVisemesUpdated);
-    };
-
-
-    return () => {
       visemesEmitter.off("visemeEvent", handleVisemesUpdated);
     };
+
   }, [group, visemesEmitter, getVisemes, setFacialExpression]);
 
   const lerpInfluence = (node, visemeName, targetValue, duration, weight = 1 ) => {
@@ -122,13 +122,16 @@ const useVisemeAnimation = (
   };
 
 
- //Jaw Leva
- const controls = useControls("Jaw Control", {
-  jawRotationX: { value: 0, min: -0.2, max: 0.2, step: 0.01 },
-  jawRotationY: { value: 0, min: -0.5, max: 0.5, step: 0.01 },
-  jawRotationZ: { value: 0, min: 1.55, max: 2, step: 0.01 },
-  manualJawControl: { value: false },
-});
+
+// Timers Setup
+const timeoutsRef = useRef([]);
+
+const clearTimers = () => {
+  timeoutsRef.current.forEach(clearTimeout);
+  timeoutsRef.current = [];
+};
+
+
 
 useEffect(() => {
   if (!characterRef.current) return;
@@ -154,11 +157,12 @@ useEffect(() => {
     console.log("playing visemes");
     let lastVisemeTargets = [];
 
+    clearTimers();
     visemeDataRef.current.forEach(({ t, v }, index) => {
       const visemeTargets = visemeMap[v] || [];
       const isSilent = v === "-";
 
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         Object.keys(nodes).forEach((meshName) => {
           const mesh = nodes[meshName];
 
@@ -227,10 +231,11 @@ useEffect(() => {
         lastVisemeTargets = visemeTargets;
 
 
-      }, t * 1000 + index * 10);
+      }, t * 1000);
+      timeoutsRef.current.push(timeout);
 
       
-      //emitter.emit('visemeEnd');
+
       
     });
   };
