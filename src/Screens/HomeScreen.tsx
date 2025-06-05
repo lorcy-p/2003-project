@@ -498,7 +498,7 @@ const HomePage = () => {
                                     className="hero-element"
                                     sx={{
                                         position: "relative",
-                                        height: { xs: 350, md: 430 },
+                                        height: "auto",
                                         width: "100%",
                                         display: "flex",
                                         justifyContent: "center",
@@ -508,7 +508,6 @@ const HomePage = () => {
                                     <Card
                                         sx={{
                                             width: "100%",
-                                            maxWidth: 500,
                                             mx: "auto",
                                             overflow: "visible",
                                             border: "1px solid rgba(0,0,0,0.04)",
@@ -653,7 +652,11 @@ const HomePage = () => {
                                 >
                                     <CardMedia
                                         component="img"
-                                        height={180}
+                                        sx={{
+                                            height: 350,          
+                                            width: '100%',         
+                                            objectFit: 'cover'    
+                                        }} 
                                         image={character.imagePath}
                                         alt={character.name}
                                     />
